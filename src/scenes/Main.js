@@ -16,15 +16,16 @@ class Main extends Phaser.Scene {
     const { width, height } = this.sys.game.config
     console.log(width, height)
 
-    const logo = this.add.image(10, 10, 'logo')
-    this.tweens.add({
-      targets: logo,
-      y: 250,
-      duration: 2000,
-      ease: 'Power2',
-      yoyo: true,
-      loop: -1
-    })
+    console.log(this.physics.config)
+
+    this.p1 = this.add.sprite(100, 100, 'doux')
+
+    this.physics.world.gravity.setTo(0, 200)
+    this.physics.world.enable([this.p1])
+
+    /** @type {Phaser.Physics.Arcade.Body} */
+    const body = this.p1.body
+    body.setCollideWorldBounds(true)
   }
 }
 

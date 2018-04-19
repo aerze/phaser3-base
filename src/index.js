@@ -6,15 +6,16 @@ import MainScene from './scenes/Main'
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'phaser-example',
-  width: 512,
-  height: 512,
-  zoom: 1,
+  width: 128,
+  height: 128,
+  zoom: 4,
   pixelArt: true,
   scaleMode: 0, // Phaser.ScaleManager.EXACT_FIT,
   physics: {
     default: 'arcade',
     arcade: {
-      debug: true
+      debug: true,
+      gravity: { y: 200 }
     }
   },
   scene: [BootScene, TitleScene, MainScene]
