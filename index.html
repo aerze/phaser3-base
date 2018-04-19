@@ -2,6 +2,28 @@
  <html>
      <head>
          <meta charset="utf-8">
+         <style>
+            @font-face {
+              font-family: 'future';
+              src: url('assets/ui-pack/Font/kenvector_future.ttf') format('truetype');
+            }
+        
+            html,
+            body,
+            #canvas {
+              max-width: 100%;
+              max-height: 100%;
+            }
+        
+            canvas {
+              display: block;
+              touch-action: none;
+              user-select: none;
+              -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+              image-rendering: pixelated;
+              cursor: inherit;
+            }
+          </style>
      </head>
      <body>
          <script src="build/project.bundle.js" charset="utf-8"></script>
