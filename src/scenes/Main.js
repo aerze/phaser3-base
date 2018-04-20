@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import Player from '../objects/Player'
 import { DARK_BLUE } from '../constants'
 
 class Main extends Phaser.Scene {
@@ -6,8 +7,12 @@ class Main extends Phaser.Scene {
     super({ key: 'Main' })
   }
 
-  preload () {
-    console.log('Main::preload()')
+  init (data) {
+    this.data = data
+  }
+
+  preload (...args) {
+    console.log('Main::preload()', ...args, ';')
     this.cameras.main.setBackgroundColor(DARK_BLUE)
   }
 
@@ -16,17 +21,19 @@ class Main extends Phaser.Scene {
     const { width, height } = this.sys.game.config
     console.log(width, height)
 
-    console.log(this.physics.config)
+    this.physics.world.gravity.setTo(0, 0)
 
-    this.p1 = this.add.sprite(100, 100, 'doux')
+    this.p1 = this.add.existing(new Player(this, 25, 25, 'doux'))
+    this.p2 = this.add.existing(new Player(this, 100, 100, 'mort'))
 
-    this.physics.world.gravity.setTo(0, 200)
-    this.physics.world.enable([this.p1])
+    this.ball = this.add.sprite(width * 0.5, height * 0.5, 'ball')
+    this.physics.world.enable(this.ball)
 
-    /** @type {Phaser.Physics.Arcade.Body} */
-    const body = this.p1.body
-    body.setCollideWorldBounds(true)
+    this.ball.setScale(0.14)
+    this.ball.body.setCollideWorldBounds(true)
   }
+
+  update () {}
 }
 
 export default Main

@@ -19,7 +19,7 @@ export default class TitleScene extends Phaser.Scene {
     text.setOrigin(0.5, 0.5)
     text.setInteractive()
     text.on('pointerdown', () => {
-      this.scene.start('Main')
+      this.scene.start('Main', { test: 'true' })
     })
   }
 }
