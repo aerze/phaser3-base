@@ -1,3 +1,5 @@
+/** phaser@3.7.1 */
+
 declare type CallCallback = (item: Phaser.GameObjects.GameObject)=>void;
 
 declare type GridAlignConfig = {
@@ -14,7 +16,7 @@ declare type GridAlignConfig = {
     /**
      * The width of the cell, in pixels, in which the item is positioned.
      */
-    cellWidth?: boolean;
+    cellWidth?: integer;
     /**
      * The height of the cell, in pixels, in which the item is positioned.
      */
@@ -35,7 +37,7 @@ declare type GridAlignConfig = {
 
 declare type JSONAnimation = {
     /**
-     * [description]
+     * The key that the animation will be associated with. i.e. sprite.animations.play(key)
      */
     key: string;
     /**
@@ -86,7 +88,7 @@ declare type JSONAnimation = {
 
 declare type AnimationFrameConfig = {
     /**
-     * [description]
+     * The key that the animation will be associated with. i.e. sprite.animations.play(key)
      */
     key: string;
     /**
@@ -105,11 +107,15 @@ declare type AnimationFrameConfig = {
 
 declare type AnimationConfig = {
     /**
-     * [description]
+     * The key that the animation will be associated with. i.e. sprite.animations.play(key)
+     */
+    key?: string;
+    /**
+     * An object containing data used to generate the frames for the animation
      */
     frames?: AnimationFrameConfig[];
     /**
-     * [description]
+     * The key of the texture all frames of the animation will use. Can be overridden on a per frame basis.
      */
     defaultTextureKey?: string;
     /**
@@ -272,10 +278,6 @@ declare type LoaderConfig = {
     /**
      * [description]
      */
-    enableParallel?: boolean;
-    /**
-     * [description]
-     */
     maxParallelDownloads?: integer;
     /**
      * [description]
@@ -419,43 +421,43 @@ declare type GameConfig = {
     /**
      * [description]
      */
-    antialias?: boolean;
+    "render.antialias"?: boolean;
     /**
      * [description]
      */
-    pixelArt?: boolean;
+    "render.pixelArt"?: boolean;
     /**
      * [description]
      */
-    autoResize?: boolean;
+    "render.autoResize"?: boolean;
     /**
      * [description]
      */
-    roundPixels?: boolean;
+    "render.roundPixels"?: boolean;
     /**
      * [description]
      */
-    transparent?: boolean;
+    "render.transparent"?: boolean;
     /**
      * [description]
      */
-    clearBeforeRender?: boolean;
+    "render.clearBeforeRender"?: boolean;
     /**
      * [description]
      */
-    premultipliedAlpha?: boolean;
+    "render.premultipliedAlpha"?: boolean;
     /**
      * [description]
      */
-    preserveDrawingBuffer?: boolean;
+    "render.preserveDrawingBuffer"?: boolean;
     /**
      * [description]
      */
-    failIfMajorPerformanceCaveat?: boolean;
+    "render.failIfMajorPerformanceCaveat"?: boolean;
     /**
      * "high-performance", "low-power" or "default"
      */
-    powerPreference?: boolean;
+    "render.powerPreference"?: string;
     /**
      * [description]
      */
@@ -497,6 +499,25 @@ declare type GameConfig = {
 declare type GameStepCallback = ()=>void;
 
 declare type TimeStepCallback = (time: number, average: number, interpolation: number)=>void;
+
+declare type JSONCameraBounds = {
+    /**
+     * The horizontal position of camera
+     */
+    x: number;
+    /**
+     * The vertical position of camera
+     */
+    y: number;
+    /**
+     * The width size of camera
+     */
+    width: number;
+    /**
+     * The height size of camera
+     */
+    height: number;
+};
 
 declare type JSONCamera = {
     /**
@@ -546,23 +567,7 @@ declare type JSONCamera = {
     /**
      * The bounds of camera
      */
-    bounds?: object;
-    /**
-     * The horizontal position of bounds of camera
-     */
-    "bounds.x"?: number;
-    /**
-     * The vertical position of bounds of camera
-     */
-    "bounds.y"?: number;
-    /**
-     * The width of the bounds of camera
-     */
-    "bounds.width"?: number;
-    /**
-     * The height of the bounds of camera
-     */
-    "bounds.height"?: number;
+    bounds?: JSONCameraBounds | undefined;
 };
 
 declare type InputJSONCameraObject = {
@@ -971,6 +976,48 @@ declare type InputColorObject = {
 
 declare type ColorObject = ()=>void;
 
+declare namespace Phaser.Display.Color {
+    /**
+     * Interpolates color values
+     */
+    namespace Interpolate {
+        /**
+         * Interpolates between the two given color ranges over the length supplied.
+         * @param r1 Red value.
+         * @param g1 Blue value.
+         * @param b1 Green value.
+         * @param r2 Red value.
+         * @param g2 Blue value.
+         * @param b2 Green value.
+         * @param length Distance to interpolate over. Default 100.
+         * @param index Index to start from. Default 0.
+         */
+        function RGBWithRGB(r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, length?: number, index?: number): ColorObject;
+
+        /**
+         * Interpolates between the two given color objects over the length supplied.
+         * @param color1 The first Color object.
+         * @param color2 The second Color object.
+         * @param length Distance to interpolate over. Default 100.
+         * @param index Index to start from. Default 0.
+         */
+        function ColorWithColor(color1: Phaser.Display.Color, color2: Phaser.Display.Color, length?: number, index?: number): ColorObject;
+
+        /**
+         * Interpolates between the Color object and color values over the length supplied.
+         * @param color1 The first Color object.
+         * @param r Red value.
+         * @param g Blue value.
+         * @param b Green value.
+         * @param length Distance to interpolate over. Default 100.
+         * @param index Index to start from. Default 0.
+         */
+        function ColorWithRGB(color1: Phaser.Display.Color, r: number, g: number, b: number, length?: number, index?: number): ColorObject;
+
+    }
+
+}
+
 declare type HSLColorObject = {
     /**
      * The hue color value. A number between 0 and 1
@@ -1025,7 +1072,7 @@ declare type DisplayCallbackConfig = {
 
 declare type DisplayCallback = (display: DisplayCallbackConfig)=>void;
 
-declare type BitmapTextConfig = {
+declare type BitmapTextConfig = GameObjectConfig & {
     /**
      * [description]
      */
@@ -1043,9 +1090,6 @@ declare type BitmapTextConfig = {
      */
     align?: string;
 };
-
-declare namespace ParseRetroFont {
-}
 
 declare type TextBounds = {
     /**
@@ -1090,7 +1134,7 @@ declare type TextBounds = {
     "global.height": number;
 };
 
-declare type JSONBitmapText = {
+declare type JSONBitmapText = JSONGameObject & {
     /**
      * [description]
      */
@@ -1108,6 +1152,139 @@ declare type JSONBitmapText = {
      */
     letterSpacing: number;
 };
+
+declare namespace Phaser.GameObjects.Blitter {
+    type BlitterFromCallback = (blitter: Phaser.GameObjects.Blitter, index: integer)=>void;
+
+    /**
+     * A Bob Game Object.
+     * 
+     * A Bob belongs to a Blitter Game Object. The Blitter is responsible for managing and rendering this object.
+     * 
+     * A Bob has a position, alpha value and a frame from a texture that it uses to render with. You can also toggle
+     * the flipped and visible state of the Bob. The Frame the Bob uses to render can be changed dynamically, but it
+     * must be a Frame within the Texture used by the parent Blitter.
+     * 
+     * Bob positions are relative to the Blitter parent. So if you move the Blitter parent, all Bob children will
+     * have their positions impacted by this change as well.
+     * 
+     * You can manipulate Bob objects directly from your game code, but the creation and destruction of them should be
+     * handled via the Blitter parent.
+     */
+    class Bob {
+        /**
+         * 
+         * @param blitter The parent Blitter object is responsible for updating this Bob.
+         * @param x The horizontal position of this Game Object in the world, relative to the parent Blitter position.
+         * @param y The vertical position of this Game Object in the world, relative to the parent Blitter position.
+         * @param frame The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
+         * @param visible Should the Bob render visible or not to start with?
+         */
+        constructor(blitter: Phaser.GameObjects.Blitter, x: number, y: number, frame: string | integer, visible: boolean);
+
+        /**
+         * [description]
+         */
+        parent: Phaser.GameObjects.Blitter;
+
+        /**
+         * [description]
+         */
+        x: number;
+
+        /**
+         * [description]
+         */
+        y: number;
+
+        /**
+         * [description]
+         */
+        frame: string | integer;
+
+        /**
+         * [description]
+         */
+        data: object;
+
+        /**
+         * [description]
+         */
+        flipX: boolean;
+
+        /**
+         * [description]
+         */
+        flipY: boolean;
+
+        /**
+         * [description]
+         * @param frame [description]
+         */
+        setFrame(frame?: Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         */
+        resetFlip(): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param x [description]
+         * @param y [description]
+         * @param frame [description]
+         */
+        reset(x: number, y: number, frame: Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param value [description]
+         */
+        setFlipX(value: number): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param value [description]
+         */
+        setFlipY(value: number): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param x [description]
+         * @param y [description]
+         */
+        setFlip(x: number, y: number): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param value [description]
+         */
+        setVisible(value: boolean): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         * @param value [description]
+         */
+        setAlpha(value: number): Phaser.GameObjects.Blitter.Bob;
+
+        /**
+         * [description]
+         */
+        destroy(): void;
+
+        /**
+         * [description]
+         */
+        visible: boolean;
+
+        /**
+         * [description]
+         */
+        alpha: number;
+
+    }
+
+}
 
 declare type GameObjectConfig = {
     /**
@@ -1256,6 +1433,12 @@ declare type JSONGameObject = {
 };
 
 declare type EachContainerCallback<I> = (item: any, ...args: any[])=>void;
+
+declare namespace Phaser.GameObjects.Graphics {
+    namespace Commands {
+    }
+
+}
 
 declare type GroupCallback = (item: Phaser.GameObjects.GameObject)=>void;
 
@@ -1425,14 +1608,110 @@ declare type GroupCreateConfig = {
 declare type LightForEach = (light: Phaser.GameObjects.Light)=>void;
 
 /**
- * The returned value sets what the property will be at the START of the particles life, on emit.
+ * The returned value sets what the property will be at the START of the particle's life, on emit.
  */
 declare type EmitterOpOnEmitCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, value: number)=>void;
 
 /**
- * The returned value updates the property for the duration of the particles life.
+ * The returned value updates the property for the duration of the particle's life.
  */
 declare type EmitterOpOnUpdateCallback = (particle: Phaser.GameObjects.Particles.Particle, key: string, t: number, value: number)=>void;
+
+/**
+ * Defines an operation yielding a random value within a range.
+ */
+declare type EmitterOpRandomConfig = {
+    /**
+     * The minimum and maximum values, as [min, max].
+     */
+    random: number[];
+};
+
+/**
+ * Defines an operation yielding a random value within a range.
+ */
+declare type EmitterOpRandomMinMaxConfig = {
+    /**
+     * The minimum value.
+     */
+    min: number;
+    /**
+     * The maximum value.
+     */
+    max: number;
+};
+
+/**
+ * Defines an operation yielding a random value within a range.
+ */
+declare type EmitterOpRandomStartEndConfig = {
+    /**
+     * The starting value.
+     */
+    start: number;
+    /**
+     * The ending value.
+     */
+    end: number;
+    /**
+     * If false, this becomes {@link EmitterOpEaseConfig}.
+     */
+    random: boolean;
+};
+
+/**
+ * Defines an operation yielding a value incremented continuously across a range.
+ */
+declare type EmitterOpEaseConfig = {
+    /**
+     * The starting value.
+     */
+    start: number;
+    /**
+     * The ending value.
+     */
+    end: number;
+    /**
+     * The name of the easing function.
+     */
+    ease?: string;
+};
+
+/**
+ * Defines an operation yielding a value incremented by steps across a range.
+ */
+declare type EmitterOpSteppedConfig = {
+    /**
+     * The starting value.
+     */
+    start: number;
+    /**
+     * The ending value.
+     */
+    end: number;
+    /**
+     * The number of steps between start and end.
+     */
+    steps: number;
+};
+
+declare type EmitterOpCustomEmitConfig = {
+    /**
+     * [description]
+     */
+    onEmit: EmitterOpOnEmitCallback;
+};
+
+declare type EmitterOpCustomUpdateConfig = {
+    /**
+     * [description]
+     */
+    onEmit?: EmitterOpOnEmitCallback;
+    /**
+     * [description]
+     */
+    onUpdate: EmitterOpOnUpdateCallback;
+};
 
 declare type GravityWellConfig = {
     /**
@@ -1460,6 +1739,343 @@ declare type GravityWellConfig = {
 declare type ParticleEmitterCallback = (particle: Phaser.GameObjects.Particles.Particle, emitter: Phaser.GameObjects.Particles.ParticleEmitter)=>void;
 
 declare type ParticleDeathCallback = (particle: Phaser.GameObjects.Particles.Particle)=>void;
+
+declare type ParticleEmitterBounds = {
+    /**
+     * The left edge of the rectangle.
+     */
+    x: number;
+    /**
+     * The top edge of the rectangle.
+     */
+    y: number;
+    /**
+     * The width of the rectangle.
+     */
+    width: number;
+    /**
+     * The height of the rectangle.
+     */
+    height: number;
+};
+
+declare type ParticleEmitterBoundsAlt = {
+    /**
+     * The left edge of the rectangle.
+     */
+    x: number;
+    /**
+     * The top edge of the rectangle.
+     */
+    y: number;
+    /**
+     * The width of the rectangle.
+     */
+    w: number;
+    /**
+     * The height of the rectangle.
+     */
+    h: number;
+};
+
+declare type ParticleEmitterDeathZoneConfig = {
+    /**
+     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.DeathZone#source}.
+     */
+    source: DeathZoneSource;
+    /**
+     * 'onEnter' or 'onLeave'.
+     */
+    type?: string;
+};
+
+declare type ParticleEmitterEdgeZoneConfig = {
+    /**
+     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.EdgeZone#source}.
+     */
+    source: EdgeZoneSource;
+    /**
+     * 'edge'.
+     */
+    type: string;
+    /**
+     * The number of particles to place on the source edge. Set to 0 to use `stepRate` instead.
+     */
+    quantity: integer;
+    /**
+     * The distance between each particle. When set, `quantity` is implied and should be set to 0.
+     */
+    stepRate?: number;
+    /**
+     * Whether particles are placed from start to end and then end to start.
+     */
+    yoyo?: boolean;
+    /**
+     * Whether one endpoint will be removed if it's identical to the other.
+     */
+    seamless?: boolean;
+};
+
+declare type ParticleEmitterRandomZoneConfig = {
+    /**
+     * A shape representing the zone. See {@link Phaser.GameObjects.Particles.Zones.RandomZone#source}.
+     */
+    source: RandomZoneSource;
+    /**
+     * 'random'.
+     */
+    type?: string;
+};
+
+declare type ParticleEmitterConfig = {
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#active}.
+     */
+    active?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#blendMode}.
+     */
+    blendMode?: integer;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope} and {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
+     */
+    callbackScope?: any;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideBottom}.
+     */
+    collideBottom?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideLeft}.
+     */
+    collideLeft?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideRight}.
+     */
+    collideRight?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#collideTop}.
+     */
+    collideTop?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallback}.
+     */
+    deathCallback?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallbackScope}.
+     */
+    deathCallbackScope?: any;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
+     */
+    emitCallback?: Function;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallbackScope}.
+     */
+    emitCallbackScope?: any;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#follow}.
+     */
+    follow?: Phaser.GameObjects.GameObject;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}.
+     */
+    frequency?: number;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityX}.
+     */
+    gravityX?: number;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#gravityY}.
+     */
+    gravityY?: number;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxParticles}.
+     */
+    maxParticles?: integer;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#name}.
+     */
+    name?: string;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#on}.
+     */
+    on?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleBringToTop}.
+     */
+    particleBringToTop?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#particleClass}.
+     */
+    particleClass?: Phaser.GameObjects.Particles.Particle;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#radial}.
+     */
+    radial?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#timeScale}.
+     */
+    timeScale?: number;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#trackVisible}.
+     */
+    trackVisible?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#visible}.
+     */
+    visible?: boolean;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationX} (emit only).
+     */
+    accelerationX?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#accelerationY} (emit only).
+     */
+    accelerationY?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#alpha}.
+     */
+    alpha?: number | number[] | EmitterOpOnUpdateCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#angle} (emit only)
+     */
+    angle?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#bounce} (emit only).
+     */
+    bounce?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#delay} (emit only).
+     */
+    delay?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#lifespan} (emit only).
+     */
+    lifespan?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityX} (emit only).
+     */
+    maxVelocityX?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#maxVelocityY} (emit only).
+     */
+    maxVelocityY?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToX} (emit only).
+     */
+    moveToX?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#moveToY} (emit only).
+     */
+    moveToY?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity} (emit only).
+     */
+    quantity?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#rotate}.
+     */
+    rotate?: number | number[] | EmitterOpOnUpdateCallback | object;
+    /**
+     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setScale}.
+     */
+    scale?: number | number[] | EmitterOpOnUpdateCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleX}.
+     */
+    scaleX?: number | number[] | EmitterOpOnUpdateCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#scaleY}.
+     */
+    scaleY?: number | number[] | EmitterOpOnUpdateCallback | object;
+    /**
+     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setSpeed} (emit only).
+     */
+    speed?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedX} (emit only).
+     */
+    speedX?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#speedY} (emit only).
+     */
+    speedY?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#tint}.
+     */
+    tint?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#x} (emit only).
+     */
+    x?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#y} (emit only).
+     */
+    y?: number | number[] | EmitterOpOnEmitCallback | object;
+    /**
+     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setEmitZone}.
+     */
+    emitZone?: object;
+    /**
+     * As {@link Phaser.GameObjects.Particles.ParticleEmitter#setBounds}.
+     */
+    bounds?: ParticleEmitterBounds | ParticleEmitterBoundsAlt;
+    /**
+     * Assigns to {@link Phaser.GameObjects.Particles.ParticleEmitter#followOffset}.
+     */
+    followOffset?: object;
+    /**
+     * x-coordinate of the offset.
+     */
+    "followOffset.x"?: number;
+    /**
+     * y-coordinate of the offset.
+     */
+    "followOffset.y"?: number;
+    /**
+     * Sets {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
+     */
+    frames?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[] | ParticleEmitterFrameConfig;
+};
+
+declare type ParticleEmitterFrameConfig = {
+    /**
+     * One or more texture frames.
+     */
+    frames?: number | number[] | string | string[] | Phaser.Textures.Frame | Phaser.Textures.Frame[];
+    /**
+     * Whether texture frames will be assigned consecutively (true) or at random (false).
+     */
+    cycle?: boolean;
+    /**
+     * The number of consecutive particles receiving each texture frame, when `cycle` is true.
+     */
+    quantity?: integer;
+};
+
+declare type DeathZoneSourceCallback = (x: number, y: number)=>void;
+
+declare type DeathZoneSource = {
+    contains: DeathZoneSourceCallback;
+};
+
+declare type EdgeZoneSourceCallback = (quantity: integer, stepRate?: integer)=>void;
+
+declare type EdgeZoneSource = {
+    /**
+     * A function placing points on the source's edge or edges.
+     */
+    getPoints: EdgeZoneSourceCallback;
+};
+
+declare type RandomZoneSourceCallback = (point: Phaser.Math.Vector2)=>void;
+
+declare type RandomZoneSource = {
+    /**
+     * A function modifying its point argument.
+     */
+    getRandomPoint: RandomZoneSourceCallback;
+};
 
 declare type PathConfig = {
     /**
@@ -1516,7 +2132,317 @@ declare type RenderTextureConfig = {
  */
 declare type TextStyleWordWrapCallback = (text: string, textObject: Phaser.GameObjects.Text)=>void;
 
-declare type TileSprite = {
+declare namespace Phaser.GameObjects.Text {
+    /**
+     * [description]
+     */
+    class TextStyle {
+        /**
+         * 
+         * @param text The Text object that this TextStyle is styling.
+         * @param style [description]
+         */
+        constructor(text: Phaser.GameObjects.Text, style: object);
+
+        /**
+         * The Text object that this TextStyle is styling.
+         */
+        parent: Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         */
+        fontFamily: string;
+
+        /**
+         * [description]
+         */
+        fontSize: string;
+
+        /**
+         * [description]
+         */
+        fontStyle: string;
+
+        /**
+         * [description]
+         */
+        backgroundColor: string;
+
+        /**
+         * [description]
+         */
+        color: string;
+
+        /**
+         * [description]
+         */
+        stroke: string;
+
+        /**
+         * [description]
+         */
+        strokeThickness: number;
+
+        /**
+         * [description]
+         */
+        shadowOffsetX: number;
+
+        /**
+         * [description]
+         */
+        shadowOffsetY: number;
+
+        /**
+         * [description]
+         */
+        shadowColor: string;
+
+        /**
+         * [description]
+         */
+        shadowBlur: number;
+
+        /**
+         * [description]
+         */
+        shadowStroke: boolean;
+
+        /**
+         * [description]
+         */
+        shadowFill: boolean;
+
+        /**
+         * [description]
+         */
+        align: string;
+
+        /**
+         * [description]
+         */
+        maxLines: integer;
+
+        /**
+         * [description]
+         */
+        fixedWidth: number;
+
+        /**
+         * [description]
+         */
+        fixedHeight: number;
+
+        /**
+         * [description]
+         */
+        rtl: boolean;
+
+        /**
+         * [description]
+         */
+        testString: string;
+
+        /**
+         * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
+         */
+        baselineX: number;
+
+        /**
+         * The amount of vertical padding adding to the width of the text when calculating the font metrics.
+         */
+        baselineY: number;
+
+        /**
+         * [description]
+         * @param style [description]
+         * @param updateText [description] Default true.
+         */
+        setStyle(style: CSSStyleRule, updateText?: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param canvas [description]
+         * @param context [description]
+         */
+        syncFont(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+
+        /**
+         * [description]
+         * @param canvas [description]
+         * @param context [description]
+         */
+        syncStyle(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
+
+        /**
+         * [description]
+         * @param context [description]
+         * @param enabled [description]
+         */
+        syncShadow(context: CanvasRenderingContext2D, enabled: boolean): void;
+
+        /**
+         * [description]
+         * @param recalculateMetrics [description]
+         */
+        update(recalculateMetrics: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param font [description]
+         */
+        setFont(font: string | object): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param family [description]
+         */
+        setFontFamily(family: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param style [description]
+         */
+        setFontStyle(style: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param size [description]
+         */
+        setFontSize(size: number | string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param string [description]
+         */
+        setTestString(string: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param width [description]
+         * @param height [description]
+         */
+        setFixedSize(width: number, height: number): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param color [description]
+         */
+        setBackgroundColor(color: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param color [description]
+         */
+        setFill(color: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param color [description]
+         */
+        setColor(color: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param color [description]
+         * @param thickness [description]
+         */
+        setStroke(color: string, thickness: number): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param x [description] Default 0.
+         * @param y [description] Default 0.
+         * @param color [description] Default '#000'.
+         * @param blur [description] Default 0.
+         * @param shadowStroke [description] Default false.
+         * @param shadowFill [description] Default true.
+         */
+        setShadow(x?: number, y?: number, color?: string, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param x [description] Default 0.
+         * @param y [description] Default 0.
+         */
+        setShadowOffset(x?: number, y?: number): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param color [description] Default '#000'.
+         */
+        setShadowColor(color?: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param blur [description] Default 0.
+         */
+        setShadowBlur(blur?: number): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param enabled [description]
+         */
+        setShadowStroke(enabled: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param enabled [description]
+         */
+        setShadowFill(enabled: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by width.
+         * @param width The maximum width of a line in pixels. Set to null to remove wrapping.
+         * @param useAdvancedWrap Whether or not to use the advanced wrapping
+         * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
+         * spaces and whitespace are left as is. Default false.
+         */
+        setWordWrapWidth(width: number, useAdvancedWrap?: boolean): Phaser.GameObjects.Text;
+
+        /**
+         * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
+         * @param callback A custom function that will be responsible for wrapping the
+         * text. It will receive two arguments: text (the string to wrap), textObject (this Text
+         * instance). It should return the wrapped lines either as an array of lines or as a string with
+         * newline characters in place to indicate where breaks should happen.
+         * @param scope The scope that will be applied when the callback is invoked. Default null.
+         */
+        setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param align [description]
+         */
+        setAlign(align: string): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         * @param max [description] Default 0.
+         */
+        setMaxLines(max?: integer): Phaser.GameObjects.Text;
+
+        /**
+         * [description]
+         */
+        getTextMetrics(): object;
+
+        /**
+         * [description]
+         */
+        toJSON(): object;
+
+        /**
+         * [description]
+         */
+        destroy(): void;
+
+    }
+
+}
+
+declare type TileSprite = GameObjectConfig & {
     /**
      * [description]
      */
@@ -1614,223 +2540,110 @@ declare type MouseHandler = ()=>void;
 
 declare type TouchHandler = (event: TouchEvent)=>void;
 
-declare type FileProcessCallback = (file: Phaser.Loader.File)=>void;
-
 declare type FileConfig = {
     /**
      * The file type string (image, json, etc) for sorting within the Loader.
      */
-    type?: string | false;
+    type: string;
     /**
      * Unique cache key (unique within its file type)
      */
-    key?: string | false;
+    key: string;
     /**
      * The URL of the file, not including baseURL.
      */
     url?: string;
     /**
-     * [description]
+     * The path of the file, not including the baseURL.
      */
     path?: string;
     /**
-     * [description]
+     * The default extension this file uses.
      */
     extension?: string;
     /**
-     * [description]
+     * The responseType to be used by the XHR request.
      */
     responseType?: XMLHttpRequestResponseType;
     /**
-     * [description]
+     * Custom XHR Settings specific to this file and merged with the Loader defaults.
      */
     xhrSettings?: XHRSettingsObject | false;
     /**
      * A config object that can be used by file types to store transitional data.
      */
-    config?: object;
+    config?: any;
 };
 
-declare type XHRConfig = {
+declare namespace Phaser.Loader.AudioSpriteFile {
     /**
-     * [description]
+     * Called by each File when it finishes loading.
+     * @param file The File that has completed processing.
      */
-    key: string;
-    /**
-     * [description]
-     */
-    texture: string;
-    /**
-     * [description]
-     */
-    data?: string;
-    /**
-     * [description]
-     */
-    xhr?: XHRConfig;
-};
+    function onFileComplete(file: Phaser.Loader.File): void;
 
-declare type FileTypeConfig = {
     /**
-     * [description]
+     * Adds this file to its target cache upon successful loading and processing.
      */
-    key: string;
-    /**
-     * [description]
-     */
-    texture: string;
-    /**
-     * [description]
-     */
-    data?: string;
-    /**
-     * [description]
-     */
-    url?: string;
-    /**
-     * [description]
-     */
-    path?: string;
-    /**
-     * [description]
-     */
-    extension?: string;
-    /**
-     * [description]
-     */
-    responseType?: string;
-    /**
-     * [description]
-     */
-    config?: object;
-    /**
-     * [description]
-     */
-    xhr?: XHRConfig;
-};
+    function addToCache(): void;
 
-declare type LinkFileObject = {
-    /**
-     * [description]
-     */
-    type: string;
-    /**
-     * [description]
-     */
-    fileA: Phaser.Loader.File;
-    /**
-     * [description]
-     */
-    fileB: Phaser.Loader.File;
-};
+}
 
-declare type LoaderFileObject = {
+declare namespace Phaser.Loader.FileTypesManager {
     /**
-     * [description]
+     * Static method called when a LoaderPlugin is created.
+     * 
+     * Loops through the local types object and injects all of them as
+     * properties into the LoaderPlugin instance.
+     * @param loader The LoaderPlugin to install the types into.
      */
-    key: string;
+    function register(loader: Phaser.Loader.LoaderPlugin): void;
+
     /**
-     * [description]
+     * Removed all associated file types.
      */
-    type: string;
-    /**
-     * [description]
-     */
-    url?: string;
-    /**
-     * [description]
-     */
-    urls?: string[];
-    /**
-     * [description]
-     */
-    textureURL?: string;
-    /**
-     * [description]
-     */
-    atlasURL?: string;
-    /**
-     * [description]
-     */
-    xmlURL?: string;
-    /**
-     * [description]
-     */
-    textureURLs?: string[];
-    /**
-     * [description]
-     */
-    atlasURLs?: string[];
-    /**
-     * [description]
-     */
-    config?: object;
-    /**
-     * [description]
-     */
-    json?: object;
-    /**
-     * [description]
-     */
-    xhrSettings?: XHRSettingsObject;
-    /**
-     * [description]
-     */
-    textureXhrSettings?: XHRSettingsObject;
-    /**
-     * [description]
-     */
-    atlasXhrSettings?: XHRSettingsObject;
-    /**
-     * [description]
-     */
-    xmlXhrSettings?: XHRSettingsObject;
-    /**
-     * [description]
-     */
-    audioXhrSettings?: XHRSettingsObject;
-    /**
-     * [description]
-     */
-    jsonXhrSettings?: XHRSettingsObject;
-};
+    function destroy(): void;
+
+}
 
 declare type XHRSettingsObject = {
     /**
-     * [description]
+     * The response type of the XHR request, i.e. `blob`, `text`, etc.
      */
     responseType: XMLHttpRequestResponseType;
     /**
-     * [description]
+     * Should the XHR request use async or not?
      */
-    async: boolean;
+    async?: boolean;
     /**
-     * [description]
+     * Optional username for the XHR request.
      */
-    user: string;
+    user?: string;
     /**
-     * [description]
+     * Optional password for the XHR request.
      */
-    password: string;
+    password?: string;
     /**
-     * [description]
+     * Optional XHR timeout value.
      */
-    timeout: number;
+    timeout?: integer;
     /**
-     * [description]
+     * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
      */
-    header: string;
+    header?: string | undefined;
     /**
-     * [description]
+     * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
      */
-    headerValue: string;
+    headerValue?: string | undefined;
     /**
-     * [description]
+     * This value is used to populate the XHR `setRequestHeader` and is undefined by default.
      */
-    overrideMimeType: string | undefined;
+    requestedWith?: string | undefined;
+    /**
+     * Provide a custom mime-type to use instead of the default.
+     */
+    overrideMimeType?: string | undefined;
 };
-
-declare function P0(): void;
 
 declare type SinCosTable = {
     /**
@@ -2019,10 +2832,10 @@ declare namespace Phaser {
         function PlaceOnTriangle<G extends Phaser.GameObjects.GameObject[]>(items: G, triangle: Phaser.Geom.Triangle, stepRate?: number): G;
 
         /**
-         * [description]
+         * Play an animation with the given key, starting at the given startFrame on all Game Objects in items.
          * @param items An array of Game Objects. The contents of this array are updated by this Action.
-         * @param key [description]
-         * @param startFrame [description]
+         * @param key The name of the animation to play.
+         * @param startFrame The starting frame of the animation with the given key.
          */
         function PlayAnimation<G extends Phaser.GameObjects.GameObject[]>(items: G, key: string, startFrame?: string | integer): G;
 
@@ -2441,16 +3254,10 @@ declare namespace Phaser {
         /**
          * A Frame based Animation.
          * 
-         * 
-         * 
          * This consists of a key, some default values (like the frame rate) and a bunch of Frame objects.
          * 
-         * 
-         * 
          * The Animation Manager creates these. Game Objects don't own an instance of these directly.
-         * 
          * Game Objects have the Animation Component, which are like playheads to global Animations (these objects)
-         * 
          * So multiple Game Objects can have playheads all pointing to this one Animation instance.
          */
         class Animation {
@@ -2463,12 +3270,12 @@ declare namespace Phaser {
             constructor(manager: Phaser.Animations.AnimationManager, key: string, config: AnimationConfig);
 
             /**
-             * [description]
+             * A reference to the global Animation Manager
              */
             manager: Phaser.Animations.AnimationManager;
 
             /**
-             * [description]
+             * The unique identifying string for this animation
              */
             key: string;
 
@@ -2572,8 +3379,8 @@ declare namespace Phaser {
             protected getFirstTick(component: Phaser.GameObjects.Components.Animation, includeDelay?: boolean): void;
 
             /**
-             * [description]
-             * @param index [description]
+             * Returns the AnimationFrame at the provided index
+             * @param index The index in the AnimationFrame array
              */
             protected getFrameAt(index: integer): Phaser.Animations.AnimationFrame;
 
@@ -2616,8 +3423,9 @@ declare namespace Phaser {
             removeFrame(frame: Phaser.Animations.AnimationFrame): Phaser.Animations.Animation;
 
             /**
-             * [description]
-             * @param index [description]
+             * Removes a frame from the AnimationFrame array at the provided index
+             * and updates the animation accordingly.
+             * @param index The index in the AnimationFrame array
              */
             removeFrameAt(index: integer): Phaser.Animations.Animation;
 
@@ -2663,15 +3471,9 @@ declare namespace Phaser {
         /**
          * A single frame in an Animation sequence.
          * 
-         * 
-         * 
          * An AnimationFrame consists of a reference to the Texture it uses for rendering, references to other
-         * 
          * frames in the animation, and index data. It also has the ability to fire its own `onUpdate` callback
-         * 
          * and modify the animation timing.
-         * 
-         * 
          * 
          * AnimationFrames are generated automatically by the Animation class.
          */
@@ -2708,22 +3510,22 @@ declare namespace Phaser {
             /**
              * Is this the first frame in an animation sequence?
              */
-            isFirst: boolean;
+            readonly isFirst: boolean;
 
             /**
              * Is this the last frame in an animation sequence?
              */
-            isLast: boolean;
+            readonly isLast: boolean;
 
             /**
              * A reference to the AnimationFrame that comes before this one in the animation, if any.
              */
-            prevFrame: Phaser.Animations.AnimationFrame;
+            readonly prevFrame: Phaser.Animations.AnimationFrame;
 
             /**
              * A reference to the AnimationFrame that comes after this one in the animation, if any.
              */
-            nextFrame: Phaser.Animations.AnimationFrame;
+            readonly nextFrame: Phaser.Animations.AnimationFrame;
 
             /**
              * Additional time (in ms) that this frame should appear for during playback.
@@ -2735,7 +3537,7 @@ declare namespace Phaser {
              * What % through the animation does this frame come?
              * This value is generated when the animation is created and cached here.
              */
-            progress: number;
+            readonly progress: number;
 
             /**
              * Generates a JavaScript object suitable for converting to JSON.
@@ -2752,15 +3554,9 @@ declare namespace Phaser {
         /**
          * The Animation Manager.
          * 
-         * 
-         * 
          * Animations are managed by the global Animation Manager. This is a singleton class that is
-         * 
          * responsible for creating and delivering animations and their corresponding data to all Game Objects.
-         * 
          * Unlike plugins it is owned by the Game instance, not the Scene.
-         * 
-         * 
          * 
          * Sprites and other Game Objects get the data they need from the AnimationManager.
          */
@@ -2904,17 +3700,11 @@ declare namespace Phaser {
 
     /**
      * The Phaser.Game instance is the main controller for the entire Phaser game. It is responsible
-     * 
      * for handling the boot process, parsing the configuration values, creating the renderer,
-     * 
      * and setting-up all of the global Phaser systems, such as sound and input.
-     * 
      * Once that is complete it will start the Scene Manager and then begin the main game loop.
      * 
-     * 
-     * 
      * You should generally avoid accessing any of the systems created by Game, and instead use those
-     * 
      * made available to you via the Phaser.Scene Systems class instead.
      */
     class Game {
@@ -2929,7 +3719,7 @@ declare namespace Phaser {
          * 
          * The values stored within this object are read-only and should not be changed at run-time.
          */
-        config: Phaser.Boot.Config;
+        readonly config: Phaser.Boot.Config;
 
         /**
          * A reference to either the Canvas or WebGL Renderer that this Game is using.
@@ -2949,12 +3739,12 @@ declare namespace Phaser {
         /**
          * A flag indicating when this Game instance has finished its boot process.
          */
-        isBooted: boolean;
+        readonly isBooted: boolean;
 
         /**
          * A flag indicating if this Game is currently running its game step or not.
          */
-        isRunning: boolean;
+        readonly isRunning: boolean;
 
         /**
          * An Event Emitter which is used to broadcast game-level events from the global systems.
@@ -3124,6 +3914,286 @@ declare namespace Phaser {
              */
             constructor(GameConfig?: GameConfig);
 
+            /**
+             * [description]
+             */
+            readonly width: integer | string;
+
+            /**
+             * [description]
+             */
+            readonly height: integer | string;
+
+            /**
+             * [description]
+             */
+            readonly zoom: number;
+
+            /**
+             * [description]
+             */
+            readonly resolution: number;
+
+            /**
+             * [description]
+             */
+            readonly renderType: number;
+
+            /**
+             * [description]
+             */
+            readonly parent: any;
+
+            /**
+             * [description]
+             */
+            readonly canvas: HTMLCanvasElement;
+
+            /**
+             * [description]
+             */
+            readonly canvasStyle: string;
+
+            /**
+             * [description]
+             */
+            readonly sceneConfig: object;
+
+            /**
+             * [description]
+             */
+            readonly seed: string[];
+
+            /**
+             * [description]
+             */
+            readonly gameTitle: string;
+
+            /**
+             * [description]
+             */
+            readonly gameURL: string;
+
+            /**
+             * [description]
+             */
+            readonly gameVersion: string;
+
+            /**
+             * [description]
+             */
+            readonly inputKeyboard: boolean;
+
+            /**
+             * [description]
+             */
+            readonly inputKeyboardEventTarget: any;
+
+            /**
+             * [description]
+             */
+            readonly inputMouse: boolean | object;
+
+            /**
+             * [description]
+             */
+            readonly inputMouseEventTarget: any;
+
+            /**
+             * [description]
+             */
+            readonly inputMouseCapture: boolean;
+
+            /**
+             * [description]
+             */
+            readonly inputTouch: boolean;
+
+            /**
+             * [description]
+             */
+            readonly inputTouchEventTarget: any;
+
+            /**
+             * [description]
+             */
+            readonly inputTouchCapture: boolean;
+
+            /**
+             * [description]
+             */
+            readonly inputGamepad: boolean;
+
+            /**
+             * [description]
+             */
+            readonly disableContextMenu: boolean;
+
+            /**
+             * [description]
+             */
+            readonly audio: any;
+
+            /**
+             * [description]
+             */
+            readonly hideBanner: boolean;
+
+            /**
+             * [description]
+             */
+            readonly hidePhaser: boolean;
+
+            /**
+             * [description]
+             */
+            readonly bannerTextColor: string;
+
+            /**
+             * [description]
+             */
+            readonly bannerBackgroundColor: string[];
+
+            /**
+             * [description]
+             */
+            readonly fps: FPSConfig;
+
+            /**
+             * [description]
+             */
+            readonly antialias: boolean;
+
+            /**
+             * [description]
+             */
+            readonly pixelArt: boolean;
+
+            /**
+             * [description]
+             */
+            readonly autoResize: boolean;
+
+            /**
+             * [description]
+             */
+            readonly roundPixels: boolean;
+
+            /**
+             * [description]
+             */
+            readonly transparent: boolean;
+
+            /**
+             * [description]
+             */
+            readonly zoclearBeforeRenderom: boolean;
+
+            /**
+             * [description]
+             */
+            readonly premultipliedAlpha: boolean;
+
+            /**
+             * [description]
+             */
+            readonly preserveDrawingBuffer: boolean;
+
+            /**
+             * [description]
+             */
+            readonly failIfMajorPerformanceCaveat: boolean;
+
+            /**
+             * [description]
+             */
+            readonly powerPreference: string;
+
+            /**
+             * [description]
+             */
+            readonly backgroundColor: Phaser.Display.Color;
+
+            /**
+             * [description]
+             */
+            readonly preBoot: BootCallback;
+
+            /**
+             * [description]
+             */
+            readonly postBoot: BootCallback;
+
+            /**
+             * [description]
+             */
+            readonly physics: object;
+
+            /**
+             * [description]
+             */
+            readonly defaultPhysicsSystem: boolean;
+
+            /**
+             * [description]
+             */
+            readonly loaderBaseURL: string;
+
+            /**
+             * [description]
+             */
+            readonly loaderPath: string;
+
+            /**
+             * [description]
+             */
+            readonly loaderMaxParallelDownloads: integer;
+
+            /**
+             * [description]
+             */
+            readonly loaderCrossOrigin: string | undefined;
+
+            /**
+             * [description]
+             */
+            readonly loaderResponseType: string;
+
+            /**
+             * [description]
+             */
+            readonly loaderAsync: boolean;
+
+            /**
+             * [description]
+             */
+            readonly loaderUser: string;
+
+            /**
+             * [description]
+             */
+            readonly loaderPassword: string;
+
+            /**
+             * [description]
+             */
+            readonly loaderTimeout: integer;
+
+            /**
+             * [description]
+             */
+            readonly defaultPlugins: any;
+
+            /**
+             * [description]
+             */
+            readonly defaultImage: string;
+
+            /**
+             * [description]
+             */
+            readonly missingImage: string;
+
         }
 
         /**
@@ -3144,9 +4214,7 @@ declare namespace Phaser {
 
         /**
          * The PluginManager is global and belongs to the Game instance, not a Scene.
-         * 
          * It handles the installation and removal of all global and Scene based plugins.
-         * 
          * Plugins automatically register themselves with the PluginManager in their respective classes.
          */
         class PluginManager {
@@ -3217,17 +4285,25 @@ declare namespace Phaser {
             /**
              * A reference to the Phaser.Game instance.
              */
-            game: Phaser.Game;
+            readonly game: Phaser.Game;
 
             /**
              * [description]
              */
-            raf: Phaser.DOM.RequestAnimationFrame;
+            readonly raf: Phaser.DOM.RequestAnimationFrame;
 
             /**
              * A flag that is set once the TimeStep has started running and toggled when it stops.
              */
-            started: boolean;
+            readonly started: boolean;
+
+            /**
+             * A flag that is set once the TimeStep has started running and toggled when it stops.
+             * The difference between this value and `started` is that `running` is toggled when
+             * the TimeStep is sent to sleep, where-as `started` remains `true`, only changing if
+             * the TimeStep is actually stopped, not just paused.
+             */
+            readonly running: boolean;
 
             /**
              * The minimum fps rate you want the Time Step to run at.
@@ -3235,19 +4311,28 @@ declare namespace Phaser {
             minFps: integer;
 
             /**
+             * The target fps rate for the Time Step to run at.
+             * 
+             * Setting this value will not actually change the speed at which the browser runs, that is beyond
+             * the control of Phaser. Instead, it allows you to determine performance issues and if the Time Step
+             * is spiraling out of control.
+             */
+            targetFps: integer;
+
+            /**
              * An exponential moving average of the frames per second.
              */
-            actualFps: integer;
+            readonly actualFps: integer;
 
             /**
              * [description]
              */
-            nextFpsUpdate: integer;
+            readonly nextFpsUpdate: integer;
 
             /**
              * The number of frames processed this second.
              */
-            framesThisSecond: integer;
+            readonly framesThisSecond: integer;
 
             /**
              * A callback to be invoked each time the Time Step steps.
@@ -3258,7 +4343,7 @@ declare namespace Phaser {
              * You can force the Time Step to use Set Timeout instead of Request Animation Frame by setting
              * the `forceSetTimeOut` property to `true` in the Game Configuration object. It cannot be changed at run-time.
              */
-            forceSetTimeOut: boolean;
+            readonly forceSetTimeOut: boolean;
 
             /**
              * [description]
@@ -3278,12 +4363,12 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            frame: integer;
+            readonly frame: integer;
 
             /**
              * [description]
              */
-            inFocus: boolean;
+            readonly inFocus: boolean;
 
             /**
              * [description]
@@ -3401,11 +4486,7 @@ declare namespace Phaser {
         /**
          * The BaseCache is a base Cache class that can be used for storing references to any kind of data.
          * 
-         * 
-         * 
          * Data can be added, retrieved and removed based on the given keys.
-         * 
-         * 
          * 
          * Keys are string-based.
          */
@@ -3432,9 +4513,17 @@ declare namespace Phaser {
 
             /**
              * Checks if this cache contains an item matching the given key.
+             * This performs the same action as `BaseCache.exists`.
              * @param key The unique key of the item to be checked in this cache.
              */
             has(key: string): boolean;
+
+            /**
+             * Checks if this cache contains an item matching the given key.
+             * This performs the same action as `BaseCache.has` and is called directly by the Loader.
+             * @param key The unique key of the item to be checked in this cache.
+             */
+            exists(key: string): boolean;
 
             /**
              * Gets an item from this cache based on the given key.
@@ -3462,12 +4551,8 @@ declare namespace Phaser {
         /**
          * The Cache Manager is the global cache owned and maintained by the Game instance.
          * 
-         * 
-         * 
          * Various systems, such as the file Loader, rely on this cache in order to store the files
-         * 
          * it has loaded. The manager itself doesn't store any files, but instead owns multiple BaseCache
-         * 
          * instances, one per type of file. You can also add your own custom caches.
          */
         class CacheManager {
@@ -3562,41 +4647,22 @@ declare namespace Phaser {
             /**
              * A Camera.
              * 
-             * 
-             * 
              * The Camera is the way in which all games are rendered in Phaser. They provide a view into your game world,
-             * 
              * and can be positioned, rotated, zoomed and scrolled accordingly.
-             * 
-             * 
              * 
              * A Camera consists of two elements: The viewport and the scroll values.
              * 
-             * 
-             * 
              * The viewport is the physical position and size of the Camera within your game. Cameras, by default, are
-             * 
              * created the same size as your game, but their position and size can be set to anything. This means if you
-             * 
              * wanted to create a camera that was 320x200 in size, positioned in the bottom-right corner of your game,
-             * 
              * you'd adjust the viewport to do that (using methods like `setViewport` and `setSize`).
              * 
-             * 
-             * 
              * If you wish to change where the Camera is looking in your game, then you scroll it. You can do this
-             * 
              * via the properties `scrollX` and `scrollY` or the method `setScroll`. Scrolling has no impact on the
-             * 
              * viewport, and changing the viewport has no impact on the scrolling.
              * 
-             * 
-             * 
              * By default a Camera will render all Game Objects it can see. You can change this using the `ignore` method,
-             * 
              * allowing you to filter Game Objects out on a per-Camera basis.
-             * 
-             * 
              * 
              * A Camera also has built-in special effects including Fade, Flash and Camera Shake.
              */
@@ -3996,6 +5062,14 @@ declare namespace Phaser {
                  */
                 protected update(time: integer, delta: number): void;
 
+                /**
+                 * Destroys this Camera instance. You rarely need to call this directly.
+                 * 
+                 * Called by the Camera Manager. If you wish to destroy a Camera please use `CameraManager.remove` as
+                 * cameras are stored in a pool, ready for recycling later, and calling this directly will prevent that.
+                 */
+                destroy(): void;
+
             }
 
             /**
@@ -4021,7 +5095,7 @@ declare namespace Phaser {
                 /**
                  * The current Camera ID.
                  */
-                currentCameraId: number;
+                readonly currentCameraId: number;
 
                 /**
                  * An Array of the Camera objects being managed by this Camera Manager.
@@ -4117,20 +5191,12 @@ declare namespace Phaser {
                 /**
                  * A Camera Fade effect.
                  * 
-                 * 
-                 * 
                  * This effect will fade the camera viewport to the given color, over the duration specified.
                  * 
-                 * 
-                 * 
                  * Only the camera viewport is faded. None of the objects it is displaying are impacted, i.e. their colors do
-                 * 
                  * not change.
                  * 
-                 * 
-                 * 
                  * The effect will dispatch several events on the Camera itself and you can also specify an `onUpdate` callback,
-                 * 
                  * which is invoked each frame for the duration of the effect, if required.
                  */
                 class Fade {
@@ -4143,12 +5209,12 @@ declare namespace Phaser {
                     /**
                      * The Camera this effect belongs to.
                      */
-                    camera: Phaser.Cameras.Scene2D.Camera;
+                    readonly camera: Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * Is this effect actively running?
                      */
-                    isRunning: boolean;
+                    readonly isRunning: boolean;
 
                     /**
                      * Has this effect finished running?
@@ -4156,18 +5222,18 @@ declare namespace Phaser {
                      * This is different from `isRunning` because it remains set to `true` when the effect is over,
                      * until the effect is either reset or started again.
                      */
-                    isComplete: boolean;
+                    readonly isComplete: boolean;
 
                     /**
                      * The direction of the fade.
                      * `true` = fade out (transparent to color), `false` = fade in (color to transparent)
                      */
-                    direction: boolean;
+                    readonly direction: boolean;
 
                     /**
                      * The duration of the effect, in milliseconds.
                      */
-                    duration: integer;
+                    readonly duration: integer;
 
                     /**
                      * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
@@ -4206,7 +5272,7 @@ declare namespace Phaser {
                      * @param pipeline The WebGL Pipeline to render to.
                      * @param getTintFunction A function that will return the gl safe tint colors.
                      */
-                    postRenderWebGL(pipeline: Phaser.Renderer.WebGL.FlatTintPipeline, getTintFunction: Function): boolean;
+                    postRenderWebGL(pipeline: Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline, getTintFunction: Function): boolean;
 
                     /**
                      * Called internally when the effect completes.
@@ -4229,20 +5295,12 @@ declare namespace Phaser {
                 /**
                  * A Camera Flash effect.
                  * 
-                 * 
-                 * 
                  * This effect will flash the camera viewport to the given color, over the duration specified.
                  * 
-                 * 
-                 * 
                  * Only the camera viewport is flashed. None of the objects it is displaying are impacted, i.e. their colors do
-                 * 
                  * not change.
                  * 
-                 * 
-                 * 
                  * The effect will dispatch several events on the Camera itself and you can also specify an `onUpdate` callback,
-                 * 
                  * which is invoked each frame for the duration of the effect, if required.
                  */
                 class Flash {
@@ -4255,17 +5313,17 @@ declare namespace Phaser {
                     /**
                      * The Camera this effect belongs to.
                      */
-                    camera: Phaser.Cameras.Scene2D.Camera;
+                    readonly camera: Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * Is this effect actively running?
                      */
-                    isRunning: boolean;
+                    readonly isRunning: boolean;
 
                     /**
                      * The duration of the effect, in milliseconds.
                      */
-                    duration: integer;
+                    readonly duration: integer;
 
                     /**
                      * If this effect is running this holds the current percentage of the progress, a value between 0 and 1.
@@ -4303,7 +5361,7 @@ declare namespace Phaser {
                      * @param pipeline The WebGL Pipeline to render to.
                      * @param getTintFunction A function that will return the gl safe tint colors.
                      */
-                    postRenderWebGL(pipeline: Phaser.Renderer.WebGL.FlatTintPipeline, getTintFunction: Function): boolean;
+                    postRenderWebGL(pipeline: Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline, getTintFunction: Function): boolean;
 
                     /**
                      * Called internally when the effect completes.
@@ -4326,20 +5384,12 @@ declare namespace Phaser {
                 /**
                  * A Camera Shake effect.
                  * 
-                 * 
-                 * 
                  * This effect will shake the camera viewport by a random amount, bounded by the specified intensity, each frame.
                  * 
-                 * 
-                 * 
                  * Only the camera viewport is moved. None of the objects it is displaying are impacted, i.e. their positions do
-                 * 
                  * not change.
                  * 
-                 * 
-                 * 
                  * The effect will dispatch several events on the Camera itself and you can also specify an `onUpdate` callback,
-                 * 
                  * which is invoked each frame for the duration of the effect if required.
                  */
                 class Shake {
@@ -4352,17 +5402,17 @@ declare namespace Phaser {
                     /**
                      * The Camera this effect belongs to.
                      */
-                    camera: Phaser.Cameras.Scene2D.Camera;
+                    readonly camera: Phaser.Cameras.Scene2D.Camera;
 
                     /**
                      * Is this effect actively running?
                      */
-                    isRunning: boolean;
+                    readonly isRunning: boolean;
 
                     /**
                      * The duration of the effect, in milliseconds.
                      */
-                    duration: integer;
+                    readonly duration: integer;
 
                     /**
                      * The intensity of the effect. Use small float values. The default when the effect starts is 0.05.
@@ -4515,6 +5565,18 @@ declare namespace Phaser {
                 destroy(): void;
 
             }
+
+            /**
+             * This alias will be removed in a future version.
+             * Use `FixedKeyControl` instead.
+             */
+            var Fixed: any;
+
+            /**
+             * This alias will be removed in a future version.
+             * Use `SmoothedKeyControl` instead.
+             */
+            var Smoothed: any;
 
             /**
              * [description]
@@ -4879,6 +5941,101 @@ declare namespace Phaser {
             /**
              * [description]
              */
+            var scene: Phaser.Scene;
+
+            /**
+             * [description]
+             */
+            var displayList: Phaser.GameObjects.DisplayList;
+
+            /**
+             * [description]
+             */
+            var updateList: Phaser.GameObjects.UpdateList;
+
+            /**
+             * [description]
+             */
+            var name: string;
+
+            /**
+             * [description]
+             */
+            var direction: Phaser.Math.Vector3;
+
+            /**
+             * [description]
+             */
+            var up: Phaser.Math.Vector3;
+
+            /**
+             * [description]
+             */
+            var position: Phaser.Math.Vector3;
+
+            /**
+             * [description]
+             */
+            var pixelScale: number;
+
+            /**
+             * [description]
+             */
+            var projection: Phaser.Math.Matrix4;
+
+            /**
+             * [description]
+             */
+            var view: Phaser.Math.Matrix4;
+
+            /**
+             * [description]
+             */
+            var combined: Phaser.Math.Matrix4;
+
+            /**
+             * [description]
+             */
+            var invProjectionView: Phaser.Math.Matrix4;
+
+            /**
+             * [description]
+             */
+            var near: number;
+
+            /**
+             * [description]
+             */
+            var far: number;
+
+            /**
+             * [description]
+             */
+            var ray: RayDef;
+
+            /**
+             * [description]
+             */
+            var viewportWidth: number;
+
+            /**
+             * [description]
+             */
+            var viewportHeight: number;
+
+            /**
+             * [description]
+             */
+            var billboardMatrixDirty: boolean;
+
+            /**
+             * [description]
+             */
+            var children: Phaser.Structs.Set<Phaser.GameObjects.GameObject>;
+
+            /**
+             * [description]
+             */
             class CameraManager {
                 /**
                  * 
@@ -4953,7 +6110,7 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            class OrthographicCamera extends Camera {
+            class OrthographicCamera extends Phaser.Cameras.Sprite3D.Camera {
                 /**
                  * 
                  * @param scene [description]
@@ -4988,6 +6145,11 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
+                update(): Phaser.Cameras.Sprite3D.OrthographicCamera;
+
+                /**
+                 * [description]
+                 */
                 zoom: number;
 
             }
@@ -4995,7 +6157,7 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            class PerspectiveCamera extends Camera {
+            class PerspectiveCamera extends Phaser.Cameras.Sprite3D.Camera {
                 /**
                  * 
                  * @param scene [description]
@@ -5026,124 +6188,72 @@ declare namespace Phaser {
                  */
                 setFOV(value: number): Phaser.Cameras.Sprite3D.PerspectiveCamera;
 
+                /**
+                 * [description]
+                 */
+                update(): Phaser.Cameras.Sprite3D.PerspectiveCamera;
+
             }
 
         }
 
-        class Controls {
-            /**
-             * This alias will be removed in a future version.
-             * Use `FixedKeyControl` instead.
-             */
-            static Fixed: any;
-
-            /**
-             * This alias will be removed in a future version.
-             * Use `SmoothedKeyControl` instead.
-             */
-            static Smoothed: any;
-
-        }
-
-        class Sprite3D {
-            /**
-             * [description]
-             */
-            scene: Phaser.Scene;
-
-            /**
-             * [description]
-             */
-            displayList: Phaser.GameObjects.DisplayList;
-
-            /**
-             * [description]
-             */
-            updateList: Phaser.GameObjects.UpdateList;
-
-            /**
-             * [description]
-             */
-            name: string;
-
-            /**
-             * [description]
-             */
-            direction: Phaser.Math.Vector3;
-
-            /**
-             * [description]
-             */
-            up: Phaser.Math.Vector3;
-
-            /**
-             * [description]
-             */
-            position: Phaser.Math.Vector3;
-
-            /**
-             * [description]
-             */
-            pixelScale: number;
-
-            /**
-             * [description]
-             */
-            projection: Phaser.Math.Matrix4;
-
-            /**
-             * [description]
-             */
-            view: Phaser.Math.Matrix4;
-
-            /**
-             * [description]
-             */
-            combined: Phaser.Math.Matrix4;
-
-            /**
-             * [description]
-             */
-            invProjectionView: Phaser.Math.Matrix4;
-
-            /**
-             * [description]
-             */
-            near: number;
-
-            /**
-             * [description]
-             */
-            far: number;
-
-            /**
-             * [description]
-             */
-            ray: RayDef;
-
-            /**
-             * [description]
-             */
-            viewportWidth: number;
-
-            /**
-             * [description]
-             */
-            viewportHeight: number;
-
-            /**
-             * [description]
-             */
-            billboardMatrixDirty: boolean;
-
-            /**
-             * [description]
-             */
-            children: Phaser.Structs.Set<Phaser.GameObjects.GameObject>;
-
-        }
-
     }
+
+    /**
+     * Phaser Release Version
+     */
+    var VERSION: string;
+
+    /**
+     * AUTO Detect Renderer.
+     */
+    var AUTO: integer;
+
+    /**
+     * Canvas Renderer.
+     */
+    var CANVAS: integer;
+
+    /**
+     * WebGL Renderer.
+     */
+    var WEBGL: integer;
+
+    /**
+     * Headless Renderer.
+     */
+    var HEADLESS: integer;
+
+    /**
+     * In Phaser the value -1 means 'forever' in lots of cases, this const allows you to use it instead
+     * to help you remember what the value is doing in your code.
+     */
+    var FOREVER: integer;
+
+    /**
+     * Direction constant.
+     */
+    var NONE: integer;
+
+    /**
+     * Direction constant.
+     */
+    var UP: integer;
+
+    /**
+     * Direction constant.
+     */
+    var DOWN: integer;
+
+    /**
+     * Direction constant.
+     */
+    var LEFT: integer;
+
+    /**
+     * Direction constant.
+     */
+    var RIGHT: integer;
 
     namespace Create {
         /**
@@ -5153,33 +6263,30 @@ declare namespace Phaser {
         function GenerateTexture(config: GenerateTextureConfig): HTMLCanvasElement;
 
         namespace Palettes {
-        }
-
-        class Palettes {
             /**
              * A 16 color palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            static ARNE16: Palette;
+            var ARNE16: Palette;
 
             /**
              * A 16 color palette inspired by the Commodore 64.
              */
-            static C64: Palette;
+            var C64: Palette;
 
             /**
              * A 16 color CGA inspired palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            static CGA: Palette;
+            var CGA: Palette;
 
             /**
              * A 16 color JMP palette by [Arne](http://androidarts.com/palette/16pal.htm)
              */
-            static JMP: Palette;
+            var JMP: Palette;
 
             /**
              * A 16 color palette inspired by Japanese computers like the MSX.
              */
-            static MSX: Palette;
+            var MSX: Palette;
 
         }
 
@@ -5189,7 +6296,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class CubicBezierCurve extends Curve {
+        class CubicBezierCurve extends Phaser.Curves.Curve {
             /**
              * 
              * @param p0 Start point, or an array of point pairs.
@@ -5220,6 +6327,12 @@ declare namespace Phaser {
             p3: Phaser.Math.Vector2;
 
             /**
+             * Gets the starting point on the curve.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getStartPoint<O extends Phaser.Math.Vector2>(out?: O): O;
+
+            /**
              * [description]
              * @param divisions The amount of divisions used by this curve.
              */
@@ -5231,6 +6344,13 @@ declare namespace Phaser {
              * @param out A Vector2 object to store the result in. If not given will be created.
              */
             getPoint<O extends Phaser.Math.Vector2>(t: number, out?: O): O;
+
+            /**
+             * [description]
+             * @param graphics [description]
+             * @param pointsTotal [description] Default 32.
+             */
+            draw<G extends Phaser.GameObjects.Graphics>(graphics: G, pointsTotal?: integer): G;
 
             /**
              * [description]
@@ -5247,8 +6367,6 @@ declare namespace Phaser {
 
         /**
          * A Base Curve class, which all other curve types extend.
-         * 
-         * 
          * 
          * Based on the three.js Curve classes created by [zz85](http://www.lab4games.net/zz85/blog)
          */
@@ -5297,7 +6415,7 @@ declare namespace Phaser {
              * @param graphics The Graphics instance onto which this curve will be drawn.
              * @param pointsTotal The resolution of the curve. The higher the value the smoother it will render, at the cost of rendering performance. Default 32.
              */
-            draw<G extends Phaser.GameObjects.Graphics>(graphics: Phaser.GameObjects.Graphics, pointsTotal?: integer): G;
+            draw<G extends Phaser.GameObjects.Graphics>(graphics: G, pointsTotal?: integer): G;
 
             /**
              * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
@@ -5403,7 +6521,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class EllipseCurve extends Curve {
+        class EllipseCurve extends Phaser.Curves.Curve {
             /**
              * 
              * @param x [description] Default 0.
@@ -5421,6 +6539,12 @@ declare namespace Phaser {
              * [description]
              */
             p0: Phaser.Math.Vector2;
+
+            /**
+             * Gets the starting point on the curve.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getStartPoint<O extends Phaser.Math.Vector2>(out?: O): O;
 
             /**
              * [description]
@@ -5539,7 +6663,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class LineCurve extends Curve {
+        class LineCurve extends Phaser.Curves.Curve {
             /**
              * 
              * @param p0 [description]
@@ -5554,6 +6678,23 @@ declare namespace Phaser {
 
             /**
              * [description]
+             */
+            p1: Phaser.Math.Vector2;
+
+            /**
+             * Returns a Rectangle where the position and dimensions match the bounds of this Curve.
+             * @param out A Rectangle object to store the bounds in. If not given a new Rectangle will be created.
+             */
+            getBounds<O extends Phaser.Geom.Rectangle>(out?: O): O;
+
+            /**
+             * Gets the starting point on the curve.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getStartPoint<O extends Phaser.Math.Vector2>(out?: O): O;
+
+            /**
+             * [description]
              * @param divisions [description] Default 1.
              */
             getResolution(divisions?: number): number;
@@ -5564,6 +6705,27 @@ declare namespace Phaser {
              * @param out A Vector2 object to store the result in. If not given will be created.
              */
             getPoint<O extends Phaser.Math.Vector2>(t: number, out?: O): O;
+
+            /**
+             * [description]
+             * @param u The position along the curve to return. Where 0 is the start and 1 is the end.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getPointAt<O extends Phaser.Math.Vector2>(u: number, out?: O): O;
+
+            /**
+             * [description]
+             */
+            getTangent<O extends Phaser.Math.Vector2>(): O;
+
+            /**
+             * Draws this curve on the given Graphics object.
+             * 
+             * The curve is drawn using `Graphics.lineBetween` so will be drawn at whatever the present Graphics line color is.
+             * The Graphics object is not cleared before the draw, so the curve will appear on-top of anything else already rendered to it.
+             * @param graphics The Graphics instance onto which this curve will be drawn.
+             */
+            draw<G extends Phaser.GameObjects.Graphics>(graphics: G): G;
 
             /**
              * [description]
@@ -5823,7 +6985,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class QuadraticBezier extends Curve {
+        class QuadraticBezier extends Phaser.Curves.Curve {
             /**
              * 
              * @param p0 Start point, or an array of point pairs.
@@ -5848,6 +7010,12 @@ declare namespace Phaser {
             p2: Phaser.Math.Vector2;
 
             /**
+             * Gets the starting point on the curve.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getStartPoint<O extends Phaser.Math.Vector2>(out?: O): O;
+
+            /**
              * [description]
              * @param divisions [description]
              */
@@ -5859,6 +7027,13 @@ declare namespace Phaser {
              * @param out A Vector2 object to store the result in. If not given will be created.
              */
             getPoint<O extends Phaser.Math.Vector2>(t: number, out?: O): O;
+
+            /**
+             * [description]
+             * @param graphics [description]
+             * @param pointsTotal [description] Default 32.
+             */
+            draw<G extends Phaser.GameObjects.Graphics>(graphics: G, pointsTotal?: integer): G;
 
             /**
              * [description]
@@ -5876,7 +7051,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class SplineCurve extends Curve {
+        class SplineCurve extends Phaser.Curves.Curve {
             /**
              * 
              * @param points [description]
@@ -5900,6 +7075,12 @@ declare namespace Phaser {
              * @param y [description]
              */
             addPoint(x: number, y: number): Phaser.Math.Vector2;
+
+            /**
+             * Gets the starting point on the curve.
+             * @param out A Vector2 object to store the result in. If not given will be created.
+             */
+            getStartPoint<O extends Phaser.Math.Vector2>(out?: O): O;
 
             /**
              * [description]
@@ -5932,9 +7113,7 @@ declare namespace Phaser {
     namespace Data {
         /**
          * The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
-         * 
          * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
-         * 
          * or have a property called `events` that is an instance of it.
          */
         class DataManager {
@@ -6057,12 +7236,10 @@ declare namespace Phaser {
 
         /**
          * The Data Component features a means to store pieces of data specific to a Game Object, System or Plugin.
-         * 
          * You can then search, query it, and retrieve the data. The parent must either extend EventEmitter,
-         * 
          * or have a property called `events` that is an instance of it.
          */
-        class DataManagerPlugin extends DataManager {
+        class DataManagerPlugin extends Phaser.Data.DataManager {
             /**
              * 
              * @param scene [description]
@@ -6493,6 +7670,71 @@ declare namespace Phaser {
 
     namespace Display {
         namespace Align {
+            /**
+             * A constant representing a top-left alignment or position.
+             */
+            const TOP_LEFT: integer;
+
+            /**
+             * A constant representing a top-center alignment or position.
+             */
+            const TOP_CENTER: integer;
+
+            /**
+             * A constant representing a top-right alignment or position.
+             */
+            const TOP_RIGHT: integer;
+
+            /**
+             * A constant representing a left-top alignment or position.
+             */
+            const LEFT_TOP: integer;
+
+            /**
+             * A constant representing a left-center alignment or position.
+             */
+            const LEFT_CENTER: integer;
+
+            /**
+             * A constant representing a left-bottom alignment or position.
+             */
+            const LEFT_BOTTOM: integer;
+
+            /**
+             * A constant representing a center alignment or position.
+             */
+            const CENTER: integer;
+
+            /**
+             * A constant representing a right-top alignment or position.
+             */
+            const RIGHT_TOP: integer;
+
+            /**
+             * A constant representing a right-center alignment or position.
+             */
+            const RIGHT_CENTER: integer;
+
+            /**
+             * A constant representing a right-bottom alignment or position.
+             */
+            const RIGHT_BOTTOM: integer;
+
+            /**
+             * A constant representing a bottom-left alignment or position.
+             */
+            const BOTTOM_LEFT: integer;
+
+            /**
+             * A constant representing a bottom-center alignment or position.
+             */
+            const BOTTOM_CENTER: integer;
+
+            /**
+             * A constant representing a bottom-right alignment or position.
+             */
+            const BOTTOM_RIGHT: integer;
+
             namespace In {
                 /**
                  * Takes given Game Object and aligns it so that it is positioned in the bottom center of the other.
@@ -6837,8 +8079,9 @@ declare namespace Phaser {
                  * @param width The width of the Canvas. Default 1.
                  * @param height The height of the Canvas. Default 1.
                  * @param canvasType The type of the Canvas. Either `Phaser.CANVAS` or `Phaser.WEBGL`. Default Phaser.CANVAS.
+                 * @param selfParent Use the generated Canvas element as the parent? Default false.
                  */
-                function create(parent: any, width?: integer, height?: integer, canvasType?: integer): HTMLCanvasElement;
+                function create(parent: any, width?: integer, height?: integer, canvasType?: integer, selfParent?: boolean): HTMLCanvasElement;
 
                 /**
                  * Creates a new Canvas DOM element, or pulls one from the pool if free.
@@ -7003,17 +8246,17 @@ declare namespace Phaser {
             /**
              * The color of this Color component, not including the alpha channel.
              */
-            color: number;
+            readonly color: number;
 
             /**
              * The color of this Color component, including the alpha channel.
              */
-            color32: number;
+            readonly color32: number;
 
             /**
              * The color of this Color component as a string which can be used in CSS color values.
              */
-            rgba: string;
+            readonly rgba: string;
 
             /**
              * The red color value, normalized to the range 0 to 1.
@@ -7139,7 +8382,6 @@ declare namespace Phaser {
              * @param input The color value to convert into a Color object.
              */
             static IntegerToRGB(input: integer): ColorObject;
-
 
             /**
              * Converts an object containing `r`, `g`, `b` and `a` properties into a Color class instance.
@@ -7274,6 +8516,14 @@ declare namespace Phaser {
                  */
                 postRenderCanvas(renderer: Phaser.Renderer.Canvas.CanvasRenderer | Phaser.Renderer.WebGL.WebGLRenderer): void;
 
+                /**
+                 * Destroys this BitmapMask and nulls any references it holds.
+                 * 
+                 * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+                 * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+                 */
+                destroy(): void;
+
             }
 
             /**
@@ -7326,75 +8576,15 @@ declare namespace Phaser {
                  */
                 postRenderCanvas(renderer: Phaser.Renderer.Canvas.CanvasRenderer | Phaser.Renderer.WebGL.WebGLRenderer): void;
 
+                /**
+                 * Destroys this GeometryMask and nulls any references it holds.
+                 * 
+                 * Note that if a Game Object is currently using this mask it will _not_ automatically detect you have destroyed it,
+                 * so be sure to call `clearMask` on any Game Object using it, before destroying it.
+                 */
+                destroy(): void;
+
             }
-
-        }
-
-        class Align {
-            /**
-             * A constant representing a top-left alignment or position.
-             */
-            static readonly TOP_LEFT: integer;
-
-            /**
-             * A constant representing a top-center alignment or position.
-             */
-            static readonly TOP_CENTER: integer;
-
-            /**
-             * A constant representing a top-right alignment or position.
-             */
-            static readonly TOP_RIGHT: integer;
-
-            /**
-             * A constant representing a left-top alignment or position.
-             */
-            static readonly LEFT_TOP: integer;
-
-            /**
-             * A constant representing a left-center alignment or position.
-             */
-            static readonly LEFT_CENTER: integer;
-
-            /**
-             * A constant representing a left-bottom alignment or position.
-             */
-            static readonly LEFT_BOTTOM: integer;
-
-            /**
-             * A constant representing a center alignment or position.
-             */
-            static readonly CENTER: integer;
-
-            /**
-             * A constant representing a right-top alignment or position.
-             */
-            static readonly RIGHT_TOP: integer;
-
-            /**
-             * A constant representing a right-center alignment or position.
-             */
-            static readonly RIGHT_CENTER: integer;
-
-            /**
-             * A constant representing a right-bottom alignment or position.
-             */
-            static readonly RIGHT_BOTTOM: integer;
-
-            /**
-             * A constant representing a bottom-left alignment or position.
-             */
-            static readonly BOTTOM_LEFT: integer;
-
-            /**
-             * A constant representing a bottom-center alignment or position.
-             */
-            static readonly BOTTOM_CENTER: integer;
-
-            /**
-             * A constant representing a bottom-right alignment or position.
-             */
-            static readonly BOTTOM_RIGHT: integer;
 
         }
 
@@ -7434,7 +8624,6 @@ declare namespace Phaser {
 
         /**
          * Abstracts away the use of RAF or setTimeOut for the core game update loop.
-         * 
          * This is invoked automatically by the Phaser.Game instance.
          */
         class RequestAnimationFrame {
@@ -7596,7 +8785,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class DynamicBitmapText extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Origin, Components.Pipeline, Components.ScrollFactor, Components.Texture, Components.Tint, Components.Transform, Components.Visible {
+        class DynamicBitmapText extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
@@ -7711,6 +8900,11 @@ declare namespace Phaser {
              * [description]
              */
             height: number;
+
+            /**
+             * [description]
+             */
+            toJSON(): JSONBitmapText;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -7833,6 +9027,59 @@ declare namespace Phaser {
              * @param value The depth of this Game Object.
              */
             setDepth(value: integer): Phaser.GameObjects.GameObject;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -7972,7 +9219,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -8175,10 +9422,115 @@ declare namespace Phaser {
 
         }
 
+        namespace RetroFont {
+            /**
+             * Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+             */
+            var TEXT_SET1: string;
+
+            /**
+             * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
+             */
+            var TEXT_SET2: string;
+
+            /**
+             * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+             */
+            var TEXT_SET3: string;
+
+            /**
+             * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
+             */
+            var TEXT_SET4: string;
+
+            /**
+             * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
+             */
+            var TEXT_SET5: string;
+
+            /**
+             * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.'
+             */
+            var TEXT_SET6: string;
+
+            /**
+             * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
+             */
+            var TEXT_SET7: string;
+
+            /**
+             * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
+             */
+            var TEXT_SET8: string;
+
+            /**
+             * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
+             */
+            var TEXT_SET9: string;
+
+            /**
+             * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
+             */
+            var TEXT_SET10: string;
+
+            /**
+             * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
+             */
+            var TEXT_SET11: string;
+
+            /**
+             * Parses a Retro Font configuration object so you can pass it to the BitmapText constructor
+             * and create a BitmapText object using a fixed-width retro font.
+             * @param scene A reference to the Phaser Scene.
+             * @param config The font configuration object.
+             */
+            function Parse(scene: Phaser.Scene, config: Phaser.GameObjects.RetroFont.Config): void;
+
+            type Config = {
+                /**
+                 * [description]
+                 */
+                image: string;
+                /**
+                 * If the font set doesn't start at the top left of the given image, specify the X coordinate offset here.
+                 */
+                "offset.x": number;
+                /**
+                 * If the font set doesn't start at the top left of the given image, specify the Y coordinate offset here.
+                 */
+                "offset.y": number;
+                /**
+                 * The width of each character in the font set.
+                 */
+                width: number;
+                /**
+                 * The height of each character in the font set.
+                 */
+                height: number;
+                /**
+                 * The characters used in the font set, in display order. You can use the TEXT_SET consts for common font set arrangements.
+                 */
+                chars: string;
+                /**
+                 * The number of characters per row in the font set. If not given charsPerRow will be the image width / characterWidth.
+                 */
+                charsPerRow: number;
+                /**
+                 * If the characters in the font set have horizontal spacing between them set the required amount here.
+                 */
+                "spacing.x": number;
+                /**
+                 * If the characters in the font set have vertical spacing between them set the required amount here.
+                 */
+                "spacing.y": number;
+            };
+
+        }
+
         /**
          * [description]
          */
-        class BitmapText extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Texture, Components.Tint, Components.Transform, Components.Visible {
+        class BitmapText extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
@@ -8251,6 +9603,11 @@ declare namespace Phaser {
              * [description]
              */
             height: number;
+
+            /**
+             * [description]
+             */
+            toJSON(): JSONBitmapText;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -8373,6 +9730,59 @@ declare namespace Phaser {
              * @param value The depth of this Game Object.
              */
             setDepth(value: integer): Phaser.GameObjects.GameObject;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -8525,7 +9935,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -8731,31 +10141,19 @@ declare namespace Phaser {
         /**
          * A Blitter Game Object.
          * 
-         * 
-         * 
          * The Blitter Game Object is a special kind of container that creates, updates and manages Bob objects.
-         * 
          * Bobs are designed for rendering speed rather than flexibility. They consist of a texture, or frame from a texture,
-         * 
          * a position and an alpha value. You cannot scale or rotate them. They use a batched drawing method for speed
-         * 
          * during rendering.
          * 
-         * 
-         * 
          * A Blitter Game Object has one texture bound to it. Bobs created by the Blitter can use any Frame from this
-         * 
          * Texture to render with, but they cannot use any other Texture. It is this single texture-bind that allows
-         * 
          * them their speed.
          * 
-         * 
-         * 
          * If you have a need to blast a large volume of frames around the screen then Blitter objects are well worth
-         * 
          * investigating. They are especially useful for using as a base for your own special effects systems.
          */
-        class Blitter extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Size, Components.Texture, Components.Transform, Components.Visible {
+        class Blitter extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. It can only belong to one Scene at any given time.
@@ -8942,6 +10340,59 @@ declare namespace Phaser {
             setDepth(value: integer): Phaser.GameObjects.GameObject;
 
             /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
+
+            /**
              * [description]
              */
             defaultPipeline: Phaser.Renderer.WebGL.WebGLPipeline;
@@ -9077,7 +10528,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -9302,104 +10753,75 @@ declare namespace Phaser {
                 alphaBottomRight: number;
             }
 
-            /**
-             * A Game Object Animation Controller.
-             * 
-             * 
-             * 
-             * This controller lives as an instance within a Game Object, accessible as `sprite.anims`.
-             */
-            class Animation {
-                /**
-                 * 
-                 * @param parent The Game Object to which this animation controller belongs.
-                 */
-                constructor(parent: Phaser.GameObjects.GameObject);
-
+            interface Animation {
                 /**
                  * The Game Object to which this animation controller belongs.
                  */
                 parent: Phaser.GameObjects.GameObject;
-
                 /**
                  * A reference to the global Animation Manager.
                  */
                 animationManager: Phaser.Animations.AnimationManager;
-
                 /**
                  * Is an animation currently playing or not?
                  */
                 isPlaying: boolean;
-
                 /**
                  * The current Animation loaded into this Animation Controller.
                  */
                 currentAnim: Phaser.Animations.Animation;
-
                 /**
                  * The current AnimationFrame being displayed by this Animation Controller.
                  */
                 currentFrame: Phaser.Animations.AnimationFrame;
-
                 /**
                  * The frame rate of playback in frames per second.
                  * The default is 24 if the `duration` property is `null`.
                  */
                 frameRate: number;
-
                 /**
                  * How long the animation should play for, in milliseconds.
                  * If the `frameRate` property has been set then it overrides this value,
                  * otherwise the `frameRate` is derived from `duration`.
                  */
                 duration: number;
-
                 /**
                  * ms per frame, not including frame specific modifiers that may be present in the Animation data.
                  */
                 msPerFrame: number;
-
                 /**
                  * Skip frames if the time lags, or always advanced anyway?
                  */
                 skipMissedFrames: boolean;
-
                 /**
                  * Will the playhead move forwards (`true`) or in reverse (`false`)
                  */
                 forward: boolean;
-
                 /**
                  * Internal time overflow accumulator.
                  */
                 accumulator: number;
-
                 /**
                  * The time point at which the next animation frame will change.
                  */
                 nextTick: number;
-
                 /**
                  * An internal counter keeping track of how many repeats are left to play.
                  */
                 repeatCounter: number;
-
                 /**
                  * An internal flag keeping track of pending repeats.
                  */
                 pendingRepeat: boolean;
-
                 /**
                  * Sets the amount of time, in milliseconds, that the animation will be delayed before starting playback.
                  * @param value The amount of time, in milliseconds, to wait before starting playback. Default 0.
                  */
                 setDelay(value?: integer): Phaser.GameObjects.GameObject;
-
                 /**
                  * Gets the amount of time, in milliseconds that the animation will be delayed before starting playback.
                  */
                 getDelay(): integer;
-
                 /**
                  * Waits for the specified delay, in milliseconds, then starts playback of the requested animation.
                  * @param delay The delay, in milliseconds, to wait before starting the animation playing.
@@ -9407,38 +10829,32 @@ declare namespace Phaser {
                  * @param startFrame The frame of the animation to start from. Default 0.
                  */
                 delayedPlay(delay: integer, key: string, startFrame?: integer): Phaser.GameObjects.GameObject;
-
                 /**
                  * Returns the key of the animation currently loaded into this component.
                  */
                 getCurrentKey(): string;
-
                 /**
                  * Internal method used to load an animation into this component.
                  * @param key [description]
                  * @param startFrame [description] Default 0.
                  */
-                protected load(key: string, startFrame?: integer): Phaser.GameObjects.GameObject;
-
+                load(key: string, startFrame?: integer): Phaser.GameObjects.GameObject;
                 /**
                  * Pause the current animation and set the `isPlaying` property to `false`.
                  * You can optionally pause it at a specific frame.
                  * @param atFrame An optional frame to set after pausing the animation.
                  */
                 pause(atFrame?: Phaser.Animations.AnimationFrame): Phaser.GameObjects.GameObject;
-
                 /**
                  * Resumes playback of a paused animation and sets the `isPlaying` property to `true`.
                  * You can optionally tell it to start playback from a specific frame.
                  * @param fromFrame An optional frame to set before restarting playback.
                  */
                 resume(fromFrame?: Phaser.Animations.AnimationFrame): Phaser.GameObjects.GameObject;
-
                 /**
                  * `true` if the current animation is paused, otherwise `false`.
                  */
-                isPaused: boolean;
-
+                readonly isPaused: boolean;
                 /**
                  * Plays an Animation on the Game Object that owns this Animation Component.
                  * @param key The string-based key of the animation to play, as defined previously in the Animation Manager.
@@ -9446,27 +10862,23 @@ declare namespace Phaser {
                  * @param startFrame Optionally start the animation playing from this frame index. Default 0.
                  */
                 play(key: string, ignoreIfPlaying?: boolean, startFrame?: integer): Phaser.GameObjects.GameObject;
-
                 /**
                  * Returns a value between 0 and 1 indicating how far this animation is through, ignoring repeats and yoyos.
                  * If the animation has a non-zero repeat defined, `getProgress` and `getTotalProgress` will be different
                  * because `getProgress` doesn't include any repeats or repeat delays, whereas `getTotalProgress` does.
                  */
                 getProgress(): number;
-
                 /**
                  * Takes a value between 0 and 1 and uses it to set how far this animation is through playback.
                  * Does not factor in repeats or yoyos, but does handle playing forwards or backwards.
                  * @param value [description] Default 0.
                  */
                 setProgress(value?: number): Phaser.GameObjects.GameObject;
-
                 /**
                  * [description]
                  * @param event [description]
                  */
                 remove(event?: Phaser.Animations.Animation): void;
-
                 /**
                  * Gets the number of times that the animation will repeat
                  * after its first iteration. For example, if returns 1, the animation will
@@ -9474,7 +10886,6 @@ declare namespace Phaser {
                  * A value of -1 means the animation will repeat indefinitely.
                  */
                 getRepeat(): integer;
-
                 /**
                  * Sets the number of times that the animation should repeat
                  * after its first iteration. For example, if repeat is 1, the animation will
@@ -9483,12 +10894,10 @@ declare namespace Phaser {
                  * @param value [description]
                  */
                 setRepeat(value: integer): Phaser.GameObjects.GameObject;
-
                 /**
                  * Gets the amount of delay between repeats, if any.
                  */
                 getRepeatDelay(): number;
-
                 /**
                  * Sets the amount of time in seconds between repeats.
                  * For example, if `repeat` is 2 and `repeatDelay` is 10, the animation will play initially,
@@ -9497,85 +10906,71 @@ declare namespace Phaser {
                  * @param value The delay to wait between repeats, in seconds.
                  */
                 setRepeatDelay(value: number): Phaser.GameObjects.GameObject;
-
                 /**
                  * Restarts the current animation from its beginning, optionally including its delay value.
                  * @param includeDelay [description] Default false.
                  */
                 restart(includeDelay?: boolean): Phaser.GameObjects.GameObject;
-
                 /**
                  * Immediately stops the current animation from playing and dispatches the `animationcomplete` event.
                  */
                 stop(): Phaser.GameObjects.GameObject;
-
                 /**
                  * Stops the current animation from playing after the specified time delay, given in milliseconds.
                  * @param delay The number of milliseconds to wait before stopping this animation.
                  */
                 stopAfterDelay(delay: integer): Phaser.GameObjects.GameObject;
-
                 /**
                  * Stops the current animation from playing when it next repeats.
                  */
                 stopOnRepeat(): Phaser.GameObjects.GameObject;
-
                 /**
                  * Stops the current animation from playing when it next sets the given frame.
                  * If this frame doesn't exist within the animation it will not stop it from playing.
                  * @param delay The frame to check before stopping this animation.
                  */
                 stopOnFrame(delay: Phaser.Animations.AnimationFrame): Phaser.GameObjects.GameObject;
-
                 /**
                  * Sets the Time Scale factor, allowing you to make the animation go go faster or slower than default.
                  * Where 1 = normal speed (the default), 0.5 = half speed, 2 = double speed, etc.
                  * @param value The time scale factor, where 1 is no change, 0.5 is half speed, etc. Default 1.
                  */
                 setTimeScale(value?: number): Phaser.GameObjects.GameObject;
-
                 /**
                  * Gets the Time Scale factor.
                  */
                 getTimeScale(): number;
-
                 /**
                  * Returns the total number of frames in this animation.
                  */
                 getTotalFrames(): integer;
-
                 /**
                  * The internal update loop for the Animation Component.
                  * @param timestamp [description]
                  * @param delta The delta time, in ms, elapsed since the last frame.
                  */
                 update(timestamp: number, delta: number): void;
-
                 /**
                  * Sets the given Animation Frame as being the current frame
                  * and applies it to the parent Game Object, adjusting its size and origin as needed.
                  * @param animationFrame The Animation Frame to set as being current.
                  */
                 setCurrentFrame(animationFrame: Phaser.Animations.AnimationFrame): Phaser.GameObjects.GameObject;
-
                 /**
                  * Sets if the current Animation will yoyo when it reaches the end.
                  * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
                  * @param value `true` if the animation should yoyo, `false` to not. Default false.
                  */
                 setYoyo(value?: boolean): Phaser.GameObjects.GameObject;
-
                 /**
                  * Gets if the current Animation will yoyo when it reaches the end.
                  * A yoyo'ing animation will play through consecutively, and then reverse-play back to the start again.
                  */
                 getYoyo(): boolean;
-
                 /**
                  * [description]
                  */
                 destroy(): void;
-
             }
 
             /**
@@ -9789,7 +11184,61 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+            }
+
+            /**
+             * Provides methods used for getting and setting the mask of a Game Object.
+             */
+            interface Mask {
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
             }
 
             /**
@@ -10057,7 +11506,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
                 /**
                  * The Texture Frame this Game Object is using to render with.
                  */
@@ -10293,17 +11742,17 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                rotation: number;
+                readonly rotation: number;
 
                 /**
                  * [description]
                  */
-                scaleX: number;
+                readonly scaleX: number;
 
                 /**
                  * [description]
                  */
-                scaleY: number;
+                readonly scaleY: number;
 
                 /**
                  * [description]
@@ -10418,77 +11867,39 @@ declare namespace Phaser {
         /**
          * A Container Game Object.
          * 
-         * 
-         * 
-         * WARNING: EXPERIMENTAL. There are several known cases where Containers will not behave correctly,
-         * 
-         * especially if you use a multi-camera or transformed camera set-up. We are still working on them,
-         * 
-         * but wanted to release as part of 3.4 under a beta feature flag, because in the main they work
-         * 
-         * are and worth getting used to.
-         * 
-         * 
-         * 
          * A Container, as the name implies, can 'contain' other types of Game Object.
-         * 
          * When a Game Object is added to a Container, the Container becomes responsible for the rendering of it.
-         * 
          * By default it will be removed from the Display List and instead added to the Containers own internal list.
-         * 
-         * 
          * 
          * The position of the Game Object automatically becomes relative to the position of the Container.
          * 
-         * 
-         * 
          * When the Container is rendered, all of its children are rendered as well, in the order in which they exist
-         * 
          * within the Container. Container children can be repositioned using methods such as `MoveUp`, `MoveDown` and `SendToBack`.
          * 
-         * 
-         * 
          * If you modify a transform property of the Container, such as `Container.x` or `Container.rotation` then it will
-         * 
          * automatically influence all children as well.
-         * 
-         * 
          * 
          * Containers can include other Containers for deeply nested transforms.
          * 
-         * 
-         * 
          * Containers can have masks set on them and can be used as a mask too. However, Container children cannot be masked.
-         * 
          * The masks do not 'stack up'. Only a Container on the root of the display list will use its mask.
          * 
-         * 
-         * 
          * Containers can be enabled for input. Because they do not have a texture you need to provide a shape for them
-         * 
          * to use as their hit area. Container children can also be enabled for input, independent of the Container.
          * 
-         * 
-         * 
          * Containers can be given a physics body for either Arcade Physics, Impact Physics or Matter Physics. However,
-         * 
-         * if Container children are enabled for physics you may get unexpected results,such as offset bodies,
-         * 
-         * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0x0.
-         * 
-         * 
+         * if Container _children_ are enabled for physics you may get unexpected results, such as offset bodies,
+         * if the Container itself, or any of its ancestors, is positioned anywhere other than at 0 x 0. Container children
+         * with physics do not factor in the Container due to the excessive extra calculations needed. Please structure
+         * your game to work around this.
          * 
          * It's important to understand the impact of using Containers. They add additional processing overhead into
-         * 
          * every one of their children. The deeper you nest them, the more the cost escalates. This is especially true
-         * 
          * for input events. You also loose the ability to set the display depth of Container children in the same
-         * 
          * flexible manner as those not within them. In short, don't use them for the sake of it. You pay a small cost
-         * 
          * every time you create one, try to structure your game around avoiding that where possible.
          */
-        class Container extends GameObject implements Components.Alpha, Components.BlendMode, Components.ComputedSize, Components.Depth, Components.ScrollFactor, Components.Transform, Components.Visible {
+        class Container extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ComputedSize, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -10544,25 +11955,25 @@ declare namespace Phaser {
              * Internal value to allow Containers to be used for input and physics.
              * Do not change this value. It has no effect other than to break things.
              */
-            originX: number;
+            readonly originX: number;
 
             /**
              * Internal value to allow Containers to be used for input and physics.
              * Do not change this value. It has no effect other than to break things.
              */
-            originY: number;
+            readonly originY: number;
 
             /**
              * Internal value to allow Containers to be used for input and physics.
              * Do not change this value. It has no effect other than to break things.
              */
-            displayOriginX: number;
+            readonly displayOriginX: number;
 
             /**
              * Internal value to allow Containers to be used for input and physics.
              * Do not change this value. It has no effect other than to break things.
              */
-            displayOriginY: number;
+            readonly displayOriginY: number;
 
             /**
              * Does this Container exclusively manage its children?
@@ -10584,6 +11995,9 @@ declare namespace Phaser {
              * Gets the bounds of this Container. It works by iterating all children of the Container,
              * getting their respective bounds, and then working out a min-max rectangle from that.
              * It does not factor in if the children render or not, all are included.
+             * 
+             * Some children are unable to return their bounds, such as Graphics objects, in which case
+             * they are skipped.
              * 
              * Depending on the quantity of children in this Container it could be a really expensive call,
              * so cache it and only poll it as needed.
@@ -10862,35 +12276,35 @@ declare namespace Phaser {
             /**
              * The number of Game Objects inside this Container.
              */
-            length: integer;
+            readonly length: integer;
 
             /**
              * Returns the first Game Object within the Container, or `null` if it is empty.
              * 
              * You can move the cursor by calling `Container.next` and `Container.previous`.
              */
-            first: Phaser.GameObjects.GameObject;
+            readonly first: Phaser.GameObjects.GameObject;
 
             /**
              * Returns the last Game Object within the Container, or `null` if it is empty.
              * 
              * You can move the cursor by calling `Container.next` and `Container.previous`.
              */
-            last: Phaser.GameObjects.GameObject;
+            readonly last: Phaser.GameObjects.GameObject;
 
             /**
              * Returns the next Game Object within the Container, or `null` if it is empty.
              * 
              * You can move the cursor by calling `Container.next` and `Container.previous`.
              */
-            next: Phaser.GameObjects.GameObject;
+            readonly next: Phaser.GameObjects.GameObject;
 
             /**
              * Returns the previous Game Object within the Container, or `null` if it is empty.
              * 
              * You can move the cursor by calling `Container.next` and `Container.previous`.
              */
-            previous: Phaser.GameObjects.GameObject;
+            readonly previous: Phaser.GameObjects.GameObject;
 
             /**
              * Destroys this Container, removing it from the Display List.
@@ -11240,7 +12654,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class DisplayList {
+        class DisplayList extends Phaser.Structs.List<Phaser.GameObjects.GameObject> {
             /**
              * 
              * @param scene [description]
@@ -11296,9 +12710,7 @@ declare namespace Phaser {
 
         /**
          * The base class that all Game Objects extend.
-         * 
          * You don't create GameObjects directly and they cannot be added to the display list.
-         * 
          * Instead, use them as the base for your own custom classes.
          */
         class GameObject extends Phaser.Events.EventEmitter {
@@ -11420,10 +12832,36 @@ declare namespace Phaser {
             /**
              * Pass this Game Object to the Input Manager to enable it for Input.
              * @param shape A geometric shape that defines the hit area for the Game Object. If not specified a Rectangle will be used.
-             * @param callback A callback to be invoked when the Game Object is interacted with.
+             * @param callback A callback to be invoked when the Game Object is interacted with. If you provide a shape you must also provide a callback.
              * @param dropZone Should this Game Object be treated as a drop zone target? Default false.
              */
             setInteractive(shape?: any, callback?: HitAreaCallback, dropZone?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * If this Game Object has previously been enabled for input, this will disable it.
+             * 
+             * An object that is disabled for input stops processing or being considered for
+             * input events, but can be turned back on again at any time by simply calling
+             * `setInteractive()` with no arguments provided.
+             * 
+             * If want to completely remove interaction from this Game Object then use `removeInteractive` instead.
+             */
+            disableInteractive(): Phaser.GameObjects.GameObject;
+
+            /**
+             * If this Game Object has previously been enabled for input, this will remove it.
+             * 
+             * The Interactive Object that was assigned to this Game Object will be destroyed,
+             * removed from the Input Manager and cleared from this Game Object.
+             * 
+             * If you wish to re-enable this Game Object at a later date you will need to
+             * re-create its InteractiveOobject by calling `setInteractive` again.
+             * 
+             * If you wish to only temporarily stop an object from receiving input then use
+             * `disableInteractive` instead, as that toggles the interactive state, where-as
+             * this erases it completely.
+             */
+            removeInteractive(): Phaser.GameObjects.GameObject;
 
             /**
              * To be overridden by custom GameObjects. Allows base objects to be used in a Pool.
@@ -11474,15 +12912,10 @@ declare namespace Phaser {
 
         /**
          * The Game Object Creator is a Scene plugin that allows you to quickly create many common
-         * 
          * types of Game Objects and return them. Unlike the Game Object Factory, they are not automatically
-         * 
          * added to the Scene.
          * 
-         * 
-         * 
          * Game Objects directly register themselves with the Creator and inject their own creation
-         * 
          * methods into the class.
          */
         class GameObjectCreator {
@@ -11496,33 +12929,37 @@ declare namespace Phaser {
              * Creates a new Dynamic Bitmap Text Game Object and returns it.
              * 
              * Note: This method will only be available if the Dynamic Bitmap Text Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            dynamicBitmapText(config: BitmapTextConfig): Phaser.GameObjects.DynamicBitmapText;
+            dynamicBitmapText(config: BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.DynamicBitmapText;
 
             /**
              * Creates a new Bitmap Text Game Object and returns it.
              * 
              * Note: This method will only be available if the Bitmap Text Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            bitmapText(config: BitmapTextConfig): Phaser.GameObjects.BitmapText;
+            bitmapText(config: BitmapTextConfig, addToScene?: boolean): Phaser.GameObjects.BitmapText;
 
             /**
              * Creates a new Blitter Game Object and returns it.
              * 
              * Note: This method will only be available if the Blitter Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            blitter(config: object): Phaser.GameObjects.Blitter;
+            blitter(config: object, addToScene?: boolean): Phaser.GameObjects.Blitter;
 
             /**
              * Creates a new Container Game Object and returns it.
              * 
              * Note: This method will only be available if the Container Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            container(config: object): Phaser.GameObjects.Container;
+            container(config: object, addToScene?: boolean): Phaser.GameObjects.Container;
 
             /**
              * The Scene to which this Game Object Creator belongs.
@@ -11548,9 +12985,10 @@ declare namespace Phaser {
              * Creates a new Graphics Game Object and returns it.
              * 
              * Note: This method will only be available if the Graphics Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            graphics(config?: object): Phaser.GameObjects.Graphics;
+            graphics(config: object, addToScene?: boolean): Phaser.GameObjects.Graphics;
 
             /**
              * Creates a new Group Game Object and returns it.
@@ -11564,73 +13002,82 @@ declare namespace Phaser {
              * Creates a new Image Game Object and returns it.
              * 
              * Note: This method will only be available if the Image Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            image(config: object): Phaser.GameObjects.Image;
+            image(config: object, addToScene?: boolean): Phaser.GameObjects.Image;
 
             /**
              * Creates a new Mesh Game Object and returns it.
              * 
              * Note: This method will only be available if the Mesh Game Object and WebGL support have been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            mesh(config: object): Phaser.GameObjects.Mesh;
+            mesh(config: object, addToScene?: boolean): Phaser.GameObjects.Mesh;
 
             /**
              * Creates a new Particle Emitter Manager Game Object and returns it.
              * 
              * Note: This method will only be available if the Particles Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            particles(config: object): Phaser.GameObjects.Particles.ParticleEmitterManager;
+            particles(config: object, addToScene?: boolean): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
             /**
              * Creates a new Quad Game Object and returns it.
              * 
              * Note: This method will only be available if the Quad Game Object and WebGL support have been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            quad(config: object): Phaser.GameObjects.Quad;
+            quad(config: object, addToScene?: boolean): Phaser.GameObjects.Quad;
 
             /**
              * Creates a new Render Texture Game Object and returns it.
              * 
              * Note: This method will only be available if the Render Texture Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            renderTexture(config: RenderTextureConfig): Phaser.GameObjects.RenderTexture;
+            renderTexture(config: RenderTextureConfig, addToScene?: boolean): Phaser.GameObjects.RenderTexture;
 
             /**
              * Creates a new Sprite Game Object and returns it.
              * 
              * Note: This method will only be available if the Sprite Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            sprite(config: object): Phaser.GameObjects.Sprite;
+            sprite(config: object, addToScene?: boolean): Phaser.GameObjects.Sprite;
 
             /**
              * Creates a new Sprite3D Game Object and returns it.
              * 
              * Note: This method will only be available if the Sprite3D Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            sprite3D(config: object): Phaser.GameObjects.Sprite3D;
+            sprite3D(config: object, addToScene?: boolean): Phaser.GameObjects.Sprite3D;
 
             /**
              * Creates a new Text Game Object and returns it.
              * 
              * Note: This method will only be available if the Text Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            text(config: object): Phaser.GameObjects.Text;
+            text(config: object, addToScene?: boolean): Phaser.GameObjects.Text;
 
             /**
              * Creates a new TileSprite Game Object and returns it.
              * 
              * Note: This method will only be available if the TileSprite Game Object has been built into Phaser.
-             * @param config [description]
+             * @param config The configuration object this Game Object will use to create itself.
+             * @param addToScene Add this Game Object to the Scene after creating it? If set this argument overrides the `add` property in the config object.
              */
-            tileSprite(config: TileSprite): Phaser.GameObjects.TileSprite;
+            tileSprite(config: TileSprite, addToScene?: boolean): Phaser.GameObjects.TileSprite;
 
             /**
              * Creates a new Zone Game Object and returns it.
@@ -11661,13 +13108,9 @@ declare namespace Phaser {
 
         /**
          * The Game Object Factory is a Scene plugin that allows you to quickly create many common
-         * 
          * types of Game Objects and have them automatically registered with the Scene.
          * 
-         * 
-         * 
          * Game Objects directly register themselves with the Factory and inject their own creation
-         * 
          * methods into the class.
          */
         class GameObjectFactory {
@@ -11941,14 +13384,13 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class Graphics extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Pipeline, Components.Transform, Components.Visible, Components.ScrollFactor {
+        class Graphics extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible, Phaser.GameObjects.Components.ScrollFactor {
             /**
              * 
              * @param scene [description]
              * @param options [description]
              */
             constructor(scene: Phaser.Scene, options: object);
-
 
             /**
              * [description]
@@ -12439,6 +13881,59 @@ declare namespace Phaser {
             setDepth(value: integer): Phaser.GameObjects.GameObject;
 
             /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
+
+            /**
              * [description]
              */
             defaultPipeline: Phaser.Renderer.WebGL.WebGLPipeline;
@@ -12646,11 +14141,7 @@ declare namespace Phaser {
         /**
          * A Group is a way for you to create, manipulate, or recycle similar Game Objects.
          * 
-         * 
-         * 
          * Group membership is non-exclusive. A Game Object can belong to several groups, one group, or none.
-         * 
-         * 
          * 
          * Groups themselves aren't displayable, and can't be positioned, rotated, scaled, or hidden.
          */
@@ -12745,8 +14236,7 @@ declare namespace Phaser {
              * 
              * If the group becomes {@link Phaser.GameObjects.Group#isFull}, no further Game Objects are created.
              * 
-             * Calls {@link Phaser.GameObjects.Group#createMultipleCallback}
-             * and {@link Phaser.GameObjects.Group#createCallback}.
+             * Calls {@link Phaser.GameObjects.Group#createMultipleCallback} and {@link Phaser.GameObjects.Group#createCallback}.
              * @param config Creation settings. This can be a single configuration object or an array of such objects, which will be applied in turn.
              */
             createMultiple(config: GroupCreateConfig | GroupCreateConfig[]): Phaser.GameObjects.GameObject[];
@@ -12783,21 +14273,23 @@ declare namespace Phaser {
             addMultiple(children: Phaser.GameObjects.GameObject[], addToScene?: boolean): Phaser.GameObjects.Group;
 
             /**
-             * Removes a member of this group.
+             * Removes a member of this Group and optionally removes it from the Scene and / or destroys it.
              * 
              * Calls {@link Phaser.GameObjects.Group#removeCallback}.
              * @param child The Game Object to remove.
-             * @param removeFromScene Also remove the group member from the scene. Default false.
+             * @param removeFromScene Optionally remove the Group member from the Scene it belongs to. Default false.
+             * @param destroyChild Optionally call destroy on the removed Group member. Default false.
              */
-            remove(child: Phaser.GameObjects.GameObject, removeFromScene?: boolean): Phaser.GameObjects.Group;
+            remove(child: Phaser.GameObjects.GameObject, removeFromScene?: boolean, destroyChild?: boolean): Phaser.GameObjects.Group;
 
             /**
-             * Removes all members of this group.
+             * Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
              * 
              * Does not call {@link Phaser.GameObjects.Group#removeCallback}.
-             * @param removeFromScene Also remove each group member from the scene. Default false.
+             * @param removeFromScene Optionally remove each Group member from the Scene. Default false.
+             * @param destroyChild Optionally call destroy on the removed Group members. Default false.
              */
-            clear(removeFromScene?: boolean): Phaser.GameObjects.Group;
+            clear(removeFromScene?: boolean, destroyChild?: boolean): Phaser.GameObjects.Group;
 
             /**
              * Tests if a Game Object is a member of this group.
@@ -12816,7 +14308,7 @@ declare namespace Phaser {
             getLength(): integer;
 
             /**
-             * Scans the group for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+             * Scans the Group, from top to bottom, for the first member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
              * assigns `x` and `y`, and returns the member.
              * 
              * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
@@ -12830,6 +14322,56 @@ declare namespace Phaser {
              * @param visible The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created). Default true.
              */
             getFirst(state?: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string, frame?: string | integer, visible?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Scans the Group, from top to bottom, for the nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+             * assigns `x` and `y`, and returns the member.
+             * 
+             * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+             * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+             * @param nth The nth matching Group member to search for.
+             * @param state The {@link Phaser.GameObjects.GameObject#active} value to match. Default false.
+             * @param createIfNull Create a new Game Object if no matching members are found, using the following arguments. Default false.
+             * @param x The horizontal position of the Game Object in the world.
+             * @param y The vertical position of the Game Object in the world.
+             * @param key The texture key assigned to a new Game Object (if one is created). Default defaultKey.
+             * @param frame A texture frame assigned to a new Game Object (if one is created). Default defaultFrame.
+             * @param visible The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created). Default true.
+             */
+            getFirstNth(nth: integer, state?: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string, frame?: string | integer, visible?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Scans the Group for the last member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+             * assigns `x` and `y`, and returns the member.
+             * 
+             * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+             * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+             * @param state The {@link Phaser.GameObjects.GameObject#active} value to match. Default false.
+             * @param createIfNull Create a new Game Object if no matching members are found, using the following arguments. Default false.
+             * @param x The horizontal position of the Game Object in the world.
+             * @param y The vertical position of the Game Object in the world.
+             * @param key The texture key assigned to a new Game Object (if one is created). Default defaultKey.
+             * @param frame A texture frame assigned to a new Game Object (if one is created). Default defaultFrame.
+             * @param visible The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created). Default true.
+             */
+            getLast(state?: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string, frame?: string | integer, visible?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Scans the Group for the last nth member that has an {@link Phaser.GameObjects.GameObject#active} state matching the argument,
+             * assigns `x` and `y`, and returns the member.
+             * 
+             * If no matching member is found and `createIfNull` is true and the group isn't full then it will create a new Game Object using `x`, `y`, `key`, `frame`, and `visible`.
+             * Unless a new member is created, `key`, `frame`, and `visible` are ignored.
+             * @param nth The nth matching Group member to search for.
+             * @param state The {@link Phaser.GameObjects.GameObject#active} value to match. Default false.
+             * @param createIfNull Create a new Game Object if no matching members are found, using the following arguments. Default false.
+             * @param x The horizontal position of the Game Object in the world.
+             * @param y The vertical position of the Game Object in the world.
+             * @param key The texture key assigned to a new Game Object (if one is created). Default defaultKey.
+             * @param frame A texture frame assigned to a new Game Object (if one is created). Default defaultFrame.
+             * @param visible The {@link Phaser.GameObjects.Components.Visible#visible} state of a new Game Object (if one is created). Default true.
+             */
+            getLastNth(nth: integer, state?: boolean, createIfNull?: boolean, x?: number, y?: number, key?: string, frame?: string | integer, visible?: boolean): Phaser.GameObjects.GameObject;
 
             /**
              * Scans the group for the first member that has an {@link Phaser.GameObjects.GameObject#active} state set to `false`,
@@ -12944,17 +14486,12 @@ declare namespace Phaser {
         /**
          * An Image Game Object.
          * 
-         * 
-         * 
          * An Image is a light-weight Game Object useful for the display of static images in your game,
-         * 
          * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
-         * 
          * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
-         * 
          * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
          */
-        class Image extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Flip, Components.GetBounds, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Size, Components.Texture, Components.Tint, Components.Transform, Components.Visible {
+        class Image extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -13179,7 +14716,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -13375,7 +14965,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -13783,7 +15373,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class LightsPlugin extends LightsManager {
+        class LightsPlugin extends Phaser.GameObjects.LightsManager {
             /**
              * 
              * @param scene [description]
@@ -13815,7 +15405,7 @@ declare namespace Phaser {
         /**
          * A Mesh Game Object.
          */
-        class Mesh extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Flip, Components.GetBounds, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.Size, Components.Texture, Components.Transform, Components.Visible, Components.ScrollFactor {
+        class Mesh extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible, Phaser.GameObjects.Components.ScrollFactor {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -14064,7 +15654,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -14216,7 +15859,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -14645,7 +16288,8 @@ declare namespace Phaser {
             }
 
             /**
-             * [description]
+             * A Particle is a simple Game Object controlled by a Particle Emitter and Manager, and rendered by the Manager.
+             * It uses its own lightweight physics system, and can interact only with its Emitter's bounds and zones.
              */
             class Particle {
                 /**
@@ -14662,12 +16306,12 @@ declare namespace Phaser {
                 emitter: Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * The texture frame used to render this Particle.
                  */
                 frame: Phaser.Textures.Frame;
 
                 /**
-                 * [description]
+                 * The position of this Particle within its Emitter's particle pool.
                  */
                 index: number;
 
@@ -14742,22 +16386,12 @@ declare namespace Phaser {
                 rotation: number;
 
                 /**
-                 * The horizontal scroll factor of this Particle.
-                 */
-                scrollFactorX: number;
-
-                /**
-                 * The vertical scroll factor of this Particle.
-                 */
-                scrollFactorY: number;
-
-                /**
                  * The tint applied to this Particle.
                  */
                 tint: number;
 
                 /**
-                 * [description]
+                 * The full color of this Particle, computed from its alpha and tint.
                  */
                 color: number;
 
@@ -14777,7 +16411,7 @@ declare namespace Phaser {
                 delayCurrent: number;
 
                 /**
-                 * The normalized lifespan T value.
+                 * The normalized lifespan T value, where 0 is the start and 1 is the end.
                  */
                 lifeT: number;
 
@@ -14803,7 +16437,7 @@ declare namespace Phaser {
                  * @param emitter The Emitter that is updating this Particle.
                  * @param delta The delta time in ms.
                  * @param step The delta value divided by 1000.
-                 * @param processors [description]
+                 * @param processors Particle processors (gravity wells).
                  */
                 computeVelocity(emitter: Phaser.GameObjects.Particles.ParticleEmitter, delta: number, step: number, processors: any[]): void;
 
@@ -14828,15 +16462,16 @@ declare namespace Phaser {
             }
 
             /**
-             * [description]
+             * A particle emitter represents a single particle stream.
+             * It controls a pool of {@link Phaser.GameObjects.Particles.Particle Particles} and is controlled by a {@link Phaser.GameObjects.Particles.ParticleEmitterManager Particle Emitter Manager}.
              */
-            class ParticleEmitter implements Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Visible {
+            class ParticleEmitter implements Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param manager The Emitter Manager this Emitter belongs to.
-                 * @param config [description]
+                 * @param config Settings for this emitter.
                  */
-                constructor(manager: Phaser.GameObjects.Particles.ParticleEmitterManager, config: object);
+                constructor(manager: Phaser.GameObjects.Particles.ParticleEmitterManager, config: ParticleEmitterConfig);
 
                 /**
                  * The Emitter Manager this Emitter belongs to.
@@ -14844,32 +16479,32 @@ declare namespace Phaser {
                 manager: Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * [description]
+                 * The texture assigned to particles.
                  */
                 texture: Phaser.Textures.Texture;
 
                 /**
-                 * [description]
+                 * The texture frames assigned to particles.
                  */
                 frames: Phaser.Textures.Frame[];
 
                 /**
-                 * [description]
+                 * The default texture frame assigned to particles.
                  */
                 defaultFrame: Phaser.Textures.Frame;
 
                 /**
-                 * [description]
+                 * Names of simple configuration properties.
                  */
                 configFastMap: object;
 
                 /**
-                 * [description]
+                 * Names of complex configuration properties.
                  */
                 configOpMap: object;
 
                 /**
-                 * The name of this Game Object.
+                 * The name of this Particle Emitter.
                  * 
                  * Empty by default and never populated by Phaser, this is left for developers to use.
                  */
@@ -14881,139 +16516,139 @@ declare namespace Phaser {
                 particleClass: Phaser.GameObjects.Particles.Particle;
 
                 /**
-                 * [description]
+                 * The x-coordinate of the particle origin (where particles will be emitted).
                  */
-                x: number;
+                x: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The y-coordinate of the particle origin (where particles will be emitted).
                  */
-                y: number;
+                y: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
                  * A radial emitter will emit particles in all directions between angle min and max,
-                 * using speed as the value. If set to false then this acts as a point Emitter.
+                 * using {@link Phaser.GameObjects.Particles.ParticleEmitter#speed} as the value. If set to false then this acts as a point Emitter.
                  * A point emitter will emit particles only in the direction derived from the speedX and speedY values.
                  */
                 radial: boolean;
 
                 /**
-                 * [description]
+                 * Horizontal acceleration applied to emitted particles, in pixels per second squared.
                  */
                 gravityX: number;
 
                 /**
-                 * [description]
+                 * Vertical acceleration applied to emitted particles, in pixels per second squared.
                  */
                 gravityY: number;
 
                 /**
-                 * [description]
+                 * Whether accelerationX and accelerationY are nonzero. Set automatically during configuration.
                  */
                 acceleration: boolean;
 
                 /**
-                 * [description]
+                 * Horizontal acceleration applied to emitted particles, in pixels per second squared.
                  */
-                accelerationX: number;
+                accelerationX: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * Vertical acceleration applied to emitted particles, in pixels per second squared.
                  */
-                accelerationY: number;
+                accelerationY: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The maximum horizontal velocity of emitted particles, in pixels per second squared.
                  */
-                maxVelocityX: number;
+                maxVelocityX: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The maximum vertical velocity of emitted particles, in pixels per second squared.
                  */
-                maxVelocityY: number;
+                maxVelocityY: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The initial horizontal speed of emitted particles, in pixels per second.
                  */
-                speedX: number;
+                speedX: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The initial vertical speed of emitted particles, in pixels per second.
                  */
-                speedY: number;
+                speedY: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * Whether moveToX and moveToY are nonzero. Set automatically during configuration.
                  */
                 moveTo: boolean;
 
                 /**
-                 * [description]
+                 * The x-coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
                  */
-                moveToX: number;
+                moveToX: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The y-coordinate emitted particles move toward, when {@link Phaser.GameObjects.Particles.ParticleEmitter#moveTo} is true.
                  */
-                moveToY: number;
+                moveToY: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * Whether particles will rebound when they meet the emitter bounds.
                  */
-                bounce: number;
+                bounce: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The horizontal scale of emitted particles.
                  */
-                scaleX: number;
+                scaleX: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The vertical scale of emitted particles.
                  */
-                scaleY: number;
+                scaleY: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * Color tint applied to emitted particles. Any alpha component (0xAA000000) is ignored.
                  */
-                tint: integer;
+                tint: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The alpha (transparency) of emitted particles.
                  */
-                alpha: number;
+                alpha: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The lifespan of emitted particles, in ms.
                  */
-                lifespan: number;
+                lifespan: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The angle of the initial velocity of emitted particles, in degrees.
                  */
-                angle: number;
+                angle: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * The rotation of emitted particles, in degrees.
                  */
-                rotate: number;
+                rotate: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * [description]
+                 * A function to call when a particle is emitted.
                  */
                 emitCallback: ParticleEmitterCallback;
 
                 /**
-                 * [description]
+                 * The calling context for {@link Phaser.GameObjects.Particles.ParticleEmitter#emitCallback}.
                  */
                 emitCallbackScope: any;
 
                 /**
-                 * [description]
+                 * A function to call when a particle dies.
                  */
                 deathCallback: ParticleDeathCallback;
 
                 /**
-                 * [description]
+                 * The calling context for {@link Phaser.GameObjects.Particles.ParticleEmitter#deathCallback}.
                  */
                 deathCallbackScope: any;
 
@@ -15021,28 +16656,31 @@ declare namespace Phaser {
                  * Set to hard limit the amount of particle objects this emitter is allowed to create.
                  * 0 means unlimited.
                  */
-                maxParticles: number;
+                maxParticles: integer;
 
                 /**
-                 * How many particles are emitted each time the emitter updates.
+                 * How many particles are emitted each time particles are emitted (one explosion or one flow cycle).
                  */
-                quantity: number;
+                quantity: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
                  * How many ms to wait after emission before the particles start updating.
                  */
-                delay: number;
+                delay: Phaser.GameObjects.Particles.EmitterOp;
 
                 /**
-                 * How often a particle is emitted in ms (if emitter is a constant / flow emitter)
-                 * If emitter is an explosion emitter this value will be -1.
-                 * Anything > -1 sets this to be a flow emitter.
+                 * For a flow emitter, the time interval (>= 0) between particle flow cycles in ms.
+                 * A value of 0 means there is one particle flow cycle for each logic update (the maximum flow frequency). This is the default setting.
+                 * For an exploding emitter, this value will be -1.
+                 * Calling {@link Phaser.GameObjects.Particles.ParticleEmitter#flow} also puts the emitter in flow mode (frequency >= 0).
+                 * Calling {@link Phaser.GameObjects.Particles.ParticleEmitter#explode} also puts the emitter in explode mode (frequency = -1).
                  */
                 frequency: number;
 
                 /**
-                 * Controls if the emitter is currently emitting particles.
+                 * Controls if the emitter is currently emitting a particle flow (when frequency >= 0).
                  * Already alive particles will continue to update until they expire.
+                 * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#start}.
                  */
                 on: boolean;
 
@@ -15053,344 +16691,365 @@ declare namespace Phaser {
                 particleBringToTop: boolean;
 
                 /**
-                 * [description]
+                 * The time rate applied to active particles, affecting lifespan, movement, and tweens. Values larger than 1 are faster than normal.
                  */
                 timeScale: number;
 
                 /**
-                 * [description]
+                 * An object describing a shape to emit particles from.
                  */
-                emitZone: object;
+                emitZone: Phaser.GameObjects.Particles.Zones.EdgeZone | Phaser.GameObjects.Particles.Zones.RandomZone;
 
                 /**
-                 * [description]
+                 * An object describing a shape that deactivates particles when they interact with it.
                  */
-                deathZone: object;
+                deathZone: Phaser.GameObjects.Particles.Zones.DeathZone;
 
                 /**
-                 * [description]
+                 * A rectangular boundary constraining particle movement.
                  */
                 bounds: Phaser.Geom.Rectangle;
 
                 /**
-                 * [description]
+                 * Whether particles interact with the left edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
                  */
                 collideLeft: boolean;
 
                 /**
-                 * [description]
+                 * Whether particles interact with the right edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
                  */
                 collideRight: boolean;
 
                 /**
-                 * [description]
+                 * Whether particles interact with the top edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
                  */
                 collideTop: boolean;
 
                 /**
-                 * [description]
+                 * Whether particles interact with the bottom edge of the emitter {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds}.
                  */
                 collideBottom: boolean;
 
                 /**
-                 * [description]
+                 * Whether this emitter updates itself and its particles.
+                 * 
+                 * Controlled by {@link Phaser.GameObjects.Particles.ParticleEmitter#pause}
+                 * and {@link Phaser.GameObjects.Particles.ParticleEmitter#resume}.
                  */
                 active: boolean;
 
                 /**
-                 * [description]
+                 * Set this to false to hide any active particles.
                  */
                 visible: boolean;
 
                 /**
-                 * [description]
+                 * The blend mode of this emitter's particles.
                  */
                 blendMode: integer;
 
                 /**
-                 * [description]
+                 * A Game Object whose position is used as the particle origin.
                  */
-                follow: Phaser.GameObjects.Particles.Particle;
+                follow: Phaser.GameObjects.GameObject;
 
                 /**
-                 * [description]
+                 * The offset of the particle origin from the {@link Phaser.GameObjects.Particles.ParticleEmitter#follow} target.
                  */
                 followOffset: Phaser.Math.Vector2;
 
                 /**
-                 * [description]
+                 * Whether the emitter's {@link Phaser.GameObjects.Particles.ParticleEmitter#visible} state will track
+                 * the {@link Phaser.GameObjects.Particles.ParticleEmitter#follow} target's visibility state.
                  */
                 trackVisible: boolean;
 
                 /**
-                 * [description]
+                 * The current texture frame, as an index of {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
                  */
-                currentFrame: number;
+                currentFrame: integer;
 
                 /**
-                 * [description]
+                 * Whether texture {@link Phaser.GameObjects.Particles.ParticleEmitter#frames} are selected at random.
                  */
                 randomFrame: boolean;
 
                 /**
-                 * [description]
+                 * The number of consecutive particles that receive a single texture frame (per frame cycle).
                  */
-                frameQuantity: number;
+                frameQuantity: integer;
 
                 /**
-                 * [description]
-                 * @param config [description]
+                 * Merges configuration settings into the emitter's current settings.
+                 * @param config Settings for this emitter.
                  */
-                fromJSON(config: object): Phaser.GameObjects.Particles.ParticleEmitter;
+                fromJSON(config: ParticleEmitterConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param output [description]
+                 * Creates a description of this emitter suitable for JSON serialization.
+                 * @param output An object to copy output into.
                  */
-                toJSON(output: object): object;
+                toJSON(output?: object): object;
 
                 /**
-                 * [description]
-                 * @param target [description]
-                 * @param offsetX [description] Default 0.
-                 * @param offsetY [description] Default 0.
-                 * @param trackVisible [description] Default false.
+                 * Continuously moves the particle origin to follow a Game Object's position.
+                 * @param target The Game Object to follow.
+                 * @param offsetX Horizontal offset of the particle origin from the Game Object. Default 0.
+                 * @param offsetY Vertical offset of the particle origin from the Game Object. Default 0.
+                 * @param trackVisible Whether the emitter's visible state will track the target's visible state. Default false.
                  */
                 startFollow(target: Phaser.GameObjects.Particles.Particle, offsetX?: number, offsetY?: number, trackVisible?: boolean): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Stops following a Game Object.
                  */
                 stopFollow(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Chooses a texture frame from {@link Phaser.GameObjects.Particles.ParticleEmitter#frames}.
                  */
                 getFrame(): Phaser.Textures.Frame;
 
                 /**
-                 * [description]
-                 * @param frames [description]
-                 * @param pickRandom [description] Default true.
-                 * @param quantity [description] Default 1.
+                 * Sets a pattern for assigning texture frames to emitted particles.
+                 * @param frames One or more texture frames, or a configuration object.
+                 * @param pickRandom Whether frames should be assigned at random from `frames`. Default true.
+                 * @param quantity The number of consecutive particles that will receive each frame. Default 1.
                  */
-                setFrame(frames: any[] | string | integer | object, pickRandom?: boolean, quantity?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
+                setFrame(frames: any[] | string | integer | ParticleEmitterFrameConfig, pickRandom?: boolean, quantity?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle movement on or off.
+                 * @param value Radial mode (true) or point mode (true). Default true.
                  */
-                setRadial(value: boolean): Phaser.GameObjects.Particles.ParticleEmitter;
+                setRadial(value?: boolean): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
+                 * Sets the position of the emitter's particle origin.
+                 * New particles will be emitted here.
+                 * @param x The x-coordinate of the particle origin.
+                 * @param y The y-coordinate of the particle origin.
                  */
-                setPosition(x: number, y: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setPosition(x: number | number[] | EmitterOpOnEmitCallback | object, y: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param width [description]
-                 * @param height [description]
+                 * Sets or modifies a rectangular boundary constraining the particles.
+                 * 
+                 * To remove the boundary, set {@link Phaser.GameObjects.Particles.ParticleEmitter#bounds} to null.
+                 * @param x The x-coordinate of the left edge of the boundary, or an object representing a rectangle.
+                 * @param y The y-coordinate of the top edge of the boundary.
+                 * @param width The width of the boundary.
+                 * @param height The height of the boundary.
                  */
-                setBounds(x: number | object, y: number, width: number, height: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setBounds(x: number | ParticleEmitterBounds | ParticleEmitterBoundsAlt, y: number, width: number, height: number): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the initial horizontal speed of emitted particles.
+                 * Changes the emitter to point mode.
+                 * @param value The speed, in pixels per second.
                  */
-                setSpeedX(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedX(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the initial vertical speed of emitted particles.
+                 * Changes the emitter to point mode.
+                 * @param value The speed, in pixels per second.
                  */
-                setSpeedY(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeedY(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the initial radial speed of emitted particles.
+                 * Changes the emitter to radial mode.
+                 * @param value The speed, in pixels per second.
                  */
-                setSpeed(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setSpeed(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the horizontal scale of emitted particles.
+                 * @param value The scale, relative to 1.
                  */
-                setScaleX(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleX(value: number | number[] | EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the vertical scale of emitted particles.
+                 * @param value The scale, relative to 1.
                  */
-                setScaleY(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScaleY(value: number | number[] | EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the scale of emitted particles.
+                 * @param value The scale, relative to 1.
                  */
-                setScale(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setScale(value: number | number[] | EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the horizontal gravity applied to emitted particles.
+                 * @param value Acceleration due to gravity, in pixels per second squared.
                  */
                 setGravityX(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the vertical gravity applied to emitted particles.
+                 * @param value Acceleration due to gravity, in pixels per second squared.
                  */
                 setGravityY(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
+                 * Sets the gravity applied to emitted particles.
+                 * @param x Horizontal acceleration due to gravity, in pixels per second squared.
+                 * @param y Vertical acceleration due to gravity, in pixels per second squared.
                  */
                 setGravity(x: number, y: number): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the opacity of emitted particles.
+                 * @param value A value between 0 (transparent) and 1 (opaque).
                  */
-                setAlpha(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAlpha(value: number | number[] | EmitterOpOnUpdateCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
+                 * @param value The angle of the initial velocity of emitted particles.
                  */
-                setEmitterAngle(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setEmitterAngle(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the angle of a {@link Phaser.GameObjects.Particles.ParticleEmitter#radial} particle stream.
+                 * @param value The angle of the initial velocity of emitted particles.
                  */
-                setAngle(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setAngle(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param value [description]
+                 * Sets the lifespan of newly emitted particles.
+                 * @param value The particle lifespan, in ms.
                  */
-                setLifespan(value: number): Phaser.GameObjects.Particles.ParticleEmitter;
+                setLifespan(value: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param quantity [description]
+                 * Sets the number of particles released at each flow cycle or explosion.
+                 * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setQuantity(quantity: integer): Phaser.GameObjects.Particles.ParticleEmitter;
+                setQuantity(quantity: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param frequency [description]
-                 * @param quantity [description]
+                 * Sets the emitter's {@link Phaser.GameObjects.Particles.ParticleEmitter#frequency}
+                 * and {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
+                 * @param frequency The time interval (>= 0) of each flow cycle, in ms; or -1 to put the emitter in explosion mode.
+                 * @param quantity The number of particles to release at each flow cycle or explosion.
                  */
-                setFrequency(frequency: number, quantity?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
+                setFrequency(frequency: number, quantity?: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * The zone must have a function called `getPoint` that takes a particle object and sets
-                 * its x and y properties accordingly then returns that object.
-                 * @param zoneConfig [description]
+                 * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#emitZone}.
+                 * 
+                 * An {@link ParticleEmitterEdgeZoneConfig EdgeZone} places particles on its edges. Its {@link EdgeZoneSource source} can be a Curve, Path, Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link EdgeZoneSourceCallback getPoints} method.
+                 * 
+                 * A {@link ParticleEmitterRandomZoneConfig RandomZone} places randomly within its interior. Its {@link RandomZoneSource source} can be a Circle, Ellipse, Line, Polygon, Rectangle, or Triangle; or any object with a suitable {@link RandomZoneSourceCallback getRandomPoint} method.
+                 * @param zoneConfig An object describing the zone, or `undefined` to remove any current emit zone.
                  */
-                setEmitZone(zoneConfig?: object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setEmitZone(zoneConfig?: ParticleEmitterEdgeZoneConfig | ParticleEmitterRandomZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param zoneConfig [description]
+                 * Sets or removes the {@link Phaser.GameObjects.Particles.ParticleEmitter#deathZone}.
+                 * @param zoneConfig An object describing the zone, or `undefined` to remove any current death zone.
                  */
-                setDeathZone(zoneConfig?: object): Phaser.GameObjects.Particles.ParticleEmitter;
+                setDeathZone(zoneConfig?: ParticleEmitterDeathZoneConfig): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param particleCount [description]
+                 * Creates inactive particles and adds them to this emitter's pool.
+                 * @param particleCount The number of particles to create.
                  */
                 reserve(particleCount: integer): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Gets the number of active (in-use) particles in this emitter.
                  */
                 getAliveParticleCount(): integer;
 
                 /**
-                 * [description]
+                 * Gets the number of inactive (available) particles in this emitter.
                  */
                 getDeadParticleCount(): integer;
 
                 /**
-                 * [description]
+                 * Gets the total number of particles in this emitter.
                  */
                 getParticleCount(): integer;
 
                 /**
-                 * [description]
+                 * Whether this emitter is at its limit (if set).
                  */
                 atLimit(): boolean;
 
                 /**
-                 * [description]
-                 * @param callback [description]
-                 * @param context [description]
+                 * Sets a function to call for each newly emitted particle.
+                 * @param callback The function.
+                 * @param context The calling context.
                  */
                 onParticleEmit(callback: ParticleEmitterCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param callback [description]
-                 * @param context [description]
+                 * Sets a function to call for each particle death.
+                 * @param callback The function.
+                 * @param context The function's calling context.
                  */
                 onParticleDeath(callback: ParticleDeathCallback, context?: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Deactivates every particle in this emitter.
                  */
                 killAll(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param callback [description]
-                 * @param thisArg [description]
+                 * Calls a function for each active particle in this emitter.
+                 * @param callback The function.
+                 * @param thisArg The function's calling context.
                  */
                 forEachAlive(callback: ParticleEmitterCallback, thisArg: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param callback [description]
-                 * @param thisArg [description]
+                 * Calls a function for each inactive particle in this emitter.
+                 * @param callback The function.
+                 * @param thisArg The function's calling context.
                  */
                 forEachDead(callback: ParticleEmitterCallback, thisArg: any): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Turns {@link Phaser.GameObjects.Particles.ParticleEmitter#on} the emitter and resets the flow counter.
+                 * 
+                 * If this emitter is in flow mode (frequency >= 0; the default), the particle flow will start (or restart).
+                 * 
+                 * If this emitter is in explode mode (frequency = -1), nothing will happen.
+                 * Use {@link Phaser.GameObjects.Particles.ParticleEmitter#explode} or {@link Phaser.GameObjects.Particles.ParticleEmitter#flow} instead.
                  */
                 start(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * {@link Phaser.GameObjects.Particles.ParticleEmitter#active Deactivates} the emitter.
                  */
                 pause(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * {@link Phaser.GameObjects.Particles.ParticleEmitter#active Activates} the emitter.
                  */
                 resume(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Sorts active particles with {@link Phaser.GameObjects.Particles.ParticleEmitter#depthSortCallback}.
                  */
                 depthSort(): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
-                 * @param frequency [description]
-                 * @param count [description] Default 1.
+                 * Puts the emitter in flow mode (frequency >= 0) and starts (or restarts) a particle flow.
+                 * 
+                 * To resume a flow at the current frequency and quantity, use {@link Phaser.GameObjects.Particles.ParticleEmitter#start} instead.
+                 * @param frequency The time interval (>= 0) of each flow cycle, in ms.
+                 * @param count The number of particles to emit at each flow cycle. Default 1.
                  */
-                flow(frequency: number, count?: integer): Phaser.GameObjects.Particles.ParticleEmitter;
+                flow(frequency: number, count?: number | number[] | EmitterOpOnEmitCallback | object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * [description]
+                 * Puts the emitter in explode mode (frequency = -1), stopping any current particle flow, and emits several particles all at once.
                  * @param count The amount of Particles to emit.
                  * @param x The x coordinate to emit the Particles from.
                  * @param y The y coordinate to emit the Particles from.
@@ -15398,39 +17057,39 @@ declare namespace Phaser {
                 explode(count: integer, x: number, y: number): Phaser.GameObjects.Particles.Particle;
 
                 /**
-                 * [description]
-                 * @param x The x coordinate to emit the Particles from.
-                 * @param y The y coordinate to emit the Particles from.
-                 * @param count The amount of Particles to emit.
+                 * Emits particles at a given position (or the emitter's current position).
+                 * @param x The x coordinate to emit the Particles from. Default this.x.
+                 * @param y The y coordinate to emit the Particles from. Default this.x.
+                 * @param count The number of Particles to emit. Default this.quantity.
                  */
-                emitParticleAt(x: number, y: number, count: integer): Phaser.GameObjects.Particles.Particle;
+                emitParticleAt(x?: number, y?: number, count?: integer): Phaser.GameObjects.Particles.Particle;
 
                 /**
-                 * [description]
-                 * @param count The amount of Particles to emit.
-                 * @param x The x coordinate to emit the Particles from.
-                 * @param y The y coordinate to emit the Particles from.
+                 * Emits particles at a given position (or the emitter's current position).
+                 * @param count The number of Particles to emit. Default this.quantity.
+                 * @param x The x coordinate to emit the Particles from. Default this.x.
+                 * @param y The y coordinate to emit the Particles from. Default this.x.
                  */
-                emitParticle(count: integer, x: number, y: number): Phaser.GameObjects.Particles.Particle;
+                emitParticle(count?: integer, x?: number, y?: number): Phaser.GameObjects.Particles.Particle;
 
                 /**
-                 * [description]
+                 * Updates this emitter and its particles.
                  * @param time The current timestamp as generated by the Request Animation Frame or SetTimeout.
                  * @param delta The delta time, in ms, elapsed since the last frame.
                  */
                 preUpdate(time: integer, delta: number): void;
 
                 /**
-                 * [description]
-                 * @param a [description]
-                 * @param b [description]
+                 * Calculates the difference of two particles, for sorting them by depth.
+                 * @param a The first particle.
+                 * @param b The second particle.
                  */
                 depthSortCallback(a: object, b: object): integer;
 
                 /**
-                 * [description]
-                 * @param a [description]
-                 * @param b [description]
+                 * Calculates the difference of two particles, for sorting them by index.
+                 * @param a The first particle.
+                 * @param b The second particle.
                  */
                 indexSortCallback(a: object, b: object): integer;
 
@@ -15456,6 +17115,59 @@ declare namespace Phaser {
                  * @param value The BlendMode value. Either a string or a CONST.
                  */
                 setBlendMode(value: string | Phaser.BlendModes): Phaser.GameObjects.GameObject;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal scroll factor of this Game Object.
@@ -15512,35 +17224,37 @@ declare namespace Phaser {
             }
 
             /**
-             * [description]
+             * A Particle Emitter Manager creates and controls {@link Phaser.GameObjects.Particles.ParticleEmitter Particle Emitters} and {@link Phaser.GameObjects.Particles.GravityWell Gravity Wells}.
              */
             class ParticleEmitterManager extends Phaser.GameObjects.GameObject {
                 /**
                  * 
-                 * @param scene [description]
-                 * @param texture [description]
-                 * @param frame [description]
-                 * @param emitters [description]
+                 * @param scene The Scene to which this Emitter Manager belongs.
+                 * @param texture The key of the Texture this Emitter Manager will use to render particles, as stored in the Texture Manager.
+                 * @param frame An optional frame from the Texture this Emitter Manager will use to render particles.
+                 * @param emitters Configuration settings for one or more emitters to create.
                  */
-                constructor(scene: Phaser.Scene, texture: string, frame: string | integer, emitters: Phaser.GameObjects.Particles.ParticleEmitter[]);
+                constructor(scene: Phaser.Scene, texture: string, frame: string | integer, emitters: ParticleEmitterConfig | ParticleEmitterConfig[]);
 
                 /**
-                 * [description]
+                 * The time scale applied to all emitters and particles, affecting flow rate, lifespan, and movement.
+                 * Values larger than 1 are faster than normal.
+                 * This is multiplied with any timeScale set on each individual emitter.
                  */
                 timeScale: number;
 
                 /**
-                 * [description]
+                 * The texture used to render this Emitter Manager's particles.
                  */
                 texture: Phaser.Textures.Texture;
 
                 /**
-                 * [description]
+                 * The texture frame used to render this Emitter Manager's particles.
                  */
                 frame: Phaser.Textures.Frame;
 
                 /**
-                 * [description]
+                 * Names of this Emitter Manager's texture frames.
                  */
                 frameNames: Phaser.Textures.Frame[];
 
@@ -15555,7 +17269,7 @@ declare namespace Phaser {
                 wells: Phaser.Structs.List<Phaser.GameObjects.Particles.GravityWell>;
 
                 /**
-                 * Sets the texture and frame this Game Object will use to render with.
+                 * Sets the texture and frame this Emitter Manager will use to render with.
                  * 
                  * Textures are referenced by their string-based keys, as stored in the Texture Manager.
                  * @param key The key of the texture to be used, as stored in the Texture Manager.
@@ -15564,7 +17278,7 @@ declare namespace Phaser {
                 setTexture(key: string, frame?: string | integer): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * Sets the frame this Game Object will use to render with.
+                 * Sets the frame this Emitter Manager will use to render with.
                  * 
                  * The Frame has to belong to the current Texture being used.
                  * 
@@ -15574,51 +17288,51 @@ declare namespace Phaser {
                 setFrame(frame?: string | integer): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * [description]
-                 * @param frames [description]
-                 * @param emitter [description]
+                 * Assigns texture frames to an emitter.
+                 * @param frames The texture frames.
+                 * @param emitter The particle emitter to modify.
                  */
                 setEmitterFrames(frames: Phaser.Textures.Frame | Phaser.Textures.Frame[], emitter: Phaser.GameObjects.Particles.ParticleEmitter): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * Adds an existing Particle Emitter to this Manager.
+                 * Adds an existing Particle Emitter to this Emitter Manager.
                  * @param emitter The Particle Emitter to add to this Emitter Manager.
                  */
                 addEmitter(emitter: Phaser.GameObjects.Particles.ParticleEmitter): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * Creates a new Particle Emitter object, adds it to this Manager and returns a reference to it.
+                 * Creates a new Particle Emitter object, adds it to this Emitter Manager and returns a reference to it.
                  * @param config [description]
                  */
                 createEmitter(config: object): Phaser.GameObjects.Particles.ParticleEmitter;
 
                 /**
-                 * Adds an existing Gravity Well object to this Manager.
+                 * Adds an existing Gravity Well object to this Emitter Manager.
                  * @param well The Gravity Well to add to this Emitter Manager.
                  */
                 addGravityWell(well: Phaser.GameObjects.Particles.GravityWell): Phaser.GameObjects.Particles.GravityWell;
 
                 /**
-                 * Creates a new Gravity Well, adds it to this Manager and returns a reference to it.
+                 * Creates a new Gravity Well, adds it to this Emitter Manager and returns a reference to it.
                  * @param config [description]
                  */
                 createGravityWell(config: object): Phaser.GameObjects.Particles.GravityWell;
 
                 /**
-                 * [description]
-                 * @param count [description]
-                 * @param x [description]
-                 * @param y [description]
+                 * Emits particles from each active emitter.
+                 * @param count The number of particles to release from each emitter. The default is the emitter's own {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
+                 * @param x The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
+                 * @param y The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
                  */
-                emitParticle(count: integer, x: number, y: number): Phaser.GameObjects.Particles.ParticleEmitterManager;
+                emitParticle(count?: integer, x?: number, y?: number): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param count [description]
+                 * Emits particles from each active emitter.
+                 * @param x The x-coordinate to to emit particles from. The default is the x-coordinate of the emitter's current location.
+                 * @param y The y-coordinate to to emit particles from. The default is the y-coordinate of the emitter's current location.
+                 * @param count The number of particles to release from each emitter. The default is the emitter's own {@link Phaser.GameObjects.Particles.ParticleEmitter#quantity}.
                  */
-                emitParticleAt(x: number, y: number, count: integer): Phaser.GameObjects.Particles.ParticleEmitterManager;
+                emitParticleAt(x?: number, y?: number, count?: integer): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
                  * Pauses this Emitter Manager.
@@ -15635,12 +17349,12 @@ declare namespace Phaser {
                 resume(): Phaser.GameObjects.Particles.ParticleEmitterManager;
 
                 /**
-                 * [description]
+                 * Gets all active particle processors (gravity wells).
                  */
                 getProcessors(): Phaser.GameObjects.Particles.GravityWell[];
 
                 /**
-                 * [description]
+                 * Updates all active emitters.
                  * @param time The current timestamp as generated by the Request Animation Frame or SetTimeout.
                  * @param delta The delta time, in ms, elapsed since the last frame.
                  */
@@ -15652,14 +17366,9 @@ declare namespace Phaser {
                 /**
                  * A Death Zone.
                  * 
-                 * 
-                 * 
                  * A Death Zone is a special type of zone that will kill a Particle as soon as it either enters, or leaves, the zone.
                  * 
-                 * 
-                 * 
                  * The zone consists of a `source` which could be a Geometric shape, such as a Rectangle or Ellipse, or your own
-                 * 
                  * object as long as it includes a `contains` method for which the Particles can be tested against.
                  */
                 class DeathZone {
@@ -15668,13 +17377,13 @@ declare namespace Phaser {
                      * @param source An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
                      * @param killOnEnter Should the Particle be killed when it enters the zone? `true` or leaves it? `false`
                      */
-                    constructor(source: object, killOnEnter: boolean);
+                    constructor(source: DeathZoneSource, killOnEnter: boolean);
 
                     /**
                      * An object instance that has a `contains` method that returns a boolean when given `x` and `y` arguments.
                      * This could be a Geometry shape, such as `Phaser.Geom.Circle`, or your own custom object.
                      */
-                    source: object;
+                    source: DeathZoneSource;
 
                     /**
                      * Set to `true` if the Particle should be killed if it enters this zone.
@@ -15691,23 +17400,23 @@ declare namespace Phaser {
                 }
 
                 /**
-                 * [description]
+                 * A zone that places particles on a shape's edges.
                  */
                 class EdgeZone {
                     /**
                      * 
-                     * @param source [description]
+                     * @param source An object instance with a `getPoints(quantity, stepRate)` method returning an array of points.
                      * @param quantity [description]
                      * @param stepRate [description]
                      * @param yoyo [description] Default false.
                      * @param seamless [description] Default true.
                      */
-                    constructor(source: object, quantity: number, stepRate: number, yoyo?: boolean, seamless?: boolean);
+                    constructor(source: EdgeZoneSource, quantity: number, stepRate: number, yoyo?: boolean, seamless?: boolean);
 
                     /**
                      * [description]
                      */
-                    source: object;
+                    source: EdgeZoneSource | RandomZoneSource;
 
                     /**
                      * [description]
@@ -15759,19 +17468,19 @@ declare namespace Phaser {
                 }
 
                 /**
-                 * [description]
+                 * A zone that places particles randomly within a shape's area.
                  */
                 class RandomZone {
                     /**
                      * 
-                     * @param source [description]
+                     * @param source An object instance with a `getRandomPoint(point)` method.
                      */
-                    constructor(source: object);
+                    constructor(source: RandomZoneSource);
 
                     /**
                      * [description]
                      */
-                    source: object;
+                    source: RandomZoneSource;
 
                     /**
                      * [description]
@@ -15788,25 +17497,16 @@ declare namespace Phaser {
         /**
          * A PathFollower Game Object.
          * 
-         * 
-         * 
          * A PathFollower is a Sprite Game Object with some extra helpers to allow it to follow a Path automatically.
          * 
-         * 
-         * 
          * Anything you can do with a standard Sprite can be done with this PathFollower, such as animate it, tint it,
-         * 
          * scale it and so on.
          * 
-         * 
-         * 
          * PathFollowers are bound to a single Path at any one time and can traverse the length of the Path, from start
-         * 
          * to finish, forwards or backwards, or from any given point on the Path to its end. They can optionally rotate
-         * 
          * to face the direction of the path, be offset from the path coordinates or rotate independently of the Path.
          */
-        class PathFollower extends Sprite {
+        class PathFollower extends Phaser.GameObjects.Sprite {
             /**
              * 
              * @param scene [description]
@@ -15908,9 +17608,12 @@ declare namespace Phaser {
             stopFollow(): Phaser.GameObjects.PathFollower;
 
             /**
-             * [description]
+             * Internal update handler that advances this PathFollower along the path.
+             * Called automatically by the Scene step, should not typically be called directly.
+             * @param time The current timestamp as generated by the Request Animation Frame or SetTimeout.
+             * @param delta The delta time, in ms, elapsed since the last frame.
              */
-            toJSON(): JSONGameObject;
+            protected preUpdate(time: integer, delta: number): void;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -16126,7 +17829,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -16322,7 +18078,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -16528,19 +18284,13 @@ declare namespace Phaser {
         /**
          * A Quad Game Object.
          * 
-         * 
-         * 
          * A Quad is a Mesh Game Object pre-configured with two triangles arranged into a rectangle, with a single
-         * 
          * texture spread across them.
          * 
-         * 
-         * 
          * You can manipulate the corner points of the quad via the getters and setters such as `topLeftX`, and also
-         * 
          * change their alpha and color values. The quad itself can be moved by adjusting the `x` and `y` properties.
          */
-        class Quad extends Mesh {
+        class Quad extends Phaser.GameObjects.Mesh {
             /**
              * 
              * @param scene [description]
@@ -16893,7 +18643,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -17045,7 +18848,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -17251,7 +19054,7 @@ declare namespace Phaser {
         /**
          * A Render Texture.
          */
-        class RenderTexture extends GameObject implements Components.Alpha, Components.BlendMode, Components.ComputedSize, Components.Depth, Components.Flip, Components.GetBounds, Components.MatrixStack, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Tint, Components.Transform, Components.Visible {
+        class RenderTexture extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ComputedSize, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.MatrixStack, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -17545,7 +19348,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * [description]
@@ -17932,23 +19788,15 @@ declare namespace Phaser {
         /**
          * A Sprite Game Object.
          * 
-         * 
-         * 
          * A Sprite Game Object is used for the display of both static and animated images in your game.
-         * 
          * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
-         * 
          * and animated.
          * 
-         * 
-         * 
          * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
-         * 
          * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
-         * 
          * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
          */
-        class Sprite extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Flip, Components.GetBounds, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Size, Components.Texture, Components.Tint, Components.Transform, Components.Visible {
+        class Sprite extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -17969,7 +19817,7 @@ declare namespace Phaser {
              * @param time [description]
              * @param delta [description]
              */
-            preUpdate(time: number, delta: number): void;
+            protected preUpdate(time: number, delta: number): void;
 
             /**
              * [description]
@@ -17978,6 +19826,11 @@ declare namespace Phaser {
              * @param startFrame [description] Default 0.
              */
             play(key: string, ignoreIfPlaying?: boolean, startFrame?: integer): Phaser.GameObjects.Sprite;
+
+            /**
+             * [description]
+             */
+            toJSON(): JSONGameObject;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -18193,7 +20046,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -18389,7 +20295,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -18595,13 +20501,10 @@ declare namespace Phaser {
         /**
          * A Sprite 3D Game Object.
          * 
-         * 
-         * 
          * The Sprite 3D object is an encapsulation of a standard Sprite object, with additional methods to allow
-         * 
          * it to be rendered by a 3D Camera. The Sprite can be positioned anywhere within 3D space.
          */
-        class Sprite3D extends GameObject {
+        class Sprite3D extends Phaser.GameObjects.GameObject {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -18682,7 +20585,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class Text extends GameObject implements Components.Alpha, Components.BlendMode, Components.ComputedSize, Components.Depth, Components.Flip, Components.GetBounds, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Tint, Components.Transform, Components.Visible {
+        class Text extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ComputedSize, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -18973,6 +20876,11 @@ declare namespace Phaser {
             /**
              * [description]
              */
+            toJSON(): JSONGameObject;
+
+            /**
+             * [description]
+             */
             preDestroy(): void;
 
             /**
@@ -19216,7 +21124,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -19541,7 +21502,7 @@ declare namespace Phaser {
         /**
          * [description]
          */
-        class TileSprite extends GameObject implements Components.Alpha, Components.BlendMode, Components.Depth, Components.Flip, Components.GetBounds, Components.Origin, Components.Pipeline, Components.ScaleMode, Components.ScrollFactor, Components.Size, Components.Texture, Components.Tint, Components.Transform, Components.Visible {
+        class TileSprite extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Mask, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -19835,7 +21796,60 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+            /**
+             * The Mask this Game Object is using during render.
+             */
+            mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+            /**
+             * Sets the mask that this Game Object will use to render with.
+             * 
+             * The mask must have been previously created and can be either a
+             * GeometryMask or a BitmapMask.
+             * 
+             * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+             * 
+             * If a mask is already set on this Game Object it will be immediately replaced.
+             * @param mask The mask this Game Object will use when rendering.
+             */
+            setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+            /**
+             * Clears the mask that this Game Object was using.
+             * @param destroyMask Destroy the mask before clearing it? Default false.
+             */
+            clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+            /**
+             * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a renderable Game Object.
+             * A renderable Game Object is one that uses a texture to render with, such as an
+             * Image, Sprite, Render Texture or BitmapText.
+             * 
+             * If you do not provide a renderable object, and this Game Object has a texture,
+             * it will use itself as the object. This means you can call this method to create
+             * a Bitmap Mask from any renderable Game Object.
+             * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+             */
+            createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+            /**
+             * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+             * including this one.
+             * 
+             * To create the mask you need to pass in a reference to a Graphics Game Object.
+             * 
+             * If you do not provide a graphics object, and this Game Object is an instance
+             * of a Graphics object, then it will use itself to create the mask.
+             * 
+             * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+             * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+             */
+            createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
             /**
              * The horizontal origin of this Game Object.
@@ -20031,7 +22045,7 @@ declare namespace Phaser {
             /**
              * The Texture this Game Object is using to render with.
              */
-            texture: Phaser.Textures.Texture;
+            texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
             /**
              * The Texture Frame this Game Object is using to render with.
@@ -20302,25 +22316,16 @@ declare namespace Phaser {
         /**
          * A Zone Game Object.
          * 
-         * 
-         * 
          * A Zone is a non-rendering rectangular Game Object that has a position and size.
-         * 
          * It has no texture and never displays, but does live on the display list and
-         * 
          * can be moved, scaled and rotated like any other Game Object.
          * 
-         * 
-         * 
          * Its primary use is for creating Drop Zones and Input Hit Areas and it has a couple of helper methods
-         * 
          * specifically for this. It is also useful for object overlap checks, or as a base for your own
-         * 
          * non-displaying Game Objects.
-         * 
          * The default origin is 0.5, the center of the Zone, the same as with Game Objects.
          */
-        class Zone extends GameObject implements Components.Depth, Components.GetBounds, Components.Origin, Components.ScaleMode, Components.Transform, Components.ScrollFactor, Components.Visible {
+        class Zone extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Visible {
             /**
              * 
              * @param scene [description]
@@ -20469,7 +22474,7 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
 
             /**
              * The horizontal origin of this Game Object.
@@ -20714,473 +22719,14 @@ declare namespace Phaser {
 
         }
 
-        namespace Blitter {
-            type BlitterFromCallback = (blitter: Phaser.GameObjects.Blitter, index: integer)=>void;
-
-            /**
-             * A Bob Game Object.
-             * 
-             * 
-             * 
-             * A Bob belongs to a Blitter Game Object. The Blitter is responsible for managing and rendering this object.
-             * 
-             * 
-             * 
-             * A Bob has a position, alpha value and a frame from a texture that it uses to render with. You can also toggle
-             * 
-             * the flipped and visible state of the Bob. The Frame the Bob uses to render can be changed dynamically, but it
-             * 
-             * must be a Frame within the Texture used by the parent Blitter.
-             * 
-             * 
-             * 
-             * Bob positions are relative to the Blitter parent. So if you move the Blitter parent, all Bob children will
-             * 
-             * have their positions impacted by this change as well.
-             * 
-             * 
-             * 
-             * You can manipulate Bob objects directly from your game code, but the creation and destruction of them should be
-             * 
-             * handled via the Blitter parent.
-             */
-            class Bob {
-                /**
-                 * 
-                 * @param blitter The parent Blitter object is responsible for updating this Bob.
-                 * @param x The horizontal position of this Game Object in the world, relative to the parent Blitter position.
-                 * @param y The vertical position of this Game Object in the world, relative to the parent Blitter position.
-                 * @param frame The Frame this Bob will render with, as defined in the Texture the parent Blitter is using.
-                 * @param visible Should the Bob render visible or not to start with?
-                 */
-                constructor(blitter: Phaser.GameObjects.Blitter, x: number, y: number, frame: string | integer, visible: boolean);
-
-                /**
-                 * [description]
-                 */
-                parent: Phaser.GameObjects.Blitter;
-
-                /**
-                 * [description]
-                 */
-                x: number;
-
-                /**
-                 * [description]
-                 */
-                y: number;
-
-                /**
-                 * [description]
-                 */
-                frame: string | integer;
-
-                /**
-                 * [description]
-                 */
-                data: object;
-
-                /**
-                 * [description]
-                 */
-                flipX: boolean;
-
-                /**
-                 * [description]
-                 */
-                flipY: boolean;
-
-                /**
-                 * [description]
-                 * @param frame [description]
-                 */
-                setFrame(frame?: Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 */
-                resetFlip(): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param frame [description]
-                 */
-                reset(x: number, y: number, frame: Phaser.Textures.Frame): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param value [description]
-                 */
-                setFlipX(value: number): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param value [description]
-                 */
-                setFlipY(value: number): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param x [description]
-                 * @param y [description]
-                 */
-                setFlip(x: number, y: number): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param value [description]
-                 */
-                setVisible(value: boolean): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 * @param value [description]
-                 */
-                setAlpha(value: number): Phaser.GameObjects.Blitter.Bob;
-
-                /**
-                 * [description]
-                 */
-                destroy(): void;
-
-                /**
-                 * [description]
-                 */
-                visible: boolean;
-
-                /**
-                 * [description]
-                 */
-                alpha: number;
-
-            }
-
-        }
-
-        namespace Text {
-            /**
-             * [description]
-             */
-            class TextStyle {
-                /**
-                 * 
-                 * @param text The Text object that this TextStyle is styling.
-                 * @param style [description]
-                 */
-                constructor(text: Phaser.GameObjects.Text, style: object);
-
-                /**
-                 * The Text object that this TextStyle is styling.
-                 */
-                parent: Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 */
-                fontFamily: string;
-
-                /**
-                 * [description]
-                 */
-                fontSize: string;
-
-                /**
-                 * [description]
-                 */
-                fontStyle: string;
-
-                /**
-                 * [description]
-                 */
-                backgroundColor: string;
-
-                /**
-                 * [description]
-                 */
-                color: string;
-
-                /**
-                 * [description]
-                 */
-                stroke: string;
-
-                /**
-                 * [description]
-                 */
-                strokeThickness: number;
-
-                /**
-                 * [description]
-                 */
-                shadowOffsetX: number;
-
-                /**
-                 * [description]
-                 */
-                shadowOffsetY: number;
-
-                /**
-                 * [description]
-                 */
-                shadowColor: string;
-
-                /**
-                 * [description]
-                 */
-                shadowBlur: number;
-
-                /**
-                 * [description]
-                 */
-                shadowStroke: boolean;
-
-                /**
-                 * [description]
-                 */
-                shadowFill: boolean;
-
-                /**
-                 * [description]
-                 */
-                align: string;
-
-                /**
-                 * [description]
-                 */
-                maxLines: integer;
-
-                /**
-                 * [description]
-                 */
-                fixedWidth: number;
-
-                /**
-                 * [description]
-                 */
-                fixedHeight: number;
-
-                /**
-                 * [description]
-                 */
-                rtl: boolean;
-
-                /**
-                 * [description]
-                 */
-                testString: string;
-
-                /**
-                 * The amount of horizontal padding adding to the width of the text when calculating the font metrics.
-                 */
-                baselineX: number;
-
-                /**
-                 * The amount of vertical padding adding to the width of the text when calculating the font metrics.
-                 */
-                baselineY: number;
-
-                /**
-                 * [description]
-                 * @param style [description]
-                 * @param updateText [description] Default true.
-                 */
-                setStyle(style: CSSStyleRule, updateText?: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param canvas [description]
-                 * @param context [description]
-                 */
-                syncFont(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
-
-                /**
-                 * [description]
-                 * @param canvas [description]
-                 * @param context [description]
-                 */
-                syncStyle(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D): void;
-
-                /**
-                 * [description]
-                 * @param context [description]
-                 * @param enabled [description]
-                 */
-                syncShadow(context: CanvasRenderingContext2D, enabled: boolean): void;
-
-                /**
-                 * [description]
-                 * @param recalculateMetrics [description]
-                 */
-                update(recalculateMetrics: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param font [description]
-                 */
-                setFont(font: string | object): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param family [description]
-                 */
-                setFontFamily(family: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param style [description]
-                 */
-                setFontStyle(style: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param size [description]
-                 */
-                setFontSize(size: number | string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param string [description]
-                 */
-                setTestString(string: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param width [description]
-                 * @param height [description]
-                 */
-                setFixedSize(width: number, height: number): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param color [description]
-                 */
-                setBackgroundColor(color: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param color [description]
-                 */
-                setFill(color: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param color [description]
-                 */
-                setColor(color: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param color [description]
-                 * @param thickness [description]
-                 */
-                setStroke(color: string, thickness: number): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param x [description] Default 0.
-                 * @param y [description] Default 0.
-                 * @param color [description] Default '#000'.
-                 * @param blur [description] Default 0.
-                 * @param shadowStroke [description] Default false.
-                 * @param shadowFill [description] Default true.
-                 */
-                setShadow(x?: number, y?: number, color?: string, blur?: number, shadowStroke?: boolean, shadowFill?: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param x [description] Default 0.
-                 * @param y [description] Default 0.
-                 */
-                setShadowOffset(x?: number, y?: number): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param color [description] Default '#000'.
-                 */
-                setShadowColor(color?: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param blur [description] Default 0.
-                 */
-                setShadowBlur(blur?: number): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param enabled [description]
-                 */
-                setShadowStroke(enabled: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param enabled [description]
-                 */
-                setShadowFill(enabled: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * Set the width (in pixels) to use for wrapping lines. Pass in null to remove wrapping by width.
-                 * @param width The maximum width of a line in pixels. Set to null to remove wrapping.
-                 * @param useAdvancedWrap Whether or not to use the advanced wrapping
-                 * algorithm. If true, spaces are collapsed and whitespace is trimmed from lines. If false,
-                 * spaces and whitespace are left as is. Default false.
-                 */
-                setWordWrapWidth(width: number, useAdvancedWrap?: boolean): Phaser.GameObjects.Text;
-
-                /**
-                 * Set a custom callback for wrapping lines. Pass in null to remove wrapping by callback.
-                 * @param callback A custom function that will be responsible for wrapping the
-                 * text. It will receive two arguments: text (the string to wrap), textObject (this Text
-                 * instance). It should return the wrapped lines either as an array of lines or as a string with
-                 * newline characters in place to indicate where breaks should happen.
-                 * @param scope The scope that will be applied when the callback is invoked. Default null.
-                 */
-                setWordWrapCallback(callback: TextStyleWordWrapCallback, scope?: object): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param align [description]
-                 */
-                setAlign(align: string): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 * @param max [description] Default 0.
-                 */
-                setMaxLines(max?: integer): Phaser.GameObjects.Text;
-
-                /**
-                 * [description]
-                 */
-                getTextMetrics(): object;
-
-                /**
-                 * [description]
-                 */
-                toJSON(): object;
-
-                /**
-                 * [description]
-                 */
-                destroy(): void;
-
-            }
-
-        }
-
     }
 
     namespace Geom {
         /**
          * A Circle object.
          * 
-         * 
-         * 
          * This is a geometry object, containing numerical values and related methods to inspect and modify them.
-         * 
          * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
-         * 
          * To render a Circle you should look at the capabilities of the Graphics class.
          */
         class Circle {
@@ -21407,12 +22953,8 @@ declare namespace Phaser {
         /**
          * An Ellipse object.
          * 
-         * 
-         * 
          * This is a geometry object, containing numerical values and related methods to inspect and modify them.
-         * 
          * It is not a Game Object, in that you cannot add it to the display list, and it has no texture.
-         * 
          * To render an Ellipse you should look at the capabilities of the Graphics class.
          */
         class Ellipse {
@@ -21778,10 +23320,10 @@ declare namespace Phaser {
         class Line {
             /**
              * 
-             * @param x1 [description] Default 0.
-             * @param y1 [description] Default 0.
-             * @param x2 [description] Default 0.
-             * @param y2 [description] Default 0.
+             * @param x1 The x coordinate of the lines starting point. Default 0.
+             * @param y1 The y coordinate of the lines starting point. Default 0.
+             * @param x2 The x coordinate of the lines ending point. Default 0.
+             * @param y2 The y coordinate of the lines ending point. Default 0.
              */
             constructor(x1?: number, y1?: number, x2?: number, y2?: number);
 
@@ -21872,22 +23414,22 @@ declare namespace Phaser {
             static Length(line: Phaser.Geom.Line): number;
 
             /**
-             * [description]
+             * The x coordinate of the lines starting point.
              */
             x1: number;
 
             /**
-             * [description]
+             * The y coordinate of the lines starting point.
              */
             y1: number;
 
             /**
-             * [description]
+             * The x coordinate of the lines ending point.
              */
             x2: number;
 
             /**
-             * [description]
+             * The y coordinate of the lines ending point.
              */
             y2: number;
 
@@ -21907,17 +23449,17 @@ declare namespace Phaser {
             getPoints<O extends Phaser.Geom.Point>(quantity: integer, stepRate?: integer, output?: O): O;
 
             /**
-             * [description]
-             * @param point [description]
+             * Get a random Point on the Line.
+             * @param point An instance of a Point to be modified.
              */
             getRandomPoint<O extends Phaser.Geom.Point>(point?: O): O;
 
             /**
-             * [description]
-             * @param x1 [description] Default 0.
-             * @param y1 [description] Default 0.
-             * @param x2 [description] Default 0.
-             * @param y2 [description] Default 0.
+             * Set new coordinates for the line endpoints.
+             * @param x1 The x coordinate of the lines starting point. Default 0.
+             * @param y1 The y coordinate of the lines starting point. Default 0.
+             * @param x2 The x coordinate of the lines ending point. Default 0.
+             * @param y2 The y coordinate of the lines ending point. Default 0.
              */
             setTo(x1?: number, y1?: number, x2?: number, y2?: number): Phaser.Geom.Line;
 
@@ -21986,9 +23528,9 @@ declare namespace Phaser {
             static PerpSlope(line: Phaser.Geom.Line): number;
 
             /**
-             * [description]
-             * @param line [description]
-             * @param out [description]
+             * Returns a random point on a given Line.
+             * @param line The Line to calculate the random Point on.
+             * @param out An instance of a Point to be modified.
              */
             static Random<O extends Phaser.Geom.Point>(line: Phaser.Geom.Line, out?: O): O;
 
@@ -22048,7 +23590,7 @@ declare namespace Phaser {
         }
 
         /**
-         * [description]
+         * Defines a Point in 2D space, with an x and y component.
          */
         class Point {
             /**
@@ -22149,7 +23691,7 @@ declare namespace Phaser {
             y: number;
 
             /**
-             * [description]
+             * Set the x and y coordinates of the point to the given values.
              * @param x The x coordinate of this Point. Default 0.
              * @param y The y coordinate of this Point. Default x.
              */
@@ -22665,9 +24207,7 @@ declare namespace Phaser {
 
         /**
          * A triangle is a plane created by connecting three points.
-         * 
          * The first two arguments specify the first point, the middle two arguments
-         * 
          * specify the second point, and the last two arguments specify the third point.
          */
         class Triangle {
@@ -23153,6 +24693,23 @@ declare namespace Phaser {
             }
 
             namespace Configs {
+                /**
+                 * Tatar SNES USB Controller Gamepad Configuration.
+                 * USB Gamepad  (STANDARD GAMEPAD Vendor: 0079 Product: 0011)
+                 */
+                var SNES_USB: object;
+
+                /**
+                 * PlayStation DualShock 4 Gamepad Configuration.
+                 * Sony PlayStation DualShock 4 (v2) wireless controller
+                 */
+                var DUALSHOCK_4: object;
+
+                /**
+                 * XBox 360 Gamepad Configuration.
+                 */
+                var XBOX_360: object;
+
             }
 
             /**
@@ -23314,26 +24871,6 @@ declare namespace Phaser {
                  * The total number of connected game pads.
                  */
                 total: number;
-
-            }
-
-            class Configs {
-                /**
-                 * Tatar SNES USB Controller Gamepad Configuration.
-                 * USB Gamepad  (STANDARD GAMEPAD Vendor: 0079 Product: 0011)
-                 */
-                static SNES_USB: object;
-
-                /**
-                 * PlayStation DualShock 4 Gamepad Configuration.
-                 * Sony PlayStation DualShock 4 (v2) wireless controller
-                 */
-                static DUALSHOCK_4: object;
-
-                /**
-                 * XBox 360 Gamepad Configuration.
-                 */
-                static XBOX_360: object;
 
             }
 
@@ -23543,7 +25080,7 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            settings: SettingsObject;
+            settings: Phaser.Scenes.Settings.Object;
 
             /**
              * [description]
@@ -23805,19 +25342,19 @@ declare namespace Phaser {
             /**
              * The current active input Pointer.
              */
-            activePointer: Phaser.Input.Pointer;
+            readonly activePointer: Phaser.Input.Pointer;
 
             /**
              * The x coordinates of the ActivePointer based on the first camera in the camera list.
              * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
              */
-            x: number;
+            readonly x: number;
 
             /**
              * The y coordinates of the ActivePointer based on the first camera in the camera list.
              * This is only safe to use if your game has just 1 non-transformed camera and doesn't use multi-touch.
              */
-            y: number;
+            readonly y: number;
 
         }
 
@@ -23825,16 +25362,10 @@ declare namespace Phaser {
             /**
              * [description]
              * 
-             * 
-             * 
              * `keys` argument can be:
              * 
-             * 
-             * 
              * A string (ATARI)
-             * 
              * An array of either integers (key codes) or strings, or a mixture of both
-             * 
              * An array of objects (such as Key objects) with a public 'keyCode' property
              */
             class KeyCombo {
@@ -23927,7 +25458,7 @@ declare namespace Phaser {
                 /**
                  * How far complete is this combo? A value between 0 and 1.
                  */
-                progress: number;
+                readonly progress: number;
 
                 /**
                  * [description]
@@ -23952,18 +25483,11 @@ declare namespace Phaser {
             /**
              * The Keyboard class monitors keyboard input and dispatches keyboard events.
              * 
-             * 
-             * 
              * _Note_: many keyboards are unable to process certain combinations of keys due to hardware limitations known as ghosting.
-             * 
              * See http://www.html5gamedevs.com/topic/4876-impossible-to-use-more-than-2-keyboard-input-buttons-at-the-same-time/ for more details.
              * 
-             * 
-             * 
              * Also please be aware that certain browser extensions can disable or override Phaser keyboard handling.
-             * 
              * For example the Chrome extension vimium is known to disable Phaser from using the D key. And there are others.
-             * 
              * So please check your extensions before opening Phaser issues.
              */
             class KeyboardManager extends Phaser.Events.EventEmitter {
@@ -24122,7 +25646,6 @@ declare namespace Phaser {
 
             /**
              * A generic Key object which can be passed to the Process functions (and so on)
-             * 
              * keycode must be an integer
              */
             class Key {
@@ -24203,6 +25726,11 @@ declare namespace Phaser {
                  * If a key is held down this holds down the number of times the key has 'repeated'.
                  */
                 repeats: number;
+
+                /**
+                 * Resets this Key object back to its default un-pressed state.
+                 */
+                static reset(): Phaser.Input.Keyboard.Key;
 
             }
 
@@ -24305,17 +25833,6 @@ declare namespace Phaser {
              * @param event [description]
              */
             function ProcessKeyUp(key: Phaser.Input.Keyboard.Key, event: KeyboardEvent): Phaser.Input.Keyboard.Key;
-
-            namespace Keys {
-                /**
-                 * Resets a Key object back to its default settings.
-                 * Optionally resets the keyCode as well.
-                 * @param key [description]
-                 * @param clearKeyCode [description] Default false.
-                 */
-                function ResetKey(key: Phaser.Input.Keyboard.Key, clearKeyCode?: boolean): Phaser.Input.Keyboard.Key;
-
-            }
 
             /**
              * Returns `true` if the Key was released within the `duration` value given, or `false` if it either isn't up,
@@ -24721,14 +26238,101 @@ declare namespace Phaser {
 
     namespace Loader {
         /**
-         * [description]
+         * The Loader is idle.
+         */
+        var LOADER_IDLE: integer;
+
+        /**
+         * The Loader is actively loading.
+         */
+        var LOADER_LOADING: integer;
+
+        /**
+         * The Loader is processing files is has loaded.
+         */
+        var LOADER_PROCESSING: integer;
+
+        /**
+         * The Loader has completed loading and processing.
+         */
+        var LOADER_COMPLETE: integer;
+
+        /**
+         * The Loader is shutting down.
+         */
+        var LOADER_SHUTDOWN: integer;
+
+        /**
+         * The Loader has been destroyed.
+         */
+        var LOADER_DESTROYED: integer;
+
+        /**
+         * File is in the load queue but not yet started
+         */
+        var FILE_PENDING: integer;
+
+        /**
+         * File has been started to load by the loader (onLoad called)
+         */
+        var FILE_LOADING: integer;
+
+        /**
+         * File has loaded successfully, awaiting processing
+         */
+        var FILE_LOADED: integer;
+
+        /**
+         * File failed to load
+         */
+        var FILE_FAILED: integer;
+
+        /**
+         * File is being processed (onProcess callback)
+         */
+        var FILE_PROCESSING: integer;
+
+        /**
+         * The File has errored somehow during processing.
+         */
+        var FILE_ERRORED: integer;
+
+        /**
+         * File has finished processing.
+         */
+        var FILE_COMPLETE: integer;
+
+        /**
+         * File has been destroyed
+         */
+        var FILE_DESTROYED: integer;
+
+        /**
+         * File was populated from local data and doesn't need an HTTP request
+         */
+        var FILE_POPULATED: integer;
+
+        /**
+         * The base File class used by all File Types that the Loader can support.
+         * You shouldn't create an instance of a File directly, but should extend it with your own class, setting a custom type and processing methods.
          */
         class File {
             /**
              * 
-             * @param fileConfig [description]
+             * @param loader The Loader that is going to load this File.
+             * @param fileConfig The file configuration object, as created by the file type.
              */
-            constructor(fileConfig: FileConfig);
+            constructor(loader: Phaser.Loader.LoaderPlugin, fileConfig: FileConfig);
+
+            /**
+             * A reference to the Loader that is going to load this file.
+             */
+            loader: Phaser.Loader.LoaderPlugin;
+
+            /**
+             * A reference to the Cache, or Texture Manager, that is going to store this file if it loads.
+             */
+            cache: Phaser.Cache.BaseCache | Phaser.Textures.TextureManager;
 
             /**
              * The file type string (image, json, etc) for sorting within the Loader.
@@ -24742,11 +26346,13 @@ declare namespace Phaser {
 
             /**
              * The URL of the file, not including baseURL.
+             * Automatically has Loader.path prepended to it.
              */
             url: string;
 
             /**
-             * Set when the Loader calls 'load' on this file.
+             * The final URL this file will load from, including baseURL and path.
+             * Set automatically when the Loader calls 'load' on this file.
              */
             src: string;
 
@@ -24754,11 +26360,6 @@ declare namespace Phaser {
              * The merged XHRSettings for this file.
              */
             xhrSettings: XHRSettingsObject;
-
-            /**
-             * The LoaderPlugin instance that is loading this file.
-             */
-            loader: Phaser.Loader.LoaderPlugin;
 
             /**
              * The XMLHttpRequest instance (as created by XHR Loader) that is loading this File.
@@ -24795,57 +26396,52 @@ declare namespace Phaser {
             crossOrigin: string | undefined;
 
             /**
-             * The processed file data, stored in here after the file has loaded.
+             * The processed file data, stored here after the file has loaded.
              */
             data: any;
 
             /**
              * A config object that can be used by file types to store transitional data.
              */
-            config: object;
+            config: any;
 
             /**
              * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-             * to the linked file. Set and used internally by the Loader.
+             * to the parent MultiFile. Set and used internally by the Loader or specific file types.
+             */
+            multiFile: Phaser.Loader.MultiFile;
+
+            /**
+             * Does this file have an associated linked file? Such as an image and a normal map.
+             * Atlases and Bitmap Fonts use the multiFile, because those files need loading together but aren't
+             * actually bound by data, where-as a linkFile is.
              */
             linkFile: Phaser.Loader.File;
 
             /**
-             * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-             * to the type of linked association. Set and used internally by the Loader.
+             * Links this File with another, so they depend upon each other for loading and processing.
+             * @param fileB The file to link to this one.
              */
-            linkType: string;
+            setLink(fileB: Phaser.Loader.File): void;
 
             /**
-             * If this is a link file, is this the parent or the sibbling?
-             */
-            linkParent: boolean;
-
-            /**
-             * If this is a multipart file, i.e. an atlas and its json together, then this is a reference
-             * to the linked file. Set and used internally by the Loader.
-             * @param fileB The linked file.
-             * @param linkType The type of association.
-             */
-            setLinkFile(fileB: Phaser.Loader.File, linkType: string): void;
-
-            /**
-             * Resets the XHRLoader instance.
+             * Resets the XHRLoader instance this file is using.
              */
             resetXHR(): void;
 
             /**
              * Called by the Loader, starts the actual file downloading.
-             * During the load the methods onLoad, onProgress, etc are called based on the XHR events.
-             * @param loader The Loader that will load this File.
+             * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+             * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
              */
-            load(loader: Phaser.Loader.LoaderPlugin): void;
+            load(): void;
 
             /**
              * Called when the file finishes loading, is sent a DOM ProgressEvent.
+             * @param xhr The XMLHttpRequest that caused this onload event.
              * @param event The DOM ProgressEvent that resulted from this load.
              */
-            onLoad(event: ProgressEvent): void;
+            onLoad(xhr: XMLHttpRequest, event: ProgressEvent): void;
 
             /**
              * Called if the file errors while loading, is sent a DOM ProgressEvent.
@@ -24860,17 +26456,46 @@ declare namespace Phaser {
             onProgress(event: ProgressEvent): void;
 
             /**
-             * Usually overridden by the FileTypes and is called by Loader.finishedLoading.
-             * The callback is Loader.processUpdate
-             * @param callback The callback to invoke to process this File.
+             * Usually overridden by the FileTypes and is called by Loader.nextFile.
+             * This method controls what extra work this File does with its loaded data, for example a JSON file will parse itself during this stage.
              */
-            onProcess(callback: FileProcessCallback): void;
+            onProcess(): void;
 
             /**
-             * Called with the File has completed loading.
-             * Checks on the state of its linkfile, if set.
+             * Called when the File has completed processing.
+             * Checks on the state of its multifile, if set.
              */
-            onComplete(): void;
+            onProcessComplete(): void;
+
+            /**
+             * Called when the File has completed processing but it generated an error.
+             * Checks on the state of its multifile, if set.
+             */
+            onProcessError(): void;
+
+            /**
+             * Checks if a key matching the one used by this file exists in the target Cache or not.
+             * This is called automatically by the LoaderPlugin to decide if the file can be safely
+             * loaded or will conflict.
+             */
+            hasCacheConflict(): boolean;
+
+            /**
+             * Adds this file to its target cache upon successful loading and processing.
+             * This method is often overridden by specific file types.
+             */
+            addToCache(): void;
+
+            /**
+             * Called once the file has been added to its cache and is now ready for deletion from the Loader.
+             * It will emit a `filecomplete` event from the LoaderPlugin.
+             */
+            pendingDestroy(): void;
+
+            /**
+             * Destroy this File and any references it holds.
+             */
+            destroy(): void;
 
             /**
              * Static method for creating object URL using URL API and setting it as image 'src' attribute.
@@ -24879,283 +26504,1227 @@ declare namespace Phaser {
              * @param blob A Blob object to create an object URL for.
              * @param defaultType Default mime type used if blob type is not available.
              */
-            static createObjectURL(image: Image, blob: Blob, defaultType: string): void;
+            static createObjectURL(image: HTMLImageElement, blob: Blob, defaultType: string): void;
 
             /**
              * Static method for releasing an existing object URL which was previously created
              * by calling {@link File#createObjectURL} method.
              * @param image Image object which 'src' attribute should be revoked.
              */
-            static revokeObjectURL(image: Image): void;
+            static revokeObjectURL(image: HTMLImageElement): void;
 
         }
 
         namespace FileTypes {
             /**
-             * An Animation JSON File.
-             * @param key The key of the file within the loader.
-             * @param url The url to load the file from.
-             * @param path The path of the file.
-             * @param xhrSettings Optional file specific XHR settings.
+             * A single Animation JSON File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#animation method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#animation.
              */
-            function AnimationJSONFile(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject): any;
+            class AnimationJSONFile extends Phaser.Loader.File {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param dataKey When the JSON file loads only this property will be stored in the Cache.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: XHRSettingsObject, dataKey?: string);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+                /**
+                 * Called at the end of the load process, after the Loader has finished all files in its queue.
+                 */
+                onLoadComplete(): void;
+
+            }
+
+            type AtlasJSONFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the texture image file from.
+                 */
+                textureURL?: string;
+                /**
+                 * The default file extension to use for the image texture if no url is provided.
+                 */
+                textureExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the texture image file.
+                 */
+                textureXhrSettings?: XHRSettingsObject;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                 */
+                normalMap?: string;
+                /**
+                 * The absolute or relative URL to load the atlas json file from. Or a well formed JSON object to use instead.
+                 */
+                atlasURL?: string;
+                /**
+                 * The default file extension to use for the atlas json if no url is provided.
+                 */
+                atlasExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the atlas json file.
+                 */
+                atlasXhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * An Atlas JSON File.
-             * @param key The key of the file within the loader.
-             * @param textureURL The url to load the texture file from.
-             * @param atlasURL The url to load the atlas file from.
-             * @param path The path of the file.
-             * @param textureXhrSettings Optional texture file specific XHR settings.
-             * @param atlasXhrSettings Optional atlas file specific XHR settings.
+             * A single JSON based Texture Atlas File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#atlas method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlas.
+             * 
+             * https://www.codeandweb.com/texturepacker/tutorials/how-to-create-sprite-sheets-for-phaser3?source=photonstorm
              */
-            function AtlasJSONFile(key: string, textureURL: string, atlasURL: string, path: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): object;
+            class AtlasJSONFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param atlasURL The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+                 * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AtlasJSONFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type AtlasXMLFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the texture image file from.
+                 */
+                textureURL?: string;
+                /**
+                 * The default file extension to use for the image texture if no url is provided.
+                 */
+                textureExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the texture image file.
+                 */
+                textureXhrSettings?: XHRSettingsObject;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                 */
+                normalMap?: string;
+                /**
+                 * The absolute or relative URL to load the atlas xml file from.
+                 */
+                atlasURL?: string;
+                /**
+                 * The default file extension to use for the atlas xml if no url is provided.
+                 */
+                atlasExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the atlas xml file.
+                 */
+                atlasXhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * [description]
+             * A single XML based Texture Atlas File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#atlasXML method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#atlasXML.
+             */
+            class AtlasXMLFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param atlasURL The absolute or relative URL to load the texture atlas xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+                 * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+                 * @param atlasXhrSettings An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AtlasXMLFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type AudioFileConfig = {
+                /**
+                 * The key of the file. Must be unique within the Loader and Audio Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                urlConfig?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+                /**
+                 * The AudioContext this file will use to process itself.
+                 */
+                audioContext?: AudioContext;
+            };
+
+            /**
+             * A single Audio File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
              */
             class AudioFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
-                 * @param audioContext [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param urlConfig The absolute or relative URL to load this file from in a config object.
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param audioContext The AudioContext this file will use to process itself.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject, audioContext?: AudioContext);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioFileConfig, urlConfig?: any, xhrSettings?: XHRSettingsObject, audioContext?: AudioContext);
 
                 /**
-                 * [description]
-                 * @param callback [description]
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
                  */
-                onProcess(callback: FileProcessCallback): void;
+                onProcess(): void;
 
             }
 
+            type AudioSpriteFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Audio Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+                 */
+                jsonURL: string;
+                /**
+                 * Extra XHR Settings specifically for the json file.
+                 */
+                jsonXhrSettings?: XHRSettingsObject;
+                /**
+                 * The absolute or relative URL to load the audio file from.
+                 */
+                audioURL?: string;
+                /**
+                 * The audio configuration options.
+                 */
+                audioConfig?: any;
+                /**
+                 * Extra XHR Settings specifically for the audio file.
+                 */
+                audioXhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * An Audio Sprite File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#audioSprite method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audioSprite.
+             */
+            class AudioSpriteFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param jsonURL The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+                 * @param audioURL The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
+                 * @param audioConfig The audio configuration options.
+                 * @param audioXhrSettings An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+                 * @param jsonXhrSettings An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioSpriteFileConfig, jsonURL: string, audioURL?: string, audioConfig?: any, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings?: XHRSettingsObject);
+
+            }
+
+            type BinaryFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Binary Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+                /**
+                 * Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
+                 */
+                dataType?: any;
+            };
+
+            /**
+             * A single Binary File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#binary method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#binary.
              */
             class BinaryFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param dataType Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.BinaryFileConfig, url?: string, xhrSettings?: XHRSettingsObject, dataType?: any);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
-            /**
-             * An Bitmap Font File.
-             * @param key The key of the file within the loader.
-             * @param textureURL The url to load the texture file from.
-             * @param xmlURL The url to load the atlas file from.
-             * @param path The path of the file.
-             * @param textureXhrSettings Optional texture file specific XHR settings.
-             * @param xmlXhrSettings Optional atlas file specific XHR settings.
-             */
-            function BitmapFontFile(key: string, textureURL: string, xmlURL: string, path: string, textureXhrSettings?: XHRSettingsObject, xmlXhrSettings?: XHRSettingsObject): object;
+            type BitmapFontFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the texture image file from.
+                 */
+                textureURL?: string;
+                /**
+                 * The default file extension to use for the image texture if no url is provided.
+                 */
+                textureExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the texture image file.
+                 */
+                textureXhrSettings?: XHRSettingsObject;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                 */
+                normalMap?: string;
+                /**
+                 * The absolute or relative URL to load the font data xml file from.
+                 */
+                fontDataURL?: string;
+                /**
+                 * The default file extension to use for the font data xml if no url is provided.
+                 */
+                fontDataExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the font data xml file.
+                 */
+                fontDataXhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * [description]
+             * A single Bitmap Font based File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#bitmapFont method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#bitmapFont.
+             */
+            class BitmapFontFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param textureURL The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param fontDataURL The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+                 * @param textureXhrSettings An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
+                 * @param fontDataXhrSettings An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.BitmapFontFileConfig, textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: XHRSettingsObject, fontDataXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type GLSLFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Text Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single GLSL File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#glsl method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#glsl.
              */
             class GLSLFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TextFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
             /**
-             * [description]
+             * A single Audio File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#audio method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#audio.
              */
             class HTML5AudioFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param config [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param urlConfig The absolute or relative URL to load this file from.
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, config?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.AudioFileConfig, urlConfig?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called when the file finishes loading.
+                 */
+                onLoad(): void;
+
+                /**
+                 * Called if the file errors while loading.
+                 */
+                onError(): void;
+
+                /**
+                 * Called during the file load progress. Is sent a DOM ProgressEvent.
+                 */
+                onProgress(): void;
+
+                /**
+                 * Called by the Loader, starts the actual file downloading.
+                 * During the load the methods onLoad, onError and onProgress are called, based on the XHR events.
+                 * You shouldn't normally call this method directly, it's meant to be invoked by the Loader.
+                 */
+                load(): void;
 
             }
 
+            type HTMLFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+                /**
+                 * The width of the texture the HTML will be rendered to.
+                 */
+                width?: integer;
+                /**
+                 * The height of the texture the HTML will be rendered to.
+                 */
+                height?: integer;
+            };
+
             /**
-             * [description]
+             * A single HTML File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#html method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#html.
              */
             class HTMLFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param width [description]
-                 * @param height [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param width The width of the texture the HTML will be rendered to.
+                 * @param height The height of the texture the HTML will be rendered to.
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, width: number, height: number, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.HTMLFileConfig, url?: string, width?: integer, height?: integer, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
+            type ImageFrameConfig = {
+                /**
+                 * The width of the frame in pixels.
+                 */
+                frameWidth: integer;
+                /**
+                 * The height of the frame in pixels. Uses the `frameWidth` value if not provided.
+                 */
+                frameHeight?: integer;
+                /**
+                 * The first frame to start parsing from.
+                 */
+                startFrame?: integer;
+                /**
+                 * The frame to stop parsing at. If not provided it will calculate the value based on the image and frame dimensions.
+                 */
+                endFrame?: integer;
+                /**
+                 * The margin in the image. This is the space around the edge of the frames.
+                 */
+                margin?: integer;
+                /**
+                 * The spacing between each frame in the image.
+                 */
+                spacing?: integer;
+            };
+
+            type ImageFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the image.
+                 */
+                normalMap?: string;
+                /**
+                 * The frame configuration object. Only provided for, and used by, Sprite Sheets.
+                 */
+                frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single Image File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#image method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#image.
              */
             class ImageFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
-                 * @param config [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param frameConfig The frame configuration object. Only provided for, and used by, Sprite Sheets.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject, config?: object);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.ImageFileConfig, url?: string | string[], xhrSettings?: XHRSettingsObject, frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
+            type JSONFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the JSON Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly added to the Cache.
+                 */
+                url?: string | any;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * If specified instead of the whole JSON file being parsed and added to the Cache, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
+                 */
+                dataKey?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single JSON File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#json method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#json.
              */
             class JSONFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param dataKey When the JSON file loads only this property will be stored in the Cache.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: XHRSettingsObject, dataKey?: string);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
+            type MultiAtlasFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the multi atlas json file from. Or, a well formed JSON object.
+                 */
+                atlasURL?: string;
+                /**
+                 * The default file extension to use for the atlas json if no url is provided.
+                 */
+                atlasExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the atlas json file.
+                 */
+                atlasXhrSettings?: XHRSettingsObject;
+                /**
+                 * Optional path to use when loading the textures defined in the atlas data.
+                 */
+                path?: string;
+                /**
+                 * Optional Base URL to use when loading the textures defined in the atlas data.
+                 */
+                baseURL?: string;
+                /**
+                 * Extra XHR Settings specifically for the texture files.
+                 */
+                textureXhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single Multi Texture Atlas File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#multiatlas method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#multiatlas.
+             */
+            class MultiAtlasFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 * @param atlasURL The absolute or relative URL to load the multi atlas json file from.
+                 * @param path Optional path to use when loading the textures defined in the atlas data.
+                 * @param baseURL Optional Base URL to use when loading the textures defined in the atlas data.
+                 * @param atlasXhrSettings Extra XHR Settings specifically for the atlas json file.
+                 * @param textureXhrSettings Extra XHR Settings specifically for the texture files.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string, atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: XHRSettingsObject, textureXhrSettings?: XHRSettingsObject);
+
+            }
+
+            type PackFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the JSON Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from. Or can be a ready formed JSON object, in which case it will be directly processed.
+                 */
+                url?: string | any;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * If specified instead of the whole JSON file being parsed, only the section corresponding to this property key will be added. If the property you want to extract is nested, use periods to divide it.
+                 */
+                dataKey?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single JSON Pack File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#pack method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#pack.
+             */
+            class PackFile extends Phaser.Loader.File {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 * @param dataKey When the JSON file loads only this property will be stored in the Cache.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.JSONFileConfig, url?: string, xhrSettings?: XHRSettingsObject, dataKey?: string);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+            }
+
+            type PluginFileConfig = {
+                /**
+                 * The key of the file. Must be unique within the Loader.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single Plugin Script File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#plugin method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#plugin.
              */
             class PluginFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.PluginFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
+            type ScriptFileConfig = {
+                /**
+                 * The key of the file. Must be unique within the Loader.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single Script File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#script method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#script.
              */
             class ScriptFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.ScriptFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
-            /**
-             * A Sprite Sheet File.
-             * @param key The key of the file within the loader.
-             * @param url The url to load the texture file from.
-             * @param config Optional texture file specific XHR settings.
-             * @param path Optional texture file specific XHR settings.
-             * @param xhrSettings Optional atlas file specific XHR settings.
-             */
-            function SpriteSheetFile(key: string, url: string, config: object, path: string, xhrSettings?: XHRSettingsObject): object;
+            type SpriteSheetFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the image.
+                 */
+                normalMap?: string;
+                /**
+                 * The frame configuration object.
+                 */
+                frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * [description]
+             * A single Sprite Sheet Image File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#spritesheet method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#spritesheet.
+             */
+            class SpriteSheetFile extends Phaser.Loader.File {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param frameConfig The frame configuration object.
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.SpriteSheetFileConfig, url?: string | string[], frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type SVGFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single SVG File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#svg method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#svg.
              */
             class SVGFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.svg`, i.e. if `key` was "alien" then the URL will be "alien.svg".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.SVGFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
+            type TextFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Text Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single Text File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#text method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#text.
              */
             class TextFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TextFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
+            type TilemapCSVFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
             /**
-             * [description]
+             * A single Tilemap CSV File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapCSV method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapCSV.
              */
             class TilemapCSVFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param format [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.csv`, i.e. if `key` was "alien" then the URL will be "alien.csv".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, format: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapCSVFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
 
             }
 
-            /**
-             * A Tilemap File.
-             * @param key [description]
-             * @param url [description]
-             * @param path [description]
-             * @param format [description]
-             * @param xhrSettings [description]
-             */
-            function TilemapJSONFile(key: string, url: string, path: string, format: string, xhrSettings?: XHRSettingsObject): object;
+            type TilemapImpactFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * An Atlas JSON File.
-             * @param key The key of the file within the loader.
-             * @param textureURL The url to load the texture file from.
-             * @param atlasURL The url to load the atlas file from.
-             * @param path The path of the file.
-             * @param textureXhrSettings Optional texture file specific XHR settings.
-             * @param atlasXhrSettings Optional atlas file specific XHR settings.
+             * A single Impact.js Tilemap JSON File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapImpact method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapImpact.
              */
-            function UnityAtlasFile(key: string, textureURL: string, atlasURL: string, path: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): object;
+            class TilemapImpactFile extends Phaser.Loader.File {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapImpactFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type TilemapJSONFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Tilemap Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
 
             /**
-             * [description]
+             * A single Tiled Tilemap JSON File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#tilemapTiledJSON method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#tilemapTiledJSON.
+             */
+            class TilemapJSONFile extends Phaser.Loader.File {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.TilemapJSONFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type UnityAtlasFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Texture Manager.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the texture image file from.
+                 */
+                textureURL?: string;
+                /**
+                 * The default file extension to use for the image texture if no url is provided.
+                 */
+                textureExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the texture image file.
+                 */
+                textureXhrSettings?: XHRSettingsObject;
+                /**
+                 * The filename of an associated normal map. It uses the same path and url to load as the texture image.
+                 */
+                normalMap?: string;
+                /**
+                 * The absolute or relative URL to load the atlas data file from.
+                 */
+                atlasURL?: string;
+                /**
+                 * The default file extension to use for the atlas data if no url is provided.
+                 */
+                atlasExtension?: string;
+                /**
+                 * Extra XHR Settings specifically for the atlas data file.
+                 */
+                atlasXhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single text file based Unity Texture Atlas File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#unityAtlas method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#unityAtlas.
+             */
+            class UnityAtlasFile extends Phaser.Loader.MultiFile {
+                /**
+                 * 
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+                 * @param atlasURL The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+                 * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+                 * @param atlasXhrSettings An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
+                 */
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.UnityAtlasFileConfig, textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Adds this file to its target cache upon successful loading and processing.
+                 */
+                addToCache(): void;
+
+            }
+
+            type XMLFileConfig = {
+                /**
+                 * The key of the file. Must be unique within both the Loader and the Text Cache.
+                 */
+                key: string;
+                /**
+                 * The absolute or relative URL to load the file from.
+                 */
+                url?: string;
+                /**
+                 * The default file extension to use if no url is provided.
+                 */
+                extension?: string;
+                /**
+                 * Extra XHR Settings specifically for this file.
+                 */
+                xhrSettings?: XHRSettingsObject;
+            };
+
+            /**
+             * A single XML File suitable for loading by the Loader.
+             * 
+             * These are created when you use the Phaser.Loader.LoaderPlugin#xml method and are not typically created directly.
+             * 
+             * For documentation about what all the arguments and configuration options mean please see Phaser.Loader.LoaderPlugin#xml.
              */
             class XMLFile extends Phaser.Loader.File {
                 /**
                  * 
-                 * @param key [description]
-                 * @param url [description]
-                 * @param path [description]
-                 * @param xhrSettings [description]
+                 * @param loader A reference to the Loader that is responsible for this file.
+                 * @param key The key to use for this file, or a file configuration object.
+                 * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+                 * @param xhrSettings Extra XHR Settings specifically for this file.
                  */
-                constructor(key: string, url: string, path: string, xhrSettings?: XHRSettingsObject);
+                constructor(loader: Phaser.Loader.LoaderPlugin, key: string | Phaser.Loader.FileTypes.XMLFileConfig, url?: string, xhrSettings?: XHRSettingsObject);
+
+                /**
+                 * Called automatically by Loader.nextFile.
+                 * This method controls what extra work this File does with its loaded data.
+                 */
+                onProcess(): void;
 
             }
 
@@ -25169,331 +27738,1871 @@ declare namespace Phaser {
         function GetURL(file: Phaser.Loader.File, baseURL: string): string;
 
         /**
-         * [description]
+         * The Loader handles loading all external content such as Images, Sounds, Texture Atlases and data files.
+         * You typically interact with it via `this.load` in your Scene. Scenes can have a `preload` method, which is always
+         * called before the Scenes `create` method, allowing you to preload assets that the Scene may need.
+         * 
+         * If you call any `this.load` methods from outside of `Scene.preload` then you need to start the Loader going
+         * yourself by calling `Loader.start()`. It's only automatically started during the Scene preload.
+         * 
+         * The Loader uses a combination of tag loading (eg. Audio elements) and XHR and provides progress and completion events.
+         * Files are loaded in parallel by default. The amount of concurrent connections can be controlled in your Game Configuration.
+         * 
+         * Once the Loader has started loading you are still able to add files to it. These can be injected as a result of a loader
+         * event, the type of file being loaded (such as a pack file) or other external events. As long as the Loader hasn't finished
+         * simply adding a new file to it, while running, will ensure it's added into the current queue.
+         * 
+         * Every Scene has its own instance of the Loader and they are bound to the Scene in which they are created. However,
+         * assets loaded by the Loader are placed into global game-level caches. For example, loading an XML file will place that
+         * file inside `Game.cache.xml`, which is accessible from every Scene in your game, no matter who was responsible
+         * for loading it. The same is true of Textures. A texture loaded in one Scene is instantly available to all other Scenes
+         * in your game.
+         * 
+         * The Loader works by using custom File Types. These are stored in the FileTypesManager, which injects them into the Loader
+         * when it's instantiated. You can create your own custom file types by extending either the File or MultiFile classes.
+         * See those files for more details.
          */
         class LoaderPlugin extends Phaser.Events.EventEmitter {
             /**
              * 
-             * @param scene [description]
+             * @param scene The Scene which owns this Loader instance.
              */
             constructor(scene: Phaser.Scene);
 
             /**
-             * Adds an Animation JSON file to the current load queue.
+             * Adds an Animation JSON Data file, or array of Animation JSON files, to the current load queue.
              * 
-             * Note: This method will only be available if the Animation JSON File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key A unique string to be used as the key to reference this file from the Cache. Must be unique within this file type.
-             * @param url URL of the file. If `undefined` or `null` the url will be set to `<key>.json`,
-             * i.e. if `key` was "alien" then the URL will be "alien.json".
-             * @param xhrSettings File specific XHR settings to be used during the load. These settings are merged with the global Loader XHR settings.
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.animation('baddieAnims', 'files/BaddieAnims.json');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the JSON Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.animation({
+             *     key: 'baddieAnims',
+             *     url: 'files/BaddieAnims.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+             * 
+             * Once the file has finished loading it will automatically be passed to the global Animation Managers `fromJSON` method.
+             * This will parse all of the JSON data and create animation data from it. This process happens at the very end
+             * of the Loader, once every other file in the load queue has finished. The reason for this is to allow you to load
+             * both animation data and the images it relies upon in the same load call.
+             * 
+             * Once the animation data has been parsed you will be able to play animations using that data.
+             * Please see the Animation Manager `fromJSON` method for more details about the format and playback.
+             * 
+             * You can also access the raw animation data from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.animation('baddieAnims', 'files/BaddieAnims.json');
+             * // and later in your game ...
+             * var data = this.cache.json.get('baddieAnims');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+             * this is what you would use to retrieve the text from the JSON Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+             * and no URL is given then the Loader will set the URL to be "data.json". It will always add `.json` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
+             * rather than the whole file. For example, if your JSON data had a structure like this:
+             * 
+             * ```json
+             * {
+             *     "level1": {
+             *         "baddies": {
+             *             "aliens": {},
+             *             "boss": {}
+             *         }
+             *     },
+             *     "level2": {},
+             *     "level3": {}
+             * }
+             * ```
+             * 
+             * And if you only wanted to create animations from the `boss` data, then you could pass `level1.baddies.boss`as the `dataKey`.
+             * 
+             * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param dataKey When the Animation JSON file loads only this property will be stored in the Cache and used to create animation data.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            animation(key: string | any[] | object, url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            animation(key: string | Phaser.Loader.FileTypes.JSONFileConfig | Phaser.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Texture Atlas file to the current load queue.
+             * Adds a JSON based Texture Atlas, or array of atlases, to the current load queue.
              * 
-             * Note: This method will only be available if the Atlas JSON File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key The key of the file within the loader.
-             * @param textureURL The url to load the texture file from.
-             * @param atlasURL The url to load the atlas file from.
-             * @param textureXhrSettings Optional texture file specific XHR settings.
-             * @param atlasXhrSettings Optional atlas file specific XHR settings.
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * Phaser expects the atlas data to be provided in a JSON file, using either the JSON Hash or JSON Array format.
+             * These files are created by software such as Texture Packer, Shoebox and Adobe Flash / Animate.
+             * If you are using Texture Packer and have enabled multi-atlas support, then please use the Phaser Multi Atlas loader
+             * instead of this one.
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.atlas({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     atlasURL: 'images/MainMenu.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.AtlasJSONFileConfig` for more details.
+             * 
+             * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
+             * 
+             * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.atlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+             * // and later in your game ...
+             * this.add.image(x, y, 'mainmenu', 'background');
+             * ```
+             * 
+             * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.atlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.json');
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.atlas({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     normalMap: 'images/MainMenu-n.png',
+             *     atlasURL: 'images/MainMenu.json'
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Atlas JSON File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param atlasURL The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+             * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
              */
-            atlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            atlas(key: string | Phaser.Loader.FileTypes.AtlasJSONFileConfig | Phaser.Loader.FileTypes.AtlasJSONFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an Audio file to the current load queue.
+             * Adds an XML based Texture Atlas, or array of atlases, to the current load queue.
              * 
-             * Note: This method will only be available if the Audio File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param urls [description]
-             * @param config [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.atlasXML('mainmenu', 'images/MainMenu.png', 'images/MainMenu.xml');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * Phaser expects the atlas data to be provided in an XML file format.
+             * These files are created by software such as Shoebox and Adobe Flash / Animate.
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.atlasXML({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     atlasURL: 'images/MainMenu.xml'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.AtlasXMLFileConfig` for more details.
+             * 
+             * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.atlasXML('mainmenu', 'images/MainMenu.png', 'images/MainMenu.xml');
+             * // and later in your game ...
+             * this.add.image(x, y, 'mainmenu', 'background');
+             * ```
+             * 
+             * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.atlasXML('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.xml');
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.atlasXML({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     normalMap: 'images/MainMenu-n.png',
+             *     atlasURL: 'images/MainMenu.xml'
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Atlas XML File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param atlasURL The absolute or relative URL to load the texture atlas xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+             * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+             * @param atlasXhrSettings An XHR Settings configuration object for the atlas xml file. Used in replacement of the Loaders default XHR Settings.
              */
-            audio(key: string, urls: string | string[], config: object, xhrSettings?: object): Phaser.Loader.LoaderPlugin;
+            atlasXML(key: string | Phaser.Loader.FileTypes.AtlasXMLFileConfig | Phaser.Loader.FileTypes.AtlasXMLFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an Audio Sprite file to the current load queue.
+             * Adds an Audio or HTML5Audio file, or array of audio files, to the current load queue.
              * 
-             * Note: This method will only be available if the Audio Sprite File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param urls [description]
-             * @param json [description]
-             * @param config [description]
-             * @param audioXhrSettings Optional file specific XHR settings.
-             * @param jsonXhrSettings Optional file specific XHR settings.
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.audio('title', [ 'music/Title.ogg', 'music/Title.mp3', 'music/Title.m4a' ]);
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Audio Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Audio Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Audio Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.audio({
+             *     key: 'title',
+             *     url: [ 'music/Title.ogg', 'music/Title.mp3', 'music/Title.m4a' ]
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.AudioFileConfig` for more details.
+             * 
+             * The URLs can be relative or absolute. If the URLs are relative the `Loader.baseURL` and `Loader.path` values will be prepended to them.
+             * 
+             * Due to different browsers supporting different audio file types you should usually provide your audio files in a variety of formats.
+             * ogg, mp3 and m4a are the most common. If you provide an array of URLs then the Loader will determine which _one_ file to load based on
+             * browser support.
+             * 
+             * If audio has been disabled in your game, either via the game config, or lack of support from the device, then no audio will be loaded.
+             * 
+             * Note: The ability to load this type of file will only be available if the Audio File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param urls The absolute or relative URL to load the audio files from.
+             * @param config An object containing an `instances` property for HTML5Audio. Defaults to 1.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            audioSprite(key: string, urls: string | string[], json: object, config: object, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audio(key: string | Phaser.Loader.FileTypes.AudioFileConfig | Phaser.Loader.FileTypes.AudioFileConfig[], urls?: string | string[], config?: any, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds Binary file to the current load queue.
+             * Adds a JSON based Audio Sprite, or array of audio sprites, to the current load queue.
              * 
-             * Note: This method will only be available if the Binary File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.audioSprite('kyobi', 'kyobi.json', [
+             *         'kyobi.ogg',
+             *         'kyobi.mp3',
+             *         'kyobi.m4a'
+             *     ]);
+             * }
+             * ```
+             * 
+             * Audio Sprites are a combination of audio files and a JSON configuration.
+             * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
+             * 
+             * If the JSON file includes a 'resource' object then you can let Phaser parse it and load the audio
+             * files automatically based on its content. To do this exclude the audio URLs from the load:
+             * 
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.audioSprite('kyobi', 'kyobi.json');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Audio Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Audio Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Audio Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.audioSprite({
+             *     key: 'kyobi',
+             *     jsonURL: 'audio/Kyobi.json',
+             *     audioURL: [
+             *         'audio/Kyobi.ogg',
+             *         'audio/Kyobi.mp3',
+             *         'audio/Kyobi.m4a'
+             *     ]
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.AudioSpriteFileConfig` for more details.
+             * 
+             * Instead of passing a URL for the audio JSON data you can also pass in a well formed JSON object instead.
+             * 
+             * Once the audio has finished loading you can use it create an Audio Sprite by referencing its key:
+             * 
+             * ```javascript
+             * this.load.audioSprite('kyobi', 'kyobi.json');
+             * // and later in your game ...
+             * var music = this.sound.addAudioSprite('kyobi');
+             * music.play('title');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * Due to different browsers supporting different audio file types you should usually provide your audio files in a variety of formats.
+             * ogg, mp3 and m4a are the most common. If you provide an array of URLs then the Loader will determine which _one_ file to load based on
+             * browser support.
+             * 
+             * If audio has been disabled in your game, either via the game config, or lack of support from the device, then no audio will be loaded.
+             * 
+             * Note: The ability to load this type of file will only be available if the Audio Sprite File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or an array of objects.
+             * @param jsonURL The absolute or relative URL to load the json file from. Or a well formed JSON object to use instead.
+             * @param audioURL The absolute or relative URL to load the audio file from. If empty it will be obtained by parsing the JSON file.
+             * @param audioConfig The audio configuration options.
+             * @param audioXhrSettings An XHR Settings configuration object for the audio file. Used in replacement of the Loaders default XHR Settings.
+             * @param jsonXhrSettings An XHR Settings configuration object for the json file. Used in replacement of the Loaders default XHR Settings.
              */
-            binary(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            audioSprite(key: string | Phaser.Loader.FileTypes.AudioSpriteFileConfig | Phaser.Loader.FileTypes.AudioSpriteFileConfig[], jsonURL: string, audioURL?: string, audioConfig?: any, audioXhrSettings?: XHRSettingsObject, jsonXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Bitmap Font file to the current load queue.
+             * Adds a Binary file, or array of Binary files, to the current load queue.
              * 
-             * Note: This method will only be available if the Bitmap Font File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param textureURL [description]
-             * @param xmlURL [description]
-             * @param textureXhrSettings [description]
-             * @param xmlXhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.binary('doom', 'files/Doom.wad');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Binary Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Binary Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Binary Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.binary({
+             *     key: 'doom',
+             *     url: 'files/Doom.wad',
+             *     dataType: Uint8Array
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.BinaryFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.binary('doom', 'files/Doom.wad');
+             * // and later in your game ...
+             * var data = this.cache.binary.get('doom');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Data` the final key will be `LEVEL1.Data` and
+             * this is what you would use to retrieve the text from the Binary Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "doom"
+             * and no URL is given then the Loader will set the URL to be "doom.bin". It will always add `.bin` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Binary File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.bin`, i.e. if `key` was "alien" then the URL will be "alien.bin".
+             * @param dataType Optional type to cast the binary file to once loaded. For example, `Uint8Array`.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            bitmapFont(key: string, textureURL: string, xmlURL: string, textureXhrSettings?: XHRSettingsObject, xmlXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            binary(key: string | Phaser.Loader.FileTypes.BinaryFileConfig | Phaser.Loader.FileTypes.BinaryFileConfig[], url?: string, dataType?: any, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a GLSL file to the current load queue.
+             * Adds an XML based Bitmap Font, or array of fonts, to the current load queue.
              * 
-             * Note: This method will only be available if the GLSL File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.bitmapFont('goldenFont', 'images/GoldFont.png', 'images/GoldFont.xml');
+             * }
+             * ```
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * Phaser expects the font data to be provided in an XML file format.
+             * These files are created by software such as the [Angelcode Bitmap Font Generator](http://www.angelcode.com/products/bmfont/),
+             * [Littera](http://kvazars.com/littera/) or [Glyph Designer](https://71squared.com/glyphdesigner)
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.bitmapFont({
+             *     key: 'goldenFont',
+             *     textureURL: 'images/GoldFont.png',
+             *     fontDataURL: 'images/GoldFont.xml'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.BitmapFontFileConfig` for more details.
+             * 
+             * Once the atlas has finished loading you can use key of it when creating a Bitmap Text Game Object:
+             * 
+             * ```javascript
+             * this.load.bitmapFont('goldenFont', 'images/GoldFont.png', 'images/GoldFont.xml');
+             * // and later in your game ...
+             * this.add.bitmapText(x, y, 'goldenFont', 'Hello World');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use when creating a Bitmap Text object.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.bitmapFont('goldenFont', [ 'images/GoldFont.png', 'images/GoldFont-n.png' ], 'images/GoldFont.xml');
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.bitmapFont({
+             *     key: 'goldenFont',
+             *     textureURL: 'images/GoldFont.png',
+             *     normalMap: 'images/GoldFont-n.png',
+             *     fontDataURL: 'images/GoldFont.xml'
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Bitmap Font File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param textureURL The absolute or relative URL to load the font image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param fontDataURL The absolute or relative URL to load the font xml data file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+             * @param textureXhrSettings An XHR Settings configuration object for the font image file. Used in replacement of the Loaders default XHR Settings.
+             * @param fontDataXhrSettings An XHR Settings configuration object for the font data xml file. Used in replacement of the Loaders default XHR Settings.
              */
-            glsl(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            bitmapFont(key: string | Phaser.Loader.FileTypes.BitmapFontFileConfig | Phaser.Loader.FileTypes.BitmapFontFileConfig[], textureURL?: string | string[], fontDataURL?: string, textureXhrSettings?: XHRSettingsObject, fontDataXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an HTML file to the current load queue.
+             * Adds a GLSL file, or array of GLSL files, to the current load queue.
+             * In Phaser 3 GLSL files are just plain Text files at the current moment in time.
              * 
-             * Note: This method will only be available if the HTML File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param width [description]
-             * @param height [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.glsl('plasma', 'shaders/Plasma.glsl');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Shader Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Shader Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Shader Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.glsl({
+             *     key: 'plasma',
+             *     url: 'shaders/Plasma.glsl'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.GLSLFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.glsl('plasma', 'shaders/Plasma.glsl');
+             * // and later in your game ...
+             * var data = this.cache.shader.get('plasma');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `FX.` and the key was `Plasma` the final key will be `FX.Plasma` and
+             * this is what you would use to retrieve the text from the Shader Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "plasma"
+             * and no URL is given then the Loader will set the URL to be "plasma.glsl". It will always add `.glsl` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the GLSL File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.glsl`, i.e. if `key` was "alien" then the URL will be "alien.glsl".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            html(key: string, url: string, width: number, height: number, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            glsl(key: string | Phaser.Loader.FileTypes.GLSLFileConfig | Phaser.Loader.FileTypes.GLSLFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an Image file to the current load queue.
+             * Adds an HTML File, or array of HTML Files, to the current load queue.
              * 
-             * Note: This method will only be available if the Image File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.html('instructions', 'content/intro.html', 256, 512);
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.html({
+             *     key: 'instructions',
+             *     url: 'content/intro.html',
+             *     width: 256,
+             *     height: 512
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.HTMLFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.html('instructions', 'content/intro.html', 256, 512);
+             * // and later in your game ...
+             * this.add.image(x, y, 'instructions');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.html". It will always add `.html` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * The width and height are the size of the texture to which the HTML will be rendered. It's not possible to determine these
+             * automatically, so you will need to provide them, either as arguments or in the file config object.
+             * When the HTML file has loaded a new SVG element is created with a size and viewbox set to the width and height given.
+             * The SVG file has a body tag added to it, with the HTML file contents included. It then calls `window.Blob` on the SVG,
+             * and if successful is added to the Texture Manager, otherwise it fails processing. The overall quality of the rendered
+             * HTML depends on your browser, and some of them may not even support the svg / blob process used. Be aware that there are
+             * limitations on what HTML can be inside an SVG. You can find out more details in this
+             * [Mozilla MDN entry](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas).
+             * 
+             * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param width The width of the texture the HTML will be rendered to. Default 512.
+             * @param height The height of the texture the HTML will be rendered to. Default 512.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            image(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            html(key: string | Phaser.Loader.FileTypes.ImageFileConfig | Phaser.Loader.FileTypes.ImageFileConfig[], url?: string, width?: integer, height?: integer, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a JSON file to the current load queue.
+             * Adds an Image, or array of Images, to the current load queue.
              * 
-             * Note: This method will only be available if the JSON File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.image('logo', 'images/phaserLogo.png');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
+             * of animated gifs to Canvas elements.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.image({
+             *     key: 'logo',
+             *     url: 'images/AtariLogo.png'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.ImageFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.image('logo', 'images/AtariLogo.png');
+             * // and later in your game ...
+             * this.add.image(x, y, 'logo');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.image('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ]);
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.image({
+             *     key: 'logo',
+             *     url: 'images/AtariLogo.png',
+             *     normalMap: 'images/AtariLogo-n.png'
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Image File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            json(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            image(key: string | Phaser.Loader.FileTypes.ImageFileConfig | Phaser.Loader.FileTypes.ImageFileConfig[], url?: string | string[], xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Multi File Texture Atlas to the current load queue.
+             * Adds a JSON file, or array of JSON files, to the current load queue.
              * 
-             * Note: This method will only be available if the Multi Atlas File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param textureURLs [description]
-             * @param atlasURLs [description]
-             * @param textureXhrSettings [description]
-             * @param atlasXhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.json('wavedata', 'files/AlienWaveData.json');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the JSON Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.json({
+             *     key: 'wavedata',
+             *     url: 'files/AlienWaveData.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.JSONFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.json('wavedata', 'files/AlienWaveData.json');
+             * // and later in your game ...
+             * var data = this.cache.json.get('wavedata');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+             * this is what you would use to retrieve the text from the JSON Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+             * and no URL is given then the Loader will set the URL to be "data.json". It will always add `.json` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
+             * rather than the whole file. For example, if your JSON data had a structure like this:
+             * 
+             * ```json
+             * {
+             *     "level1": {
+             *         "baddies": {
+             *             "aliens": {},
+             *             "boss": {}
+             *         }
+             *     },
+             *     "level2": {},
+             *     "level3": {}
+             * }
+             * ```
+             * 
+             * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss`as the `dataKey`.
+             * 
+             * Note: The ability to load this type of file will only be available if the JSON File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param dataKey When the JSON file loads only this property will be stored in the Cache.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            multiatlas(key: string, textureURLs: string[], atlasURLs: string[], textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            json(key: string | Phaser.Loader.FileTypes.JSONFileConfig | Phaser.Loader.FileTypes.JSONFileConfig[], url?: string, dataKey?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Plugin file to the current load queue.
+             * Adds a Multi Texture Atlas, or array of multi atlases, to the current load queue.
              * 
-             * Note: This method will only be available if the Plugin File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.multiatlas('level1', 'images/Level1.json');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * Phaser expects the atlas data to be provided in a JSON file as exported from the application Texture Packer,
+             * version 4.6.3 or above, where you have made sure to use the Phaser 3 Export option.
+             * 
+             * The way it works internally is that you provide a URL to the JSON file. Phaser then loads this JSON, parses it and
+             * extracts which texture files it also needs to load to complete the process. If the JSON also defines normal maps,
+             * Phaser will load those as well.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.multiatlas({
+             *     key: 'level1',
+             *     atlasURL: 'images/Level1.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.MultiAtlasFileConfig` for more details.
+             * 
+             * Instead of passing a URL for the atlas JSON data you can also pass in a well formed JSON object instead.
+             * 
+             * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.multiatlas('level1', 'images/Level1.json');
+             * // and later in your game ...
+             * this.add.image(x, y, 'level1', 'background');
+             * ```
+             * 
+             * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Multi Atlas File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param atlasURL The absolute or relative URL to load the texture atlas json data file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param path Optional path to use when loading the textures defined in the atlas data.
+             * @param baseURL Optional Base URL to use when loading the textures defined in the atlas data.
+             * @param atlasXhrSettings An XHR Settings configuration object for the atlas json file. Used in replacement of the Loaders default XHR Settings.
              */
-            plugin(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            multiatlas(key: string | Phaser.Loader.FileTypes.MultiAtlasFileConfig | Phaser.Loader.FileTypes.MultiAtlasFileConfig[], atlasURL?: string, path?: string, baseURL?: string, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a JavaScript file to the current load queue.
+             * Adds a JSON File Pack, or array of packs, to the current load queue.
              * 
-             * Note: This method will only be available if the Script File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.pack('level1', 'data/Level1Files.json');
+             * }
+             * ```
+             * 
+             * A File Pack is a JSON file (or object) that contains details about other files that should be added into the Loader.
+             * Here is a small example:
+             * 
+             * ```json
+             * { 
+             *    "test1": {
+             *        "files": [
+             *            {
+             *                "type": "image",
+             *                "key": "taikodrummaster",
+             *                "url": "assets/pics/taikodrummaster.jpg"
+             *            },
+             *            {
+             *                "type": "image",
+             *                "key": "sukasuka-chtholly",
+             *                "url": "assets/pics/sukasuka-chtholly.png"
+             *            }
+             *        ]
+             *    },
+             *    "meta": {
+             *        "generated": "1401380327373",
+             *        "app": "Phaser 3 Asset Packer",
+             *        "url": "https://phaser.io",
+             *        "version": "1.0",
+             *        "copyright": "Photon Storm Ltd. 2018"
+             *    }
+             * }
+             * ```
+             * 
+             * The pack can be split into sections. In the example above you'll see a section called `test1. You can tell
+             * the `load.pack` method to parse only a particular section of a pack. The pack is stored in the JSON Cache,
+             * so you can pass it to the Loader to process additional sections as needed in your game, or you can just load
+             * them all at once without specifying anything.
+             * 
+             * The pack file can contain an entry for any type of file that Phaser can load. The object structures exactly
+             * match that of the file type configs, and all properties available within the file type configs can be used
+             * in the pack file too.
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * The key must be a unique String. It is used to add the file to the global JSON Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the JSON Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the JSON Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.pack({
+             *     key: 'level1',
+             *     url: 'data/Level1Files.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.PackFileConfig` for more details.
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+             * this is what you would use to retrieve the text from the JSON Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+             * and no URL is given then the Loader will set the URL to be "data.json". It will always add `.json` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * You can also optionally provide a `dataKey` to use. This allows you to extract only a part of the JSON and store it in the Cache,
+             * rather than the whole file. For example, if your JSON data had a structure like this:
+             * 
+             * ```json
+             * {
+             *     "level1": {
+             *         "baddies": {
+             *             "aliens": {},
+             *             "boss": {}
+             *         }
+             *     },
+             *     "level2": {},
+             *     "level3": {}
+             * }
+             * ```
+             * 
+             * And you only wanted to store the `boss` data in the Cache, then you could pass `level1.baddies.boss`as the `dataKey`.
+             * 
+             * Note: The ability to load this type of file will only be available if the Pack File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param dataKey When the JSON file loads only this property will be stored in the Cache.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            script(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            pack(key: string | Phaser.Loader.FileTypes.PackFileConfig | Phaser.Loader.FileTypes.PackFileConfig[], url?: string, dataKey?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Sprite Sheet file to the current load queue.
+             * Adds a Plugin Script file, or array of plugin files, to the current load queue.
              * 
-             * Note: This method will only be available if the Sprite Sheet File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param config config can include: frameWidth, frameHeight, startFrame, endFrame, margin, spacing.
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.plugin('modplayer', 'plugins/ModPlayer.js');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String and not already in-use by another file in the Loader.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.plugin({
+             *     key: 'modplayer',
+             *     url: 'plugins/ModPlayer.js'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.PluginFileConfig` for more details.
+             * 
+             * Once the file has finished loading it will automatically be converted into a script element
+             * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
+             * false and then the resulting element will be appended to `document.head`. Any code then in the
+             * script will be executed. It will then be passed to the Phaser PluginManager.register method.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            spritesheet(key: string, url: string, config: object, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            plugin(key: string | Phaser.Loader.FileTypes.PluginFileConfig | Phaser.Loader.FileTypes.PluginFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an SVG file to the current load queue.
+             * Adds a Script file, or array of Script files, to the current load queue.
              * 
-             * Note: This method will only be available if the SVG File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.script('aliens', 'lib/aliens.js');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String and not already in-use by another file in the Loader.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.script({
+             *     key: 'aliens',
+             *     url: 'lib/aliens.js'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.ScriptFileConfig` for more details.
+             * 
+             * Once the file has finished loading it will automatically be converted into a script element
+             * via `document.createElement('script')`. It will have its language set to JavaScript, `defer` set to
+             * false and then the resulting element will be appended to `document.head`. Any code then in the
+             * script will be executed.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.js". It will always add `.js` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Script File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.js`, i.e. if `key` was "alien" then the URL will be "alien.js".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            svg(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            script(key: string | Phaser.Loader.FileTypes.ScriptFileConfig | Phaser.Loader.FileTypes.ScriptFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Text file to the current load queue.
+             * Adds a Sprite Sheet Image, or array of Sprite Sheet Images, to the current load queue.
              * 
-             * Note: This method will only be available if the Text File type has been built into Phaser.
+             * The term 'Sprite Sheet' in Phaser means a fixed-size sheet. Where every frame in the sheet is the exact same size,
+             * and you reference those frames using numbers, not frame names. This is not the same thing as a Texture Atlas, where
+             * the frames are packed in a way where they take up the least amount of space, and are referenced by their names,
+             * not numbers. Some articles and software use the term 'Sprite Sheet' to mean Texture Atlas, so please be aware of
+             * what sort of file you're actually trying to load.
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+             * 
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.spritesheet('bot', 'images/robot.png', { frameWidth: 32, frameHeight: 38 });
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * If you try to load an animated gif only the first frame will be rendered. Browsers do not natively support playback
+             * of animated gifs to Canvas elements.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.spritesheet({
+             *     key: 'bot',
+             *     url: 'images/robot.png',
+             *     frameConfig: {
+             *         frameWidth: 32,
+             *         frameHeight: 38,
+             *         startFrame: 0,
+             *         endFrame: 8
+             *     }
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.SpriteSheetFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.spritesheet('bot', 'images/robot.png', { frameWidth: 32, frameHeight: 38 });
+             * // and later in your game ...
+             * this.add.image(x, y, 'bot', 0);
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `PLAYER.` and the key was `Running` the final key will be `PLAYER.Running` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.spritesheet('logo', [ 'images/AtariLogo.png', 'images/AtariLogo-n.png' ], { frameWidth: 256, frameHeight: 80 });
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.spritesheet({
+             *     key: 'logo',
+             *     url: 'images/AtariLogo.png',
+             *     normalMap: 'images/AtariLogo-n.png',
+             *     frameConfig: {
+             *         frameWidth: 256,
+             *         frameHeight: 80
+             *     }
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Sprite Sheet File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param frameConfig The frame configuration object. At a minimum it should have a `frameWidth` property.
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            text(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            spritesheet(key: string | Phaser.Loader.FileTypes.SpriteSheetFileConfig | Phaser.Loader.FileTypes.SpriteSheetFileConfig[], url?: string, frameConfig?: Phaser.Loader.FileTypes.ImageFrameConfig, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Tilemap CSV file to the current load queue.
+             * Adds an SVG File, or array of SVG Files, to the current load queue.
              * 
-             * Note: This method will only be available if the Tilemap CSV File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.svg('morty', 'images/Morty.svg');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.svg({
+             *     key: 'morty',
+             *     url: 'images/Morty.svg'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.SVGFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can use it as a texture for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.svg('morty', 'images/Morty.svg');
+             * // and later in your game ...
+             * this.add.image(x, y, 'morty');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.html". It will always add `.html` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the SVG File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.svg`, i.e. if `key` was "alien" then the URL will be "alien.svg".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapCSV(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            svg(key: string | Phaser.Loader.FileTypes.SVGFileConfig | Phaser.Loader.FileTypes.SVGFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Tilemap (Tiled JSON Format) file to the current load queue.
+             * Adds a Text file, or array of Text files, to the current load queue.
              * 
-             * Note: This method will only be available if the Tilemap File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.text('story', files/IntroStory.txt');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Text Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Text Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Text Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.text({
+             *     key: 'story',
+             *     url: 'files/IntroStory.txt'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.TextFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.image('story', 'files/IntroStory.txt');
+             * // and later in your game ...
+             * var data = this.cache.text.get('story');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
+             * this is what you would use to retrieve the text from the Text Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "story"
+             * and no URL is given then the Loader will set the URL to be "story.txt". It will always add `.txt` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Text File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapTiledJSON(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            text(key: string | Phaser.Loader.FileTypes.TextFileConfig | Phaser.Loader.FileTypes.TextFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Tilemap (Weltmeister Format) file to the current load queue.
+             * Adds a CSV Tilemap file, or array of CSV files, to the current load queue.
              * 
-             * Note: This method will only be available if the Tilemap File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.tilemapCSV('level1', maps/Level1.csv');
+             * }
+             * ```
+             * 
+             * Tilemap CSV data can be created in a text editor, or a 3rd party app that exports as CSV.
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Text Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.tilemapCSV({
+             *     key: 'level1',
+             *     url: 'maps/Level1.csv'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.TilemapCSVFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.tilemapCSV('level1', 'maps/Level1.csv');
+             * // and later in your game ...
+             * var map = this.make.tilemap({ key: 'level1' });
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
+             * this is what you would use to retrieve the text from the Tilemap Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "level"
+             * and no URL is given then the Loader will set the URL to be "level.csv". It will always add `.csv` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Tilemap CSV File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.csv`, i.e. if `key` was "alien" then the URL will be "alien.csv".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            tilemapWeltmeister(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapCSV(key: string | Phaser.Loader.FileTypes.TilemapCSVFileConfig | Phaser.Loader.FileTypes.TilemapCSVFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds a Unity Texture Atlas file to the current load queue.
+             * Adds an Impact.js Tilemap file, or array of map files, to the current load queue.
              * 
-             * Note: This method will only be available if the Unity Atlas File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key The key of the file within the loader.
-             * @param textureURL The url to load the texture file from.
-             * @param atlasURL The url to load the atlas file from.
-             * @param textureXhrSettings Optional texture file specific XHR settings.
-             * @param atlasXhrSettings Optional atlas file specific XHR settings.
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.tilemapImpact('level1', maps/Level1.json');
+             * }
+             * ```
+             * 
+             * Impact Tilemap data is created the Impact.js Map Editor called Weltmeister.
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Text Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.tilemapImpact({
+             *     key: 'level1',
+             *     url: 'maps/Level1.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.TilemapImpactFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.tilemapImpact('level1', 'maps/Level1.json');
+             * // and later in your game ...
+             * var map = this.make.tilemap({ key: 'level1' });
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
+             * this is what you would use to retrieve the text from the Tilemap Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "level"
+             * and no URL is given then the Loader will set the URL to be "level.json". It will always add `.json` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Tilemap Impact File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            unityAtlas(key: string, textureURL: string, atlasURL: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapImpact(key: string | Phaser.Loader.FileTypes.TilemapImpactFileConfig | Phaser.Loader.FileTypes.TilemapImpactFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Adds an XML file to the current load queue.
+             * Adds a Tiled JSON Tilemap file, or array of map files, to the current load queue.
              * 
-             * Note: This method will only be available if the XML File type has been built into Phaser.
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
              * 
-             * The file is **not** loaded immediately after calling this method.
-             * Instead, the file is added to a queue within the Loader, which is processed automatically when the Loader starts.
-             * @param key [description]
-             * @param url [description]
-             * @param xhrSettings [description]
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.tilemapTiledJSON('level1', maps/Level1.json');
+             * }
+             * ```
+             * 
+             * The Tilemap data is created using the Tiled Map Editor and selecting JSON as the export format.
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Tilemap Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Tilemap Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Text Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.tilemapTiledJSON({
+             *     key: 'level1',
+             *     url: 'maps/Level1.json'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.TilemapJSONFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.tilemapTiledJSON('level1', 'maps/Level1.json');
+             * // and later in your game ...
+             * var map = this.make.tilemap({ key: 'level1' });
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Story` the final key will be `LEVEL1.Story` and
+             * this is what you would use to retrieve the text from the Tilemap Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "level"
+             * and no URL is given then the Loader will set the URL to be "level.json". It will always add `.json` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the Tilemap JSON File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.json`, i.e. if `key` was "alien" then the URL will be "alien.json".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            xml(key: string, url: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
+            tilemapTiledJSON(key: string | Phaser.Loader.FileTypes.TilemapJSONFileConfig | Phaser.Loader.FileTypes.TilemapJSONFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
+             * Adds a Unity YAML based Texture Atlas, or array of atlases, to the current load queue.
+             * 
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+             * 
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.txt');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * If you call this from outside of `preload` then you are responsible for starting the Loader afterwards and monitoring
+             * its events to know when it's safe to use the asset. Please see the Phaser.Loader.LoaderPlugin class for more details.
+             * 
+             * Phaser expects the atlas data to be provided in a YAML formatted text file as exported from Unity.
+             * 
+             * Phaser can load all common image types: png, jpg, gif and any other format the browser can natively handle.
+             * 
+             * The key must be a unique String. It is used to add the file to the global Texture Manager upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the Texture Manager.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the Texture Manager first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.unityAtlas({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     atlasURL: 'images/MainMenu.txt'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.UnityAtlasFileConfig` for more details.
+             * 
+             * Once the atlas has finished loading you can use frames from it as textures for a Game Object by referencing its key:
+             * 
+             * ```javascript
+             * this.load.unityAtlas('mainmenu', 'images/MainMenu.png', 'images/MainMenu.json');
+             * // and later in your game ...
+             * this.add.image(x, y, 'mainmenu', 'background');
+             * ```
+             * 
+             * To get a list of all available frames within an atlas please consult your Texture Atlas software.
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `MENU.` and the key was `Background` the final key will be `MENU.Background` and
+             * this is what you would use to retrieve the image from the Texture Manager.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "alien"
+             * and no URL is given then the Loader will set the URL to be "alien.png". It will always add `.png` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Phaser also supports the automatic loading of associated normal maps. If you have a normal map to go with this image,
+             * then you can specify it by providing an array as the `url` where the second element is the normal map:
+             * 
+             * ```javascript
+             * this.load.unityAtlas('mainmenu', [ 'images/MainMenu.png', 'images/MainMenu-n.png' ], 'images/MainMenu.txt');
+             * ```
+             * 
+             * Or, if you are using a config object use the `normalMap` property:
+             * 
+             * ```javascript
+             * this.load.unityAtlas({
+             *     key: 'mainmenu',
+             *     textureURL: 'images/MainMenu.png',
+             *     normalMap: 'images/MainMenu-n.png',
+             *     atlasURL: 'images/MainMenu.txt'
+             * });
+             * ```
+             * 
+             * The normal map file is subject to the same conditions as the image file with regard to the path, baseURL, CORs and XHR Settings.
+             * Normal maps are a WebGL only feature.
+             * 
+             * Note: The ability to load this type of file will only be available if the Unity Atlas File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param textureURL The absolute or relative URL to load the texture image file from. If undefined or `null` it will be set to `<key>.png`, i.e. if `key` was "alien" then the URL will be "alien.png".
+             * @param atlasURL The absolute or relative URL to load the texture atlas data file from. If undefined or `null` it will be set to `<key>.txt`, i.e. if `key` was "alien" then the URL will be "alien.txt".
+             * @param textureXhrSettings An XHR Settings configuration object for the atlas image file. Used in replacement of the Loaders default XHR Settings.
+             * @param atlasXhrSettings An XHR Settings configuration object for the atlas data file. Used in replacement of the Loaders default XHR Settings.
              */
-            scene: Phaser.Scene;
+            unityAtlas(key: string | Phaser.Loader.FileTypes.UnityAtlasFileConfig | Phaser.Loader.FileTypes.UnityAtlasFileConfig[], textureURL?: string | string[], atlasURL?: string, textureXhrSettings?: XHRSettingsObject, atlasXhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
+             * Adds an XML file, or array of XML files, to the current load queue.
+             * 
+             * You can call this method from within your Scene's `preload`, along with any other files you wish to load:
+             * 
+             * ```javascript
+             * function preload ()
+             * {
+             *     this.load.xml('wavedata', 'files/AlienWaveData.xml');
+             * }
+             * ```
+             * 
+             * The file is **not** loaded right away. It is added to a queue ready to be loaded either when the loader starts,
+             * or if it's already running, when the next free load slot becomes available. This happens automatically if you
+             * are calling this from within the Scene's `preload` method, or a related callback. Because the file is queued
+             * it means you cannot use the file immediately after calling this method, but must wait for the file to complete.
+             * The typical flow for a Phaser Scene is that you load assets in the Scene's `preload` method and then when the
+             * Scene's `create` method is called you are guaranteed that all of those assets are ready for use and have been
+             * loaded.
+             * 
+             * The key must be a unique String. It is used to add the file to the global XML Cache upon a successful load.
+             * The key should be unique both in terms of files being loaded and files already present in the XML Cache.
+             * Loading a file using a key that is already taken will result in a warning. If you wish to replace an existing file
+             * then remove it from the XML Cache first, before loading a new one.
+             * 
+             * Instead of passing arguments you can pass a configuration object, such as:
+             * 
+             * ```javascript
+             * this.load.xml({
+             *     key: 'wavedata',
+             *     url: 'files/AlienWaveData.xml'
+             * });
+             * ```
+             * 
+             * See the documentation for `Phaser.Loader.FileTypes.XMLFileConfig` for more details.
+             * 
+             * Once the file has finished loading you can access it from its Cache using its key:
+             * 
+             * ```javascript
+             * this.load.xml('wavedata', 'files/AlienWaveData.xml');
+             * // and later in your game ...
+             * var data = this.cache.xml.get('wavedata');
+             * ```
+             * 
+             * If you have specified a prefix in the loader, via `Loader.setPrefix` then this value will be prepended to this files
+             * key. For example, if the prefix was `LEVEL1.` and the key was `Waves` the final key will be `LEVEL1.Waves` and
+             * this is what you would use to retrieve the text from the XML Cache.
+             * 
+             * The URL can be relative or absolute. If the URL is relative the `Loader.baseURL` and `Loader.path` values will be prepended to it.
+             * 
+             * If the URL isn't specified the Loader will take the key and create a filename from that. For example if the key is "data"
+             * and no URL is given then the Loader will set the URL to be "data.xml". It will always add `.xml` as the extension, although
+             * this can be overridden if using an object instead of method arguments. If you do not desire this action then provide a URL.
+             * 
+             * Note: The ability to load this type of file will only be available if the XML File type has been built into Phaser.
+             * It is available in the default build but can be excluded from custom builds.
+             * @param key The key to use for this file, or a file configuration object, or array of them.
+             * @param url The absolute or relative URL to load this file from. If undefined or `null` it will be set to `<key>.xml`, i.e. if `key` was "alien" then the URL will be "alien.xml".
+             * @param xhrSettings An XHR Settings configuration object. Used in replacement of the Loaders default XHR Settings.
              */
-            systems: Phaser.Scenes.Systems;
+            xml(key: string | Phaser.Loader.FileTypes.XMLFileConfig | Phaser.Loader.FileTypes.XMLFileConfig[], url?: string, xhrSettings?: XHRSettingsObject): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
+             * The Scene which owns this Loader instance.
+             */
+            protected scene: Phaser.Scene;
+
+            /**
+             * A reference to the Scene Systems.
+             */
+            protected systems: Phaser.Scenes.Systems;
+
+            /**
+             * A reference to the global Cache Manager.
+             */
+            protected cacheManager: Phaser.Cache.CacheManager;
+
+            /**
+             * A reference to the global Texture Manager.
+             */
+            protected textureManager: Phaser.Textures.TextureManager;
+
+            /**
+             * An optional prefix that is automatically prepended to the start of every file key.
+             * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
+             * You can set this directly, or call `Loader.setPrefix()`. It will then affect every file added to the Loader
+             * from that point on. It does _not_ change any file already in the load queue.
+             */
+            prefix: string;
+
+            /**
+             * The value of `path`, if set, is placed before any _relative_ file path given. For example:
+             * 
+             * ```javascript
+             * this.load.path = "images/sprites/";
+             * this.load.image("ball", "ball.png");
+             * this.load.image("tree", "level1/oaktree.png");
+             * this.load.image("boom", "http://server.com/explode.png");
+             * ```
+             * 
+             * Would load the `ball` file from `images/sprites/ball.png` and the tree from
+             * `images/sprites/level1/oaktree.png` but the file `boom` would load from the URL
+             * given as it's an absolute URL.
+             * 
+             * Please note that the path is added before the filename but *after* the baseURL (if set.)
+             * 
+             * If you set this property directly then it _must_ end with a "/". Alternatively, call `setPath()` and it'll do it for you.
              */
             path: string;
 
             /**
-             * [description]
+             * If you want to append a URL before the path of any asset you can set this here.
+             * 
+             * Useful if allowing the asset base url to be configured outside of the game code.
+             * 
+             * If you set this property directly then it _must_ end with a "/". Alternatively, call `setBaseURL()` and it'll do it for you.
              */
             baseURL: string;
 
             /**
-             * [description]
-             */
-            enableParallel: boolean;
-
-            /**
-             * [description]
+             * The number of concurrent / parallel resources to try and fetch at once.
+             * 
+             * Old browsers limit 6 requests per domain; modern ones, especially those with HTTP/2 don't limit it at all.
+             * 
+             * The default is 32 but you can change this in your Game Config, or by changing this property before the Loader starts.
              */
             maxParallelDownloads: integer;
 
@@ -25503,76 +29612,162 @@ declare namespace Phaser {
             xhr: XHRSettingsObject;
 
             /**
-             * [description]
+             * The crossOrigin value applied to loaded images. Very often this needs to be set to 'anonymous'.
              */
             crossOrigin: string;
 
             /**
-             * [description]
+             * The total number of files to load. It may not always be accurate because you may add to the Loader during the process
+             * of loading, especially if you load a Pack File. Therefore this value can change, but in most cases remains static.
              */
-            totalToLoad: number;
+            totalToLoad: integer;
 
             /**
-             * [description]
+             * The progress of the current load queue, as a float value between 0 and 1.
+             * This is updated automatically as files complete loading.
+             * Note that it is possible for this value to go down again if you add content to the current load queue during a load.
              */
             progress: number;
 
             /**
-             * [description]
+             * Files are placed in this Set when they're added to the Loader via `addFile`.
+             * 
+             * They are moved to the `inflight` Set when they start loading, and assuming a successful
+             * load, to the `queue` Set for further processing.
+             * 
+             * By the end of the load process this Set will be empty.
              */
             list: Phaser.Structs.Set<Phaser.Loader.File>;
 
             /**
-             * [description]
+             * Files are stored in this Set while they're in the process of being loaded.
+             * 
+             * Upon a successful load they are moved to the `queue` Set.
+             * 
+             * By the end of the load process this Set will be empty.
              */
             inflight: Phaser.Structs.Set<Phaser.Loader.File>;
 
             /**
-             * [description]
-             */
-            failed: Phaser.Structs.Set<Phaser.Loader.File>;
-
-            /**
-             * [description]
+             * Files are stored in this Set while they're being processed.
+             * 
+             * If the process is successful they are moved to their final destination, which could be
+             * a Cache or the Texture Manager.
+             * 
+             * At the end of the load process this Set will be empty.
              */
             queue: Phaser.Structs.Set<Phaser.Loader.File>;
 
             /**
-             * [description]
+             * The total number of files that failed to load during the most recent load.
+             * This value is reset when you call `Loader.start`.
              */
-            storage: Phaser.Structs.Set<(Phaser.Loader.File|LinkFileObject)>;
+            totalFailed: integer;
 
             /**
-             * [description]
+             * The total number of files that successfully loaded during the most recent load.
+             * This value is reset when you call `Loader.start`.
              */
-            state: integer;
+            totalComplete: integer;
 
             /**
-             * [description]
-             * @param url [description]
+             * The current state of the Loader.
              */
-            setBaseURL(url: string): Phaser.Loader.LoaderPlugin;
+            readonly state: integer;
 
             /**
-             * [description]
-             * @param path [description]
+             * If you want to append a URL before the path of any asset you can set this here.
+             * 
+             * Useful if allowing the asset base url to be configured outside of the game code.
+             * 
+             * Once a base URL is set it will affect every file loaded by the Loader from that point on. It does _not_ change any
+             * file _already_ being loaded. To reset it, call this method with no arguments.
+             * @param url The URL to use. Leave empty to reset.
              */
-            setPath(path: string): Phaser.Loader.LoaderPlugin;
+            setBaseURL(url?: string): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
-             * @param crossOrigin [description]
+             * The value of `path`, if set, is placed before any _relative_ file path given. For example:
+             * 
+             * ```javascript
+             * this.load.setPath("images/sprites/");
+             * this.load.image("ball", "ball.png");
+             * this.load.image("tree", "level1/oaktree.png");
+             * this.load.image("boom", "http://server.com/explode.png");
+             * ```
+             * 
+             * Would load the `ball` file from `images/sprites/ball.png` and the tree from
+             * `images/sprites/level1/oaktree.png` but the file `boom` would load from the URL
+             * given as it's an absolute URL.
+             * 
+             * Please note that the path is added before the filename but *after* the baseURL (if set.)
+             * 
+             * Once a path is set it will then affect every file added to the Loader from that point on. It does _not_ change any
+             * file _already_ in the load queue. To reset it, call this method with no arguments.
+             * @param path The path to use. Leave empty to reset.
              */
-            setCORS(crossOrigin: string): Phaser.Loader.LoaderPlugin;
+            setPath(path?: string): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
-             * @param file [description]
+             * An optional prefix that is automatically prepended to the start of every file key.
+             * 
+             * If prefix was `MENU.` and you load an image with the key 'Background' the resulting key would be `MENU.Background`.
+             * 
+             * Once a prefix is set it will then affect every file added to the Loader from that point on. It does _not_ change any
+             * file _already_ in the load queue. To reset it, call this method with no arguments.
+             * @param prefix The prefix to use. Leave empty to reset.
              */
-            addFile(file: Phaser.Loader.File): Phaser.Loader.File;
+            setPrefix(prefix?: string): Phaser.Loader.LoaderPlugin;
 
             /**
-             * Is the Loader actively loading (or processing loaded files)
+             * Sets the Cross Origin Resource Sharing value used when loading files.
+             * 
+             * Files can override this value on a per-file basis by specifying an alternative `crossOrigin` value in their file config.
+             * 
+             * Once CORs is set it will then affect every file loaded by the Loader from that point on, as long as they don't have
+             * their own CORs setting. To reset it, call this method with no arguments.
+             * 
+             * For more details about CORs see https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+             * @param crossOrigin The value to use for the `crossOrigin` property in the load request.
+             */
+            setCORS(crossOrigin?: string): Phaser.Loader.LoaderPlugin;
+
+            /**
+             * Adds a file, or array of files, into the load queue.
+             * 
+             * The file must be an instance of `Phaser.Loader.File`, or a class that extends it. The Loader will check that the key
+             * used by the file won't conflict with any other key either in the loader, the inflight queue or the target cache.
+             * If allowed it will then add the file into the pending list, read for the load to start. Or, if the load has already
+             * started, ready for the next batch of files to be pulled from the list to the inflight queue.
+             * 
+             * You should not normally call this method directly, but rather use one of the Loader methods like `image` or `atlas`,
+             * however you can call this as long as the file given to it is well formed.
+             * @param file The file, or array of files, to be added to the load queue.
+             */
+            addFile(file: Phaser.Loader.File | Phaser.Loader.File[]): void;
+
+            /**
+             * Checks the key and type of the given file to see if it will conflict with anything already
+             * in a Cache, the Texture Manager, or the list or inflight queues.
+             * @param file The file to check the key of.
+             */
+            keyExists(file: Phaser.Loader.File): boolean;
+
+            /**
+             * Takes a well formed, fully parsed pack file object and adds its entries into the load queue. Usually you do not call
+             * this method directly, but instead use `Loader.pack` and supply a path to a JSON file that holds the
+             * pack data. However, if you've got the data prepared you can pass it to this method.
+             * 
+             * You can also provide an optional key. If you do then it will only add the entries from that part of the pack into
+             * to the load queue. If not specified it will add all entries it finds. For more details about the pack file format
+             * see the `LoaderPlugin.pack` method.
+             * @param data The Pack File data to be parsed and each entry of it to added to the load queue.
+             * @param packKey An optional key to use from the pack file data.
+             */
+            addPack(data: any, packKey?: string): boolean;
+
+            /**
+             * Is the Loader actively loading, or processing loaded files?
              */
             isLoading(): boolean;
 
@@ -25582,91 +29777,87 @@ declare namespace Phaser {
             isReady(): boolean;
 
             /**
-             * [description]
+             * Starts the Loader running. This will reset the progress and totals and then emit a `start` event.
+             * If there is nothing in the queue the Loader will immediately complete, otherwise it will start
+             * loading the first batch of files.
+             * 
+             * The Loader is started automatically if the queue is populated within your Scenes `preload` method.
+             * 
+             * However, outside of this, you need to call this method to start it.
+             * 
+             * If the Loader is already running this method will simply return.
              */
             start(): void;
 
             /**
-             * [description]
+             * Called automatically during the load process.
+             * It updates the `progress` value and then emits a progress event, which you can use to
+             * display a loading bar in your game.
              */
             updateProgress(): void;
 
             /**
-             * [description]
+             * An internal method called automatically by the XHRLoader belong to a File.
+             * 
+             * This method will remove the given file from the inflight Set and update the load progress.
+             * If the file was successful its `onProcess` method is called, otherwise it is added to the delete queue.
+             * @param file The File that just finished loading, or errored during load.
+             * @param success `true` if the file loaded successfully, otherwise `false`.
              */
-            processLoadQueue(): void;
+            nextFile(file: Phaser.Loader.File, success: boolean): void;
 
             /**
-             * [description]
-             * @param file [description]
+             * An internal method that is called automatically by the File when it has finished processing.
+             * 
+             * If the process was successful, and the File isn't part of a MultiFile, its `addToCache` method is called.
+             * 
+             * It this then removed from the queue. If there are more files to load, `checkLoadQueue` is called, otherwise `loadComplete` is.
+             * @param file The file that has finished processing.
              */
-            loadFile(file: Phaser.Loader.File): void;
+            fileProcessComplete(file: Phaser.Loader.File): void;
 
             /**
-             * [description]
-             * @param previousFile [description]
-             * @param success [description]
+             * Called at the end when the load queue is exhausted and all files have either loaded or errored.
+             * By this point every loaded file will now be in its associated cache and ready for use.
+             * 
+             * Also clears down the Sets, puts progress to 1 and clears the deletion queue.
              */
-            nextFile(previousFile: Phaser.Loader.File, success: boolean): void;
+            loadComplete(): void;
 
             /**
-             * [description]
+             * Adds a File into the pending-deletion queue.
+             * @param file The File to be queued for deletion when the Loader completes.
              */
-            finishedLoading(): void;
+            flagForRemoval(file: Phaser.Loader.File): void;
 
             /**
-             * Called automatically by the File when it has finished processing.
-             * @param file [description]
-             */
-            processUpdate(file: Phaser.Loader.File): void;
-
-            /**
-             * [description]
-             * @param file [description]
-             */
-            removeFromQueue(file: Phaser.Loader.File): void;
-
-            /**
-             * [description]
-             */
-            processComplete(): void;
-
-            /**
-             * The Loader has finished.
-             */
-            processCallback(): void;
-
-            /**
-             * [description]
-             * @param data [description]
-             * @param filename [description] Default file.json.
+             * Converts the given JSON data into a file that the browser then prompts you to download so you can save it locally.
+             * 
+             * The data must be well formed JSON and ready-parsed, not a JavaScript object.
+             * @param data The JSON data, ready parsed.
+             * @param filename The name to save the JSON file as. Default file.json.
              */
             saveJSON(data: any, filename?: string): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
-             * @param data [description]
-             * @param filename [description] Default file.json.
-             * @param filetype [description] Default application/json.
+             * Causes the browser to save the given data as a file to its default Downloads folder.
+             * 
+             * Creates a DOM level anchor link, assigns it as being a `download` anchor, sets the href
+             * to be an ObjectURL based on the given data, and then invokes a click event.
+             * @param data The data to be saved. Will be passed through URL.createObjectURL.
+             * @param filename The filename to save the file as. Default file.json.
+             * @param filetype The file type to use when saving the file. Defaults to JSON. Default application/json.
              */
             save(data: any, filename?: string, filetype?: string): Phaser.Loader.LoaderPlugin;
 
             /**
-             * [description]
+             * Resets the Loader.
+             * 
+             * This will clear all lists and reset the base URL, path and prefix.
+             * 
+             * Warning: If the Loader is currently downloading files, or has files in its queue, they will be aborted.
              */
             reset(): void;
-
-            /**
-             * [description]
-             * @param files [description]
-             */
-            loadArray(files: LoaderFileObject[]): boolean;
-
-            /**
-             * [description]
-             * @param file [description]
-             */
-            file(file: LoaderFileObject): Phaser.Loader.File;
 
         }
 
@@ -25679,6 +29870,92 @@ declare namespace Phaser {
          * @param local The local XHRSettings object.
          */
         function MergeXHRSettings(global: XHRSettingsObject, local: XHRSettingsObject): XHRSettingsObject;
+
+        /**
+         * A MultiFile is a special kind of parent that contains two, or more, Files as children and looks after
+         * the loading and processing of them all. It is commonly extended and used as a base class for file types such as AtlasJSON or BitmapFont.
+         * 
+         * You shouldn't create an instance of a MultiFile directly, but should extend it with your own class, setting a custom type and processing methods.
+         */
+        class MultiFile {
+            /**
+             * 
+             * @param loader The Loader that is going to load this File.
+             * @param type The file type string for sorting within the Loader.
+             * @param key The key of the file within the loader.
+             * @param files An array of Files that make-up this MultiFile.
+             */
+            constructor(loader: Phaser.Loader.LoaderPlugin, type: string, key: string, files: Phaser.Loader.File[]);
+
+            /**
+             * Called by each File when it finishes loading.
+             * @param file The File that has completed processing.
+             */
+            onFileComplete(file: Phaser.Loader.File): void;
+
+            /**
+             * Adds this file to its target cache upon successful loading and processing.
+             */
+            addToCache(): void;
+
+            /**
+             * A reference to the Loader that is going to load this file.
+             */
+            loader: Phaser.Loader.LoaderPlugin;
+
+            /**
+             * The file type string for sorting within the Loader.
+             */
+            type: string;
+
+            /**
+             * Unique cache key (unique within its file type)
+             */
+            key: string;
+
+            /**
+             * Array of files that make up this MultiFile.
+             */
+            files: Phaser.Loader.File[];
+
+            /**
+             * The completion status of this MultiFile.
+             */
+            complete: boolean;
+
+            /**
+             * The number of files to load.
+             */
+            pending: integer;
+
+            /**
+             * The number of files that failed to load.
+             */
+            failed: integer;
+
+            /**
+             * A storage container for transient data that the loading files need.
+             */
+            config: any;
+
+            /**
+             * Checks if this MultiFile is ready to process its children or not.
+             */
+            isReadyToProcess(): boolean;
+
+            /**
+             * Adds another child to this MultiFile, increases the pending count and resets the completion status.
+             * @param files The File to add to this MultiFile.
+             */
+            addToMultiFile(files: Phaser.Loader.File): Phaser.Loader.MultiFile;
+
+            /**
+             * Called by each File that fails to load.
+             * @param file The File that has failed to load.
+             */
+            onFileFailed(file: Phaser.Loader.File): void;
+
+        }
 
         /**
          * Creates a new XMLHttpRequest (xhr) object based on the given File and XHRSettings
@@ -25830,15 +30107,45 @@ declare namespace Phaser {
         function Clamp(value: number, min: number, max: number): number;
 
         /**
-         * [description]
-         * @param degrees [description]
+         * The value of PI * 2.
+         */
+        var PI2: number;
+
+        /**
+         * The value of PI * 0.5.
+         */
+        var TAU: number;
+
+        /**
+         * An epsilon value (1.0e-6)
+         */
+        var EPSILON: number;
+
+        /**
+         * For converting degrees to radians (PI / 180)
+         */
+        var DEG_TO_RAD: number;
+
+        /**
+         * For converting radians to degrees (180 / PI)
+         */
+        var RAD_TO_DEG: number;
+
+        /**
+         * An instance of the Random Number Generator.
+         */
+        var RND: Phaser.Math.RandomDataGenerator;
+
+        /**
+         * Convert the given angle from degrees, to the equivalent angle in radians.
+         * @param degrees The angle (in degrees) to convert to radians.
          */
         function DegToRad(degrees: integer): number;
 
         /**
-         * [description]
-         * @param a [description]
-         * @param b [description]
+         * Calculates the positive difference of two given numbers.
+         * @param a The first number in the calculation.
+         * @param b The second number in the calculation.
          */
         function Difference(a: number, b: number): number;
 
@@ -26115,15 +30422,15 @@ declare namespace Phaser {
         }
 
         /**
-         * [description]
-         * @param value [description]
+         * Calculates the factorial of a given number for integer values greater than 0.
+         * @param value A positive integer to calculate the factorial of.
          */
         function Factorial(value: number): number;
 
         /**
-         * [description]
-         * @param min [description]
-         * @param max [description]
+         * Generate a random floating point number between the two given bounds, minimum inclusive, maximum exclusive.
+         * @param min The lower bound for the float, inclusive.
+         * @param max The upper bound for the float exclusive.
          */
         function FloatBetween(min: number, max: number): number;
 
@@ -26235,8 +30542,8 @@ declare namespace Phaser {
         }
 
         /**
-         * [description]
-         * @param value [description]
+         * Check if a given value is an even number.
+         * @param value The number to perform the check with.
          */
         function IsEven(value: number): boolean;
 
@@ -26810,8 +31117,8 @@ declare namespace Phaser {
         }
 
         /**
-         * [description]
-         * @param radians [description]
+         * Convert the given angle in radians, to the equivalent angle in degrees.
+         * @param radians The angle in radians to convert ot degrees.
          */
         function RadToDeg(radians: number): integer;
 
@@ -26941,6 +31248,12 @@ declare namespace Phaser {
              */
             state(state?: string): string;
 
+            /**
+             * Shuffles the given array, using the current seed.
+             * @param array The array to be shuffled.
+             */
+            shuffle(array?: any[][]): any[];
+
         }
 
         /**
@@ -26965,9 +31278,9 @@ declare namespace Phaser {
         function RandomXYZW(vec4: Phaser.Math.Vector4, scale?: number): Phaser.Math.Vector4;
 
         /**
-         * [description]
-         * @param point [description]
-         * @param angle [description]
+         * Rotate a given point by a given angle around the origin (0, 0), in an anti-clockwise direction.
+         * @param point The point to be rotated.
+         * @param angle The angle to be rotated by in an anticlockwise direction.
          */
         function Rotate(point: Phaser.Geom.Point | object, angle: number): Phaser.Geom.Point;
 
@@ -27002,8 +31315,8 @@ declare namespace Phaser {
         function RotateVec3(vec: Phaser.Math.Vector3, axis: Phaser.Math.Vector3, radians: number): Phaser.Math.Vector3;
 
         /**
-         * [description]
-         * @param value [description]
+         * Round a given number so it is further away from zero. That is, positive numbers are rounded up, and negative numbers are rounded down.
+         * @param value The number to round.
          */
         function RoundAwayFromZero(value: number): number;
 
@@ -27082,13 +31395,13 @@ declare namespace Phaser {
         function TransformXY(x: number, y: number, positionX: number, positionY: number, rotation: number, scaleX: number, scaleY: number, output?: Phaser.Math.Vector2 | Phaser.Geom.Point | object): Phaser.Math.Vector2 | Phaser.Geom.Point | object;
 
         /**
-         * [description]
+         * A representation of a vector in 2D space.
          */
         class Vector2 {
             /**
              * 
-             * @param x [description]
-             * @param y [description]
+             * @param x The x component of this Vector.
+             * @param y The y component of this Vector.
              */
             constructor(x?: number, y?: number);
 
@@ -27103,33 +31416,33 @@ declare namespace Phaser {
             y: number;
 
             /**
-             * [description]
+             * Make a clone of this Vector2.
              */
             clone(): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Copy the components of a given vector, into this Vector.
+             * @param src The Vector to copy the components from.
              */
             copy(src: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param obj [description]
+             * Set the component values of this Vector from a given Vector2Like object.
+             * @param obj The object containing the component values to set for this Vector.
              */
             setFromObject(obj: Vector2Like): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param x [description]
-             * @param y [description] Default x.
+             * Set the x and y components of the this Vector to the given x and y values.
+             * @param x The x value to set for this Vector.
+             * @param y The y value to set for this Vector. Default x.
              */
             set(x: number, y?: number): Phaser.Math.Vector2;
 
             /**
              * This method is an alias for `Vector2.set`.
-             * @param x [description]
-             * @param y [description] Default x.
+             * @param x The x value to set for this Vector.
+             * @param y The y value to set for this Vector. Default x.
              */
             setTo(x: number, y?: number): Phaser.Math.Vector2;
 
@@ -27141,75 +31454,75 @@ declare namespace Phaser {
             setToPolar(azimuth: number, radius?: number): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param v [description]
+             * Check if this Vector is equal to a given Vector.
+             * @param v The vector to compare with this Vector.
              */
             equals(v: Phaser.Math.Vector2): boolean;
 
             /**
-             * [description]
+             * Calculate the angle between this Vector and the positive x-axis, in radians.
              */
             angle(): number;
 
             /**
-             * [description]
-             * @param src [description]
+             * Add a given Vector to this Vector. Addition is element-wise.
+             * @param src The Vector to add to this Vector.
              */
             add(src: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Subtract the given Vector from this Vector. Subtraction is element-wise.
+             * @param src The Vector to subtract from this Vector.
              */
             subtract(src: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Perform an element-wise multiplication between this Vector and the given Vector.
+             * @param src The Vector to multiply this Vector by.
              */
             multiply(src: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param value [description]
+             * Scale this Vector by the given value.
+             * @param value The value to scale this Vector by.
              */
             scale(value: number): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Perform an element-wise division between this Vector and the given Vector. This Vector is divided by the given Vector.
+             * @param src The Vector to divide this Vector by.
              */
             divide(src: Phaser.Math.Vector2): Phaser.Math.Vector2;
 
             /**
-             * [description]
+             * Negate the x and y components of this Vector.
              */
             negate(): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Calculate the distance between this Vector, and the given Vector.
+             * @param src The Vector to calculate the distance to.
              */
             distance(src: Phaser.Math.Vector2): number;
 
             /**
-             * [description]
-             * @param src [description]
+             * The distance between this Vector, and the given Vector, squared.
+             * @param src The Vector to calculate the distance to.
              */
             distanceSq(src: Phaser.Math.Vector2): number;
 
             /**
-             * [description]
+             * The length (or magnitude) of this Vector.
              */
             length(): number;
 
             /**
-             * [description]
+             * Calculate the length of this Vector squared.
              */
             lengthSq(): number;
 
             /**
-             * [description]
+             * Normalise this Vector, that is, make it a unit length vector (magnitude of 1) in the same direction.
              */
             normalize(): Phaser.Math.Vector2;
 
@@ -27219,8 +31532,8 @@ declare namespace Phaser {
             normalizeRightHand(): Phaser.Math.Vector2;
 
             /**
-             * [description]
-             * @param src [description]
+             * Perform a dot product between this Vector and the given Vector
+             * @param src The Vector2 to dot product with this Vector2.
              */
             dot(src: Phaser.Math.Vector2): number;
 
@@ -27250,7 +31563,7 @@ declare namespace Phaser {
             transformMat4(mat: Phaser.Math.Matrix4): Phaser.Math.Vector2;
 
             /**
-             * [description]
+             * Make this Vector the zero vector (0, 0).
              */
             reset(): Phaser.Math.Vector2;
 
@@ -27614,8 +31927,8 @@ declare namespace Phaser {
 
         /**
          * Checks if the two values are within the given `tolerance` of each other.
-         * @param a [description]
-         * @param b [description]
+         * @param a The first value to use in the calculation.
+         * @param b The second value to use in the calculation.
          * @param tolerance The tolerance. Anything equal to or less than this value is considered as being within range.
          */
         function Within(a: number, b: number, tolerance: number): boolean;
@@ -27635,17 +31948,12 @@ declare namespace Phaser {
             /**
              * An Arcade Physics Image Game Object.
              * 
-             * 
-             * 
              * An Image is a light-weight Game Object useful for the display of static images in your game,
-             * 
              * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
-             * 
              * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
-             * 
              * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
              */
-            class Image extends Phaser.GameObjects.Image implements Components.Acceleration, Components.Angular, Components.Bounce, Components.Debug, Components.Drag, Components.Enable, Components.Friction, Components.Gravity, Components.Immovable, Components.Mass, Components.Size, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class Image extends Phaser.GameObjects.Image implements Phaser.Physics.Arcade.Components.Acceleration, Phaser.Physics.Arcade.Components.Angular, Phaser.Physics.Arcade.Components.Bounce, Phaser.Physics.Arcade.Components.Debug, Phaser.Physics.Arcade.Components.Drag, Phaser.Physics.Arcade.Components.Enable, Phaser.Physics.Arcade.Components.Friction, Phaser.Physics.Arcade.Components.Gravity, Phaser.Physics.Arcade.Components.Immovable, Phaser.Physics.Arcade.Components.Mass, Phaser.Physics.Arcade.Components.Size, Phaser.Physics.Arcade.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -27870,7 +32178,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -28066,7 +32427,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -28685,23 +33046,15 @@ declare namespace Phaser {
             /**
              * An Arcade Physics Sprite Game Object.
              * 
-             * 
-             * 
              * A Sprite Game Object is used for the display of both static and animated images in your game.
-             * 
              * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
-             * 
              * and animated.
              * 
-             * 
-             * 
              * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
-             * 
              * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
-             * 
              * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
              */
-            class Sprite extends Phaser.GameObjects.Components.Animation implements Components.Acceleration, Components.Angular, Components.Bounce, Components.Debug, Components.Drag, Components.Enable, Components.Friction, Components.Gravity, Components.Immovable, Components.Mass, Components.Size, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class Sprite extends Phaser.GameObjects.Sprite implements Phaser.Physics.Arcade.Components.Acceleration, Phaser.Physics.Arcade.Components.Angular, Phaser.Physics.Arcade.Components.Bounce, Phaser.Physics.Arcade.Components.Debug, Phaser.Physics.Arcade.Components.Drag, Phaser.Physics.Arcade.Components.Enable, Phaser.Physics.Arcade.Components.Friction, Phaser.Physics.Arcade.Components.Gravity, Phaser.Physics.Arcade.Components.Immovable, Phaser.Physics.Arcade.Components.Mass, Phaser.Physics.Arcade.Components.Size, Phaser.Physics.Arcade.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param scene The Scene to which this Game Object belongs. A Game Object can only belong to one Scene at a time.
@@ -28711,11 +33064,6 @@ declare namespace Phaser {
                  * @param frame An optional frame from the Texture this Game Object is rendering with.
                  */
                 constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | integer);
-
-                /**
-                 * [description]
-                 */
-                toJSON(): JSONGameObject;
 
                 /**
                  * Clears all alpha values associated with this Game Object.
@@ -28931,7 +33279,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -29127,7 +33528,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -29880,7 +34281,7 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                physicsType: integer;
+                readonly physicsType: integer;
 
                 /**
                  * [description]
@@ -30176,22 +34577,22 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                left: number;
+                readonly left: number;
 
                 /**
                  * [description]
                  */
-                right: number;
+                readonly right: number;
 
                 /**
                  * [description]
                  */
-                top: number;
+                readonly top: number;
 
                 /**
                  * [description]
                  */
-                bottom: number;
+                readonly bottom: number;
 
             }
 
@@ -30209,7 +34610,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                constructor(world: Phaser.Physics.Arcade.World, overlapOnly: boolean, object1: Phaser.Physics.Arcade.Body, object2: Phaser.Physics.Arcade.Body, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: object);
+                constructor(world: Phaser.Physics.Arcade.World, overlapOnly: boolean, object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: object);
 
                 /**
                  * [description]
@@ -30548,8 +34949,52 @@ declare namespace Phaser {
             }
 
             /**
+             * [description]
+             */
+            var DYNAMIC_BODY: number;
+
+            /**
+             * [description]
+             */
+            var STATIC_BODY: number;
+
+            /**
+             * [description]
+             */
+            var GROUP: number;
+
+            /**
+             * [description]
+             */
+            var TILEMAPLAYER: number;
+
+            /**
+             * [description]
+             */
+            var FACING_NONE: number;
+
+            /**
+             * [description]
+             */
+            var FACING_UP: number;
+
+            /**
+             * [description]
+             */
+            var FACING_DOWN: number;
+
+            /**
+             * [description]
+             */
+            var FACING_LEFT: number;
+
+            /**
+             * [description]
+             */
+            var FACING_RIGHT: number;
+
+            /**
              * The Arcade Physics Factory allows you to easily create Arcade Physics enabled Game Objects.
-             * 
              * Objects that are created by this Factory are automatically added to the physics world.
              */
             class Factory {
@@ -30582,7 +35027,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                collider(object1: Phaser.Physics.Arcade.Body, object2: Phaser.Physics.Arcade.Body, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any): Phaser.Physics.Arcade.Collider;
+                collider(object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * Create a new Arcade Physics Collider Overlap object.
@@ -30592,7 +35037,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                overlap(object1: Phaser.Physics.Arcade.Body, object2: Phaser.Physics.Arcade.Body, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any): Phaser.Physics.Arcade.Collider;
+                overlap(object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * Adds an Arcade Physics Body to the given Game Object.
@@ -30681,8 +35126,6 @@ declare namespace Phaser {
             /**
              * An Arcade Physics Group object.
              * 
-             * 
-             * 
              * All Game Objects created by this Group will automatically be dynamic Arcade Physics objects.
              */
             class Group extends Phaser.GameObjects.Group {
@@ -30709,6 +35152,18 @@ declare namespace Phaser {
                  * [description]
                  */
                 defaults: PhysicsGroupDefaults;
+
+                /**
+                 * [description]
+                 * @param child [description]
+                 */
+                createCallbackHandler(child: Phaser.GameObjects.GameObject): void;
+
+                /**
+                 * [description]
+                 * @param child [description]
+                 */
+                removeCallbackHandler(child: Phaser.GameObjects.GameObject): void;
 
                 /**
                  * [description]
@@ -31067,22 +35522,22 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                left: number;
+                readonly left: number;
 
                 /**
                  * [description]
                  */
-                right: number;
+                readonly right: number;
 
                 /**
                  * [description]
                  */
-                top: number;
+                readonly top: number;
 
                 /**
                  * [description]
                  */
-                bottom: number;
+                readonly bottom: number;
 
             }
 
@@ -31108,6 +35563,24 @@ declare namespace Phaser {
                  * [description]
                  */
                 physicsType: integer;
+
+                /**
+                 * [description]
+                 * @param child [description]
+                 */
+                createCallbackHandler(child: Phaser.GameObjects.GameObject): void;
+
+                /**
+                 * [description]
+                 * @param child [description]
+                 */
+                removeCallbackHandler(child: Phaser.GameObjects.GameObject): void;
+
+                /**
+                 * [description]
+                 * @param entries [description]
+                 */
+                createMultipleCallbackHandler(entries: object): void;
 
                 /**
                  * [description]
@@ -31367,7 +35840,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects collide. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                addCollider(object1: Phaser.Physics.Arcade.Body, object2: Phaser.Physics.Arcade.Body, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
+                addCollider(object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * [description]
@@ -31377,7 +35850,7 @@ declare namespace Phaser {
                  * @param processCallback The callback to invoke when the two objects overlap. Must return a boolean.
                  * @param callbackContext The scope in which to call the callbacks.
                  */
-                addOverlap(object1: Phaser.Physics.Arcade.Body, object2: Phaser.Physics.Arcade.Body, collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
+                addOverlap(object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback?: ArcadePhysicsCallback, processCallback?: ArcadePhysicsCallback, callbackContext?: any): Phaser.Physics.Arcade.Collider;
 
                 /**
                  * [description]
@@ -31476,7 +35949,7 @@ declare namespace Phaser {
                  * @param callbackContext [description]
                  * @param overlapOnly [description]
                  */
-                collideObjects(object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject, collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any, overlapOnly: boolean): boolean;
+                collideObjects(object1: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], object2: Phaser.GameObjects.GameObject | Phaser.GameObjects.GameObject[], collideCallback: ArcadePhysicsCallback, processCallback: ArcadePhysicsCallback, callbackContext: any, overlapOnly: boolean): boolean;
 
                 /**
                  * [description]
@@ -31596,7 +36069,6 @@ declare namespace Phaser {
         namespace Impact {
             /**
              * An Impact.js compatible physics body.
-             * 
              * This re-creates the properties you'd get on an Entity and the math needed to update them.
              */
             class Body {
@@ -32082,15 +36554,19 @@ declare namespace Phaser {
                     /**
                      * [description]
                      */
-                    setLite(): Phaser.GameObjects.GameObject;
+                    setLiteCollision(): Phaser.GameObjects.GameObject;
                     /**
                      * [description]
                      */
-                    setPassive(): Phaser.GameObjects.GameObject;
+                    setPassiveCollision(): Phaser.GameObjects.GameObject;
                     /**
                      * [description]
                      */
-                    setFixed(): Phaser.GameObjects.GameObject;
+                    setActiveCollision(): Phaser.GameObjects.GameObject;
+                    /**
+                     * [description]
+                     */
+                    setFixedCollision(): Phaser.GameObjects.GameObject;
                     /**
                      * [description]
                      */
@@ -32226,7 +36702,6 @@ declare namespace Phaser {
 
             /**
              * The Impact Physics Factory allows you to easily create Impact Physics enabled Game Objects.
-             * 
              * Objects that are created by this Factory are automatically added to the physics world.
              */
             class Factory {
@@ -32299,7 +36774,7 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            class ImpactBody implements Components.Acceleration, Components.BodyScale, Components.BodyType, Components.Bounce, Components.CheckAgainst, Components.Collides, Components.Debug, Components.Friction, Components.Gravity, Components.Offset, Components.SetGameObject, Components.Velocity {
+            class ImpactBody implements Phaser.Physics.Impact.Components.Acceleration, Phaser.Physics.Impact.Components.BodyScale, Phaser.Physics.Impact.Components.BodyType, Phaser.Physics.Impact.Components.Bounce, Phaser.Physics.Impact.Components.CheckAgainst, Phaser.Physics.Impact.Components.Collides, Phaser.Physics.Impact.Components.Debug, Phaser.Physics.Impact.Components.Friction, Phaser.Physics.Impact.Components.Gravity, Phaser.Physics.Impact.Components.Offset, Phaser.Physics.Impact.Components.SetGameObject, Phaser.Physics.Impact.Components.Velocity {
                 /**
                  * 
                  * @param world [description]
@@ -32460,22 +36935,22 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                setLite(): Phaser.GameObjects.GameObject;
+                setLiteCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setPassive(): Phaser.GameObjects.GameObject;
+                setPassiveCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setActive(): Phaser.GameObjects.GameObject;
+                setActiveCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setFixed(): Phaser.GameObjects.GameObject;
+                setFixedCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
@@ -32593,17 +37068,12 @@ declare namespace Phaser {
             /**
              * An Impact Physics Image Game Object.
              * 
-             * 
-             * 
              * An Image is a light-weight Game Object useful for the display of static images in your game,
-             * 
              * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
-             * 
              * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
-             * 
              * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
              */
-            class ImpactImage extends Phaser.GameObjects.Image implements Components.Acceleration, Components.BodyScale, Components.BodyType, Components.Bounce, Components.CheckAgainst, Components.Collides, Components.Debug, Components.Friction, Components.Gravity, Components.Offset, Components.SetGameObject, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class ImpactImage extends Phaser.GameObjects.Image implements Phaser.Physics.Impact.Components.Acceleration, Phaser.Physics.Impact.Components.BodyScale, Phaser.Physics.Impact.Components.BodyType, Phaser.Physics.Impact.Components.Bounce, Phaser.Physics.Impact.Components.CheckAgainst, Phaser.Physics.Impact.Components.Collides, Phaser.Physics.Impact.Components.Debug, Phaser.Physics.Impact.Components.Friction, Phaser.Physics.Impact.Components.Gravity, Phaser.Physics.Impact.Components.Offset, Phaser.Physics.Impact.Components.SetGameObject, Phaser.Physics.Impact.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param world [description]
@@ -32863,7 +37333,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -33059,7 +37582,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -33375,17 +37898,22 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                setLite(): Phaser.GameObjects.GameObject;
+                setLiteCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setPassive(): Phaser.GameObjects.GameObject;
+                setPassiveCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setFixed(): Phaser.GameObjects.GameObject;
+                setActiveCollision(): Phaser.GameObjects.GameObject;
+
+                /**
+                 * [description]
+                 */
+                setFixedCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
@@ -33555,23 +38083,15 @@ declare namespace Phaser {
             /**
              * An Impact Physics Sprite Game Object.
              * 
-             * 
-             * 
              * A Sprite Game Object is used for the display of both static and animated images in your game.
-             * 
              * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
-             * 
              * and animated.
              * 
-             * 
-             * 
              * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
-             * 
              * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
-             * 
              * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
              */
-            class ImpactSprite extends Phaser.GameObjects.Components.Animation implements Components.Acceleration, Components.BodyScale, Components.BodyType, Components.Bounce, Components.CheckAgainst, Components.Collides, Components.Debug, Components.Friction, Components.Gravity, Components.Offset, Components.SetGameObject, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class ImpactSprite extends Phaser.GameObjects.Sprite implements Phaser.Physics.Impact.Components.Acceleration, Phaser.Physics.Impact.Components.BodyScale, Phaser.Physics.Impact.Components.BodyType, Phaser.Physics.Impact.Components.Bounce, Phaser.Physics.Impact.Components.CheckAgainst, Phaser.Physics.Impact.Components.Collides, Phaser.Physics.Impact.Components.Debug, Phaser.Physics.Impact.Components.Friction, Phaser.Physics.Impact.Components.Gravity, Phaser.Physics.Impact.Components.Offset, Phaser.Physics.Impact.Components.SetGameObject, Phaser.Physics.Impact.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param world [description]
@@ -33616,11 +38136,6 @@ declare namespace Phaser {
                  * [description]
                  */
                 maxVel: Object;
-
-                /**
-                 * [description]
-                 */
-                toJSON(): JSONGameObject;
 
                 /**
                  * Clears all alpha values associated with this Game Object.
@@ -33836,7 +38351,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -34032,7 +38600,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -34348,17 +38916,22 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                setLite(): Phaser.GameObjects.GameObject;
+                setLiteCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setPassive(): Phaser.GameObjects.GameObject;
+                setPassiveCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
                  */
-                setFixed(): Phaser.GameObjects.GameObject;
+                setActiveCollision(): Phaser.GameObjects.GameObject;
+
+                /**
+                 * [description]
+                 */
+                setFixedCollision(): Phaser.GameObjects.GameObject;
 
                 /**
                  * [description]
@@ -35575,17 +40148,12 @@ declare namespace Phaser {
             /**
              * A Matter Physics Image Game Object.
              * 
-             * 
-             * 
              * An Image is a light-weight Game Object useful for the display of static images in your game,
-             * 
              * such as logos, backgrounds, scenery or other non-animated elements. Images can have input
-             * 
              * events and physics bodies, or be tweened, tinted or scrolled. The main difference between an
-             * 
              * Image and a Sprite is that you cannot animate an Image as they do not have the Animation component.
              */
-            class Image extends Phaser.GameObjects.Image implements Components.Bounce, Components.Collision, Components.Force, Components.Friction, Components.Gravity, Components.Mass, Components.Sensor, Components.SetBody, Components.Sleep, Components.Static, Components.Transform, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class Image extends Phaser.GameObjects.Image implements Phaser.Physics.Matter.Components.Bounce, Phaser.Physics.Matter.Components.Collision, Phaser.Physics.Matter.Components.Force, Phaser.Physics.Matter.Components.Friction, Phaser.Physics.Matter.Components.Gravity, Phaser.Physics.Matter.Components.Mass, Phaser.Physics.Matter.Components.Sensor, Phaser.Physics.Matter.Components.SetBody, Phaser.Physics.Matter.Components.Sleep, Phaser.Physics.Matter.Components.Static, Phaser.Physics.Matter.Components.Transform, Phaser.Physics.Matter.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param world [description]
@@ -35816,7 +40384,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -36012,7 +40633,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -36539,23 +41160,15 @@ declare namespace Phaser {
             /**
              * A Matter Physics Sprite Game Object.
              * 
-             * 
-             * 
              * A Sprite Game Object is used for the display of both static and animated images in your game.
-             * 
              * Sprites can have input events and physics bodies. They can also be tweened, tinted, scrolled
-             * 
              * and animated.
              * 
-             * 
-             * 
              * The main difference between a Sprite and an Image Game Object is that you cannot animate Images.
-             * 
              * As such, Sprites take a fraction longer to process and have a larger API footprint due to the Animation
-             * 
              * Component. If you do not require animation then you can safely use Images to replace Sprites in all cases.
              */
-            class Sprite extends Phaser.GameObjects.Components.Animation implements Components.Bounce, Components.Collision, Components.Force, Components.Friction, Components.Gravity, Components.Mass, Components.Sensor, Components.SetBody, Components.Sleep, Components.Static, Components.Transform, Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
+            class Sprite extends Phaser.GameObjects.Sprite implements Phaser.Physics.Matter.Components.Bounce, Phaser.Physics.Matter.Components.Collision, Phaser.Physics.Matter.Components.Force, Phaser.Physics.Matter.Components.Friction, Phaser.Physics.Matter.Components.Gravity, Phaser.Physics.Matter.Components.Mass, Phaser.Physics.Matter.Components.Sensor, Phaser.Physics.Matter.Components.SetBody, Phaser.Physics.Matter.Components.Sleep, Phaser.Physics.Matter.Components.Static, Phaser.Physics.Matter.Components.Transform, Phaser.Physics.Matter.Components.Velocity, Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Size, Phaser.GameObjects.Components.Texture, Phaser.GameObjects.Components.Tint, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
                 /**
                  * 
                  * @param world [description]
@@ -36571,11 +41184,6 @@ declare namespace Phaser {
                  * [description]
                  */
                 world: Phaser.Physics.Matter.World;
-
-                /**
-                 * [description]
-                 */
-                toJSON(): JSONGameObject;
 
                 /**
                  * Clears all alpha values associated with this Game Object.
@@ -36791,7 +41399,60 @@ declare namespace Phaser {
                  * The values are stored and returned in a Rectangle, or Rectangle-like, object.
                  * @param output An object to store the values in. If not provided a new Rectangle will be created.
                  */
-                getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+                getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
+
+                /**
+                 * The Mask this Game Object is using during render.
+                 */
+                mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask;
+
+                /**
+                 * Sets the mask that this Game Object will use to render with.
+                 * 
+                 * The mask must have been previously created and can be either a
+                 * GeometryMask or a BitmapMask.
+                 * 
+                 * Note: Bitmap Masks only work on WebGL. Geometry Masks work on both WebGL and Canvas.
+                 * 
+                 * If a mask is already set on this Game Object it will be immediately replaced.
+                 * @param mask The mask this Game Object will use when rendering.
+                 */
+                setMask(mask: Phaser.Display.Masks.BitmapMask | Phaser.Display.Masks.GeometryMask): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Clears the mask that this Game Object was using.
+                 * @param destroyMask Destroy the mask before clearing it? Default false.
+                 */
+                clearMask(destroyMask?: boolean): Phaser.GameObjects.GameObject;
+
+                /**
+                 * Creates and returns a Bitmap Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a renderable Game Object.
+                 * A renderable Game Object is one that uses a texture to render with, such as an
+                 * Image, Sprite, Render Texture or BitmapText.
+                 * 
+                 * If you do not provide a renderable object, and this Game Object has a texture,
+                 * it will use itself as the object. This means you can call this method to create
+                 * a Bitmap Mask from any renderable Game Object.
+                 * @param renderable A renderable Game Object that uses a texture, such as a Sprite.
+                 */
+                createBitmapMask(renderable?: Phaser.GameObjects.GameObject): Phaser.Display.Masks.BitmapMask;
+
+                /**
+                 * Creates and returns a Geometry Mask. This mask can be used by any Game Object,
+                 * including this one.
+                 * 
+                 * To create the mask you need to pass in a reference to a Graphics Game Object.
+                 * 
+                 * If you do not provide a graphics object, and this Game Object is an instance
+                 * of a Graphics object, then it will use itself to create the mask.
+                 * 
+                 * This means you can call this method to create a Geometry Mask from any Graphics Game Object.
+                 * @param graphics A Graphics Game Object. The geometry within it will be used as the mask.
+                 */
+                createGeometryMask(graphics?: Phaser.GameObjects.Graphics): Phaser.Display.Masks.GeometryMask;
 
                 /**
                  * The horizontal origin of this Game Object.
@@ -36987,7 +41648,7 @@ declare namespace Phaser {
                 /**
                  * The Texture this Game Object is using to render with.
                  */
-                texture: Phaser.Textures.Texture;
+                texture: Phaser.Textures.Texture | Phaser.Textures.CanvasTexture;
 
                 /**
                  * The Texture Frame this Game Object is using to render with.
@@ -37414,26 +42075,17 @@ declare namespace Phaser {
 
             /**
              * A wrapper around a Tile that provides access to a corresponding Matter body. A tile can only
-             * 
              * have one Matter body associated with it. You can either pass in an existing Matter body for
-             * 
              * the tile or allow the constructor to create the corresponding body for you. If the Tile has a
-             * 
              * collision group (defined in Tiled), those shapes will be used to create the body. If not, the
-             * 
              * tile's rectangle bounding box will be used.
-             * 
-             * 
              * 
              * The corresponding body will be accessible on the Tile itself via Tile.physics.matterBody.
              * 
-             * 
-             * 
              * Note: not all Tiled collision shapes are supported. See
-             * 
              * Phaser.Physics.Matter.TileBody#setFromTileCollision for more information.
              */
-            class TileBody implements Components.Bounce, Components.Collision, Components.Friction, Components.Gravity, Components.Mass, Components.Sensor, Components.Sleep, Components.Static {
+            class TileBody implements Phaser.Physics.Matter.Components.Bounce, Phaser.Physics.Matter.Components.Collision, Phaser.Physics.Matter.Components.Friction, Phaser.Physics.Matter.Components.Gravity, Phaser.Physics.Matter.Components.Mass, Phaser.Physics.Matter.Components.Sensor, Phaser.Physics.Matter.Components.Sleep, Phaser.Physics.Matter.Components.Static {
                 /**
                  * 
                  * @param world [description]
@@ -37974,57 +42626,36 @@ declare namespace Phaser {
 
         }
 
-        class Arcade {
-            /**
-             * [description]
-             */
-            static DYNAMIC_BODY: number;
-
-            /**
-             * [description]
-             */
-            static STATIC_BODY: number;
-
-            /**
-             * [description]
-             */
-            static GROUP: number;
-
-            /**
-             * [description]
-             */
-            static TILEMAPLAYER: number;
-
-            /**
-             * [description]
-             */
-            static FACING_NONE: number;
-
-            /**
-             * [description]
-             */
-            static FACING_UP: number;
-
-            /**
-             * [description]
-             */
-            static FACING_DOWN: number;
-
-            /**
-             * [description]
-             */
-            static FACING_LEFT: number;
-
-            /**
-             * [description]
-             */
-            static FACING_RIGHT: number;
-
-        }
-
     }
 
     namespace Plugins {
+        /**
+         * These are the Global Managers that are created by the Phaser.Game instance.
+         * They are referenced from Scene.Systems so that plugins can use them.
+         */
+        var Global: any[];
+
+        /**
+         * These are the core plugins that are installed into every Scene.Systems instance, no matter what.
+         * They are optionally exposed in the Scene as well (see the InjectionMap for details)
+         * 
+         * They are created in the order in which they appear in this array and EventEmitter is always first.
+         */
+        var CoreScene: any[];
+
+        /**
+         * These plugins are created in Scene.Systems in addition to the CoreScenePlugins.
+         * 
+         * You can elect not to have these plugins by either creating a DefaultPlugins object as part
+         * of the Game Config, by creating a Plugins object as part of a Scene Config, or by modifying this array
+         * and building your own bundle.
+         * 
+         * They are optionally exposed in the Scene as well (see the InjectionMap for details)
+         * 
+         * They are always created in the order in which they appear in the array.
+         */
+        var DefaultScene: any[];
+
     }
 
     /**
@@ -38330,550 +42961,734 @@ declare namespace Phaser {
         }
 
         namespace WebGL {
-            /**
-             * [description]
-             */
-            class BitmapMaskPipeline extends WebGLPipeline {
-                /**
-                 * 
-                 * @param config [description]
-                 */
-                constructor(config: object);
-
-                /**
-                 * [description]
-                 */
-                vertexViewF32: Float32Array;
-
-                /**
-                 * [description]
-                 */
-                maxQuads: number;
-
-                /**
-                 * [description]
-                 */
-                resolutionDirty: boolean;
-
-                /**
-                 * [description]
-                 * @param mask [description]
-                 * @param maskedObject [description]
-                 * @param camera [description]
-                 */
-                beginMask(mask: Phaser.GameObjects.GameObject, maskedObject: Phaser.GameObjects.GameObject, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param mask [description]
-                 */
-                endMask(mask: Phaser.GameObjects.GameObject): void;
-
-            }
-
-            /**
-             * [description]
-             */
-            class FlatTintPipeline extends WebGLPipeline {
-                /**
-                 * 
-                 * @param config [description]
-                 */
-                constructor(config: object);
-
-                /**
-                 * [description]
-                 */
-                vertexViewF32: Float32Array;
-
-                /**
-                 * [description]
-                 */
-                vertexViewU32: Uint32Array;
-
-                /**
-                 * [description]
-                 */
-                tempTriangle: any[];
-
-                /**
-                 * [description]
-                 */
-                polygonCache: any[];
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param width [description]
-                 * @param height [description]
-                 * @param fillColor [description]
-                 * @param fillAlpha [description]
-                 * @param a1 [description]
-                 * @param b1 [description]
-                 * @param c1 [description]
-                 * @param d1 [description]
-                 * @param e1 [description]
-                 * @param f1 [description]
-                 * @param currentMatrix [description]
-                 */
-                batchFillRect(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x: number, y: number, width: number, height: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param x0 [description]
-                 * @param y0 [description]
-                 * @param x1 [description]
-                 * @param y1 [description]
-                 * @param x2 [description]
-                 * @param y2 [description]
-                 * @param fillColor [description]
-                 * @param fillAlpha [description]
-                 * @param a1 [description]
-                 * @param b1 [description]
-                 * @param c1 [description]
-                 * @param d1 [description]
-                 * @param e1 [description]
-                 * @param f1 [description]
-                 * @param currentMatrix [description]
-                 */
-                batchFillTriangle(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param x0 [description]
-                 * @param y0 [description]
-                 * @param x1 [description]
-                 * @param y1 [description]
-                 * @param x2 [description]
-                 * @param y2 [description]
-                 * @param lineWidth [description]
-                 * @param lineColor [description]
-                 * @param lineAlpha [description]
-                 * @param a [description]
-                 * @param b [description]
-                 * @param c [description]
-                 * @param d [description]
-                 * @param e [description]
-                 * @param f [description]
-                 * @param currentMatrix [description]
-                 */
-                batchStrokeTriangle(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, lineWidth: number, lineColor: integer, lineAlpha: number, a: number, b: number, c: number, d: number, e: number, f: number, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param path [description]
-                 * @param fillColor [description]
-                 * @param fillAlpha [description]
-                 * @param a1 [description]
-                 * @param b1 [description]
-                 * @param c1 [description]
-                 * @param d1 [description]
-                 * @param e1 [description]
-                 * @param f1 [description]
-                 * @param currentMatrix [description]
-                 */
-                batchFillPath(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, path: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param path [description]
-                 * @param lineWidth [description]
-                 * @param lineColor [description]
-                 * @param lineAlpha [description]
-                 * @param a [description]
-                 * @param b [description]
-                 * @param c [description]
-                 * @param d [description]
-                 * @param e [description]
-                 * @param f [description]
-                 * @param isLastPath [description]
-                 * @param currentMatrix [description]
-                 */
-                batchStrokePath(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, path: any[], lineWidth: number, lineColor: integer, lineAlpha: number, a: number, b: number, c: number, d: number, e: number, f: number, isLastPath: boolean, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcScaleX [description]
-                 * @param srcScaleY [description]
-                 * @param srcRotation [description]
-                 * @param ax [description]
-                 * @param ay [description]
-                 * @param bx [description]
-                 * @param by [description]
-                 * @param aLineWidth [description]
-                 * @param bLineWidth [description]
-                 * @param aLineColor [description]
-                 * @param bLineColor [description]
-                 * @param lineAlpha [description]
-                 * @param a1 [description]
-                 * @param b1 [description]
-                 * @param c1 [description]
-                 * @param d1 [description]
-                 * @param e1 [description]
-                 * @param f1 [description]
-                 * @param currentMatrix [description]
-                 */
-                batchLine(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, ax: number, ay: number, bx: number, by: number, aLineWidth: number, bLineWidth: number, aLineColor: integer, bLineColor: integer, lineAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
-
-                /**
-                 * [description]
-                 * @param graphics [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchGraphics(graphics: Phaser.GameObjects.Graphics, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
-
-                /**
-                 * [description]
-                 * @param tilemap [description]
-                 * @param camera [description]
-                 */
-                drawStaticTilemapLayer(tilemap: Phaser.Tilemaps.StaticTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param emitterManager [description]
-                 * @param camera [description]
-                 */
-                drawEmitterManager(emitterManager: Phaser.GameObjects.Particles.ParticleEmitterManager, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param blitter [description]
-                 * @param camera [description]
-                 */
-                drawBlitter(blitter: Phaser.GameObjects.Blitter, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param sprite [description]
-                 * @param camera [description]
-                 */
-                batchSprite(sprite: Phaser.GameObjects.Sprite, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param mesh [description]
-                 * @param camera [description]
-                 */
-                batchMesh(mesh: Phaser.GameObjects.Mesh, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param bitmapText [description]
-                 * @param camera [description]
-                 */
-                batchBitmapText(bitmapText: Phaser.GameObjects.BitmapText, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param bitmapText [description]
-                 * @param camera [description]
-                 */
-                batchDynamicBitmapText(bitmapText: Phaser.GameObjects.DynamicBitmapText, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param text [description]
-                 * @param camera [description]
-                 */
-                batchText(text: Phaser.GameObjects.Text, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param tilemapLayer [description]
-                 * @param camera [description]
-                 */
-                batchDynamicTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param tileSprite [description]
-                 * @param camera [description]
-                 */
-                batchTileSprite(tileSprite: Phaser.GameObjects.TileSprite, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-            }
-
-            /**
-             * [description]
-             */
-            class ForwardDiffuseLightPipeline extends TextureTintPipeline {
-                /**
-                 * 
-                 * @param config [description]
-                 */
-                constructor(config: object);
-
-                /**
-                 * [description]
-                 * @param tilemap [description]
-                 * @param camera [description]
-                 */
-                drawStaticTilemapLayer(tilemap: Phaser.Tilemaps.StaticTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
-
-                /**
-                 * [description]
-                 * @param width [description]
-                 * @param height [description]
-                 * @param resolution [description]
-                 */
-                resize(width: number, height: number, resolution: number): Phaser.Renderer.WebGL.TextureTintPipeline;
-
-            }
-
             namespace Pipelines {
-            }
-
-            /**
-             * [description]
-             */
-            class TextureTintPipeline extends WebGLPipeline {
                 /**
-                 * 
-                 * @param config [description]
+                 * BitmapMaskPipeline handles all bitmap masking rendering in WebGL. It works by using 
+                 * sampling two texture on the fragment shader and using the fragment's alpha to clip the region.
+                 * The config properties are:
+                 * - game: Current game instance.
+                 * - renderer: Current WebGL renderer.
+                 * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+                 *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+                 * - vertShader: Source for vertex shader as a string.
+                 * - fragShader: Source for fragment shader as a string.
+                 * - vertexCapacity: The amount of vertices that shall be allocated
+                 * - vertexSize: The size of a single vertex in bytes.
                  */
-                constructor(config: object);
+                class BitmapMaskPipeline extends Phaser.Renderer.WebGL.WebGLPipeline {
+                    /**
+                     * 
+                     * @param config Used for overriding shader an pipeline properties if extending this pipeline.
+                     */
+                    constructor(config: object);
 
-                /**
-                 * [description]
-                 */
-                vertexViewF32: Float32Array;
+                    /**
+                     * Float32 view of the array buffer containing the pipeline's vertices.
+                     */
+                    vertexViewF32: Float32Array;
 
-                /**
-                 * [description]
-                 */
-                vertexViewU32: Uint32Array;
+                    /**
+                     * Size of the batch.
+                     */
+                    maxQuads: number;
 
-                /**
-                 * [description]
-                 */
-                maxQuads: integer;
+                    /**
+                     * Dirty flag to check if resolution properties need to be updated on the 
+                     * masking shader.
+                     */
+                    resolutionDirty: boolean;
 
-                /**
-                 * [description]
-                 */
-                batches: any[];
+                    /**
+                     * Called every time the pipeline needs to be used.
+                     * It binds all necessary resources.
+                     */
+                    onBind(): Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline;
 
-                /**
-                 * [description]
-                 * @param texture [description]
-                 * @param textureUnit [description]
-                 */
-                setTexture2D(texture: WebGLTexture, textureUnit: integer): Phaser.Renderer.WebGL.TextureTintPipeline;
+                    /**
+                     * [description]
+                     * @param width [description]
+                     * @param height [description]
+                     * @param resolution [description]
+                     */
+                    resize(width: number, height: number, resolution: number): Phaser.Renderer.WebGL.Pipelines.BitmapMaskPipeline;
 
-                /**
-                 * [description]
-                 */
-                pushBatch(): void;
+                    /**
+                     * Binds necessary resources and renders the mask to a separated framebuffer.
+                     * The framebuffer for the masked object is also bound for further use.
+                     * @param mask GameObject used as mask.
+                     * @param maskedObject GameObject masked by the mask GameObject.
+                     * @param camera [description]
+                     */
+                    beginMask(mask: Phaser.GameObjects.GameObject, maskedObject: Phaser.GameObjects.GameObject, camera: Phaser.Cameras.Scene2D.Camera): void;
 
-                /**
-                 * [description]
-                 * @param tilemap [description]
-                 * @param camera [description]
-                 */
-                drawStaticTilemapLayer(tilemap: Phaser.Tilemaps.StaticTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
+                    /**
+                     * The masked game object's framebuffer is unbound and it's texture 
+                     * is bound together with the mask texture and the mask shader and 
+                     * a draw call with a single quad is processed. Here is where the
+                     * masking effect is applied.
+                     * @param mask GameObject used as a mask.
+                     */
+                    endMask(mask: Phaser.GameObjects.GameObject): void;
 
-                /**
-                 * [description]
-                 * @param emitterManager [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                drawEmitterManager(emitterManager: Phaser.GameObjects.Particles.ParticleEmitterManager, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
-
-                /**
-                 * [description]
-                 * @param blitter [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                drawBlitter(blitter: Phaser.GameObjects.Blitter, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
-
-                /**
-                 * [description]
-                 * @param sprite [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchSprite(sprite: Phaser.GameObjects.Sprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                }
 
                 /**
-                 * [description]
-                 * @param mesh [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
+                 * The FlatTintPipeline is used for rendering flat colored shapes. 
+                 * Mostly used by the Graphics game object.
+                 * The config properties are:
+                 * - game: Current game instance.
+                 * - renderer: Current WebGL renderer.
+                 * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+                 *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+                 * - vertShader: Source for vertex shader as a string.
+                 * - fragShader: Source for fragment shader as a string.
+                 * - vertexCapacity: The amount of vertices that shall be allocated
+                 * - vertexSize: The size of a single vertex in bytes.
                  */
-                batchMesh(mesh: Phaser.GameObjects.Mesh, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                class FlatTintPipeline extends Phaser.Renderer.WebGL.WebGLPipeline {
+                    /**
+                     * 
+                     * @param config Used for overriding shader an pipeline properties if extending this pipeline.
+                     */
+                    constructor(config: object);
+
+                    /**
+                     * Float32 view of the array buffer containing the pipeline's vertices.
+                     */
+                    vertexViewF32: Float32Array;
+
+                    /**
+                     * Uint32 view of the array buffer containing the pipeline's vertices.
+                     */
+                    vertexViewU32: Uint32Array;
+
+                    /**
+                     * Used internally to draw triangles
+                     */
+                    tempTriangle: any[];
+
+                    /**
+                     * Used internally by for triangulating a polyong
+                     */
+                    polygonCache: any[];
+
+                    /**
+                     * [description]
+                     */
+                    onBind(): Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline;
+
+                    /**
+                     * [description]
+                     * @param width [description]
+                     * @param height [description]
+                     * @param resolution [description]
+                     */
+                    resize(width: number, height: number, resolution: number): Phaser.Renderer.WebGL.Pipelines.FlatTintPipeline;
+
+                    /**
+                     * Pushes a rectangle into the vertex batch
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param x Horiztonal top left coordinate of the rectangle
+                     * @param y Vertical top left coordinate of the rectangle
+                     * @param width Width of the rectangle
+                     * @param height Height of the rectangle
+                     * @param fillColor RGB color packed as a uint
+                     * @param fillAlpha Alpha represented as float
+                     * @param a1 Matrix stack top a component
+                     * @param b1 Matrix stack top b component
+                     * @param c1 Matrix stack top c component
+                     * @param d1 Matrix stack top d component
+                     * @param e1 Matrix stack top e component
+                     * @param f1 Matrix stack top f component
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchFillRect(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x: number, y: number, width: number, height: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param x0 Point 0 x coordinate
+                     * @param y0 Point 0 y coordinate
+                     * @param x1 Point 1 x coordinate
+                     * @param y1 Point 1 y coordinate
+                     * @param x2 Point 2 x coordinate
+                     * @param y2 Point 2 y coordinate
+                     * @param fillColor RGB color packed as a uint
+                     * @param fillAlpha Alpha represented as float
+                     * @param a1 Matrix stack top a component
+                     * @param b1 Matrix stack top b component
+                     * @param c1 Matrix stack top c component
+                     * @param d1 Matrix stack top d component
+                     * @param e1 Matrix stack top e component
+                     * @param f1 Matrix stack top f component
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchFillTriangle(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param x0 [description]
+                     * @param y0 [description]
+                     * @param x1 [description]
+                     * @param y1 [description]
+                     * @param x2 [description]
+                     * @param y2 [description]
+                     * @param lineWidth Size of the line as a float value
+                     * @param lineColor RGB color packed as a uint
+                     * @param lineAlpha Alpha represented as float
+                     * @param a Matrix stack top a component
+                     * @param b Matrix stack top b component
+                     * @param c Matrix stack top c component
+                     * @param d Matrix stack top d component
+                     * @param e Matrix stack top e component
+                     * @param f Matrix stack top f component
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchStrokeTriangle(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, x0: number, y0: number, x1: number, y1: number, x2: number, y2: number, lineWidth: number, lineColor: integer, lineAlpha: number, a: number, b: number, c: number, d: number, e: number, f: number, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param path Collection of points that represent the path
+                     * @param fillColor RGB color packed as a uint
+                     * @param fillAlpha Alpha represented as float
+                     * @param a1 Matrix stack top a component
+                     * @param b1 Matrix stack top b component
+                     * @param c1 Matrix stack top c component
+                     * @param d1 Matrix stack top d component
+                     * @param e1 Matrix stack top e component
+                     * @param f1 Matrix stack top f component
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchFillPath(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, path: number, fillColor: integer, fillAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param path [description]
+                     * @param lineWidth [description]
+                     * @param lineColor RGB color packed as a uint
+                     * @param lineAlpha Alpha represented as float
+                     * @param a Matrix stack top a component
+                     * @param b Matrix stack top b component
+                     * @param c Matrix stack top c component
+                     * @param d Matrix stack top d component
+                     * @param e Matrix stack top e component
+                     * @param f Matrix stack top f component
+                     * @param isLastPath Indicates if the path should be closed
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchStrokePath(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, path: any[], lineWidth: number, lineColor: integer, lineAlpha: number, a: number, b: number, c: number, d: number, e: number, f: number, isLastPath: boolean, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param srcX Graphics horizontal component for translation
+                     * @param srcY Graphics vertical component for translation
+                     * @param srcScaleX Graphics horizontal component for scale
+                     * @param srcScaleY Graphics vertical component for scale
+                     * @param srcRotation Graphics rotation
+                     * @param ax X coordinate to the start of the line
+                     * @param ay Y coordinate to the start of the line
+                     * @param bx X coordinate to the end of the line
+                     * @param by Y coordinate to the end of the line
+                     * @param aLineWidth Width of the start of the line
+                     * @param bLineWidth Width of the end of the line
+                     * @param aLineColor RGB color packed as a uint
+                     * @param bLineColor RGB color packed as a uint
+                     * @param lineAlpha Alpha represented as float
+                     * @param a1 Matrix stack top a component
+                     * @param b1 Matrix stack top b component
+                     * @param c1 Matrix stack top c component
+                     * @param d1 Matrix stack top d component
+                     * @param e1 Matrix stack top e component
+                     * @param f1 Matrix stack top f component
+                     * @param currentMatrix Parent matrix, generally used by containers
+                     */
+                    batchLine(srcX: number, srcY: number, srcScaleX: number, srcScaleY: number, srcRotation: number, ax: number, ay: number, bx: number, by: number, aLineWidth: number, bLineWidth: number, aLineColor: integer, bLineColor: integer, lineAlpha: number, a1: number, b1: number, c1: number, d1: number, e1: number, f1: number, currentMatrix: Float32Array): void;
+
+                    /**
+                     * [description]
+                     * @param graphics [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchGraphics(graphics: Phaser.GameObjects.Graphics, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param tilemap [description]
+                     * @param camera [description]
+                     */
+                    drawStaticTilemapLayer(tilemap: Phaser.Tilemaps.StaticTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param emitterManager [description]
+                     * @param camera [description]
+                     */
+                    drawEmitterManager(emitterManager: Phaser.GameObjects.Particles.ParticleEmitterManager, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param blitter [description]
+                     * @param camera [description]
+                     */
+                    drawBlitter(blitter: Phaser.GameObjects.Blitter, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param sprite [description]
+                     * @param camera [description]
+                     */
+                    batchSprite(sprite: Phaser.GameObjects.Sprite, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param mesh [description]
+                     * @param camera [description]
+                     */
+                    batchMesh(mesh: Phaser.GameObjects.Mesh, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     */
+                    batchBitmapText(bitmapText: Phaser.GameObjects.BitmapText, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     */
+                    batchDynamicBitmapText(bitmapText: Phaser.GameObjects.DynamicBitmapText, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param text [description]
+                     * @param camera [description]
+                     */
+                    batchText(text: Phaser.GameObjects.Text, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param tilemapLayer [description]
+                     * @param camera [description]
+                     */
+                    batchDynamicTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                    /**
+                     * [description]
+                     * @param tileSprite [description]
+                     * @param camera [description]
+                     */
+                    batchTileSprite(tileSprite: Phaser.GameObjects.TileSprite, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                }
 
                 /**
-                 * [description]
-                 * @param bitmapText [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
+                 * ForwardDiffuseLightPipeline implements a forward rendering approach for 2D lights.
+                 * This pipeline extends TextureTintPipeline so it implements all it's rendering functions
+                 * and batching system.
                  */
-                batchBitmapText(bitmapText: Phaser.GameObjects.BitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                class ForwardDiffuseLightPipeline extends Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline {
+                    /**
+                     * 
+                     * @param config [description]
+                     */
+                    constructor(config: object);
+
+                    /**
+                     * This function sets all the needed resources for each camera pass.
+                     * @param scene [description]
+                     * @param camera [description]
+                     */
+                    onRender(scene: Phaser.Scene, camera: Phaser.Cameras.Scene2D.Camera): Phaser.Renderer.WebGL.Pipelines.ForwardDiffuseLightPipeline;
+
+                    /**
+                     * [description]
+                     * @param emitterManager [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawEmitterManager(emitterManager: Phaser.GameObjects.Particles.ParticleEmitterManager, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param blitter [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawBlitter(blitter: Phaser.GameObjects.Blitter, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param sprite [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchSprite(sprite: Phaser.GameObjects.Sprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param mesh [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchMesh(mesh: Phaser.GameObjects.Mesh, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchBitmapText(bitmapText: Phaser.GameObjects.BitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchDynamicBitmapText(bitmapText: Phaser.GameObjects.DynamicBitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param text [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchText(text: Phaser.GameObjects.Text, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param tilemapLayer [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchDynamicTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * [description]
+                     * @param tileSprite [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchTileSprite(tileSprite: Phaser.GameObjects.TileSprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                }
 
                 /**
-                 * [description]
-                 * @param bitmapText [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
+                 * TextureTintPipeline implements the rendering infrastructure
+                 * for displaying textured objects
+                 * The config properties are:
+                 * - game: Current game instance.
+                 * - renderer: Current WebGL renderer.
+                 * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+                 *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+                 * - vertShader: Source for vertex shader as a string.
+                 * - fragShader: Source for fragment shader as a string.
+                 * - vertexCapacity: The amount of vertices that shall be allocated
+                 * - vertexSize: The size of a single vertex in bytes.
                  */
-                batchDynamicBitmapText(bitmapText: Phaser.GameObjects.DynamicBitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                class TextureTintPipeline extends Phaser.Renderer.WebGL.WebGLPipeline {
+                    /**
+                     * 
+                     * @param config [description]
+                     */
+                    constructor(config: object);
 
-                /**
-                 * [description]
-                 * @param text [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchText(text: Phaser.GameObjects.Text, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                    /**
+                     * Float32 view of the array buffer containing the pipeline's vertices.
+                     */
+                    vertexViewF32: Float32Array;
 
-                /**
-                 * [description]
-                 * @param tilemapLayer [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchDynamicTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                    /**
+                     * Uint32 view of the array buffer containing the pipeline's vertices.
+                     */
+                    vertexViewU32: Uint32Array;
 
-                /**
-                 * [description]
-                 * @param tileSprite [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchTileSprite(tileSprite: Phaser.GameObjects.TileSprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                    /**
+                     * Size of the batch.
+                     */
+                    maxQuads: integer;
 
-                /**
-                 * [description]
-                 * @param gameObject [description]
-                 * @param texture [description]
-                 * @param textureWidth [description]
-                 * @param textureHeight [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param srcWidth [description]
-                 * @param srcHeight [description]
-                 * @param scaleX [description]
-                 * @param scaleY [description]
-                 * @param rotation [description]
-                 * @param flipX [description]
-                 * @param flipY [description]
-                 * @param scrollFactorX [description]
-                 * @param scrollFactorY [description]
-                 * @param displayOriginX [description]
-                 * @param displayOriginY [description]
-                 * @param frameX [description]
-                 * @param frameY [description]
-                 * @param frameWidth [description]
-                 * @param frameHeight [description]
-                 * @param tintTL [description]
-                 * @param tintTR [description]
-                 * @param tintBL [description]
-                 * @param tintBR [description]
-                 * @param uOffset [description]
-                 * @param vOffset [description]
-                 * @param camera [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                batchTexture(gameObject: Phaser.GameObjects.GameObject, texture: WebGLTexture, textureWidth: integer, textureHeight: integer, srcX: number, srcY: number, srcWidth: number, srcHeight: number, scaleX: number, scaleY: number, rotation: number, flipX: boolean, flipY: boolean, scrollFactorX: number, scrollFactorY: number, displayOriginX: number, displayOriginY: number, frameX: number, frameY: number, frameWidth: number, frameHeight: number, tintTL: integer, tintTR: integer, tintBL: integer, tintBR: integer, uOffset: number, vOffset: number, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+                    /**
+                     * Collection of batch information
+                     */
+                    batches: any[];
 
-                /**
-                 * Immediately draws a texture with no batching.
-                 * @param texture [description]
-                 * @param srcX [description]
-                 * @param srcY [description]
-                 * @param tint [description]
-                 * @param alpha [description]
-                 * @param frameX [description]
-                 * @param frameY [description]
-                 * @param frameWidth [description]
-                 * @param frameHeight [description]
-                 * @param transformMatrix [description]
-                 * @param parentTransformMatrix [description]
-                 */
-                drawTexture(texture: WebGLTexture, srcX: number, srcY: number, tint: number, alpha: number, frameX: number, frameY: number, frameWidth: number, frameHeight: number, transformMatrix: Phaser.GameObjects.Components.TransformMatrix, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): Phaser.Renderer.WebGL.TextureTintPipeline;
+                    /**
+                     * Assigns a texture to the current batch. If a texture is already set it creates
+                     * a new batch object.
+                     * @param texture WebGLTexture that will be assigned to the current batch.
+                     * @param textureUnit Texture unit to which the texture needs to be bound.
+                     */
+                    setTexture2D(texture: WebGLTexture, textureUnit: integer): Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 
-                /**
-                 * [description]
-                 * @param graphics [description]
-                 * @param camera [description]
-                 */
-                batchGraphics(graphics: Phaser.GameObjects.Graphics, camera: Phaser.Cameras.Scene2D.Camera): void;
+                    /**
+                     * Creates a new batch object and pushes it to a batch array.
+                     * The batch object contains information relevant to the current 
+                     * vertex batch like the offset in the vertex buffer, vertex count and 
+                     * the textures used by that batch.
+                     */
+                    pushBatch(): void;
+
+                    /**
+                     * Binds, uploads resources and processes all batches generating draw calls.
+                     */
+                    flush(): Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+
+                    /**
+                     * Called every time the pipeline needs to be used.
+                     * It binds all necessary resources.
+                     */
+                    onBind(): Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+
+                    /**
+                     * [description]
+                     * @param width [description]
+                     * @param height [description]
+                     * @param resolution [description]
+                     */
+                    resize(width: number, height: number, resolution: number): Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+
+                    /**
+                     * Renders immediately a static tilemap. This function won't use
+                     * the batching functionality of the pipieline.
+                     * @param tilemap [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawStaticTilemapLayer(tilemap: Phaser.Tilemaps.StaticTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Renders contents of a ParticleEmitterManager. It'll batch all particles if possible.
+                     * @param emitterManager [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawEmitterManager(emitterManager: Phaser.GameObjects.Particles.ParticleEmitterManager, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches blitter game object
+                     * @param blitter [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawBlitter(blitter: Phaser.GameObjects.Blitter, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches Sprite game object
+                     * @param sprite [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchSprite(sprite: Phaser.GameObjects.Sprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches Mesh game object
+                     * @param mesh [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchMesh(mesh: Phaser.GameObjects.Mesh, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches BitmapText game object
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchBitmapText(bitmapText: Phaser.GameObjects.BitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches DynamicBitmapText game object
+                     * @param bitmapText [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchDynamicBitmapText(bitmapText: Phaser.GameObjects.DynamicBitmapText, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches Text game object
+                     * @param text [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchText(text: Phaser.GameObjects.Text, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches DynamicTilemapLayer game object
+                     * @param tilemapLayer [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchDynamicTilemapLayer(tilemapLayer: Phaser.Tilemaps.DynamicTilemapLayer, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Batches TileSprite game object
+                     * @param tileSprite [description]
+                     * @param camera [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    batchTileSprite(tileSprite: Phaser.GameObjects.TileSprite, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Generic function for batching a textured quad
+                     * @param gameObject Source GameObject
+                     * @param texture Raw WebGLTexture associated with the quad
+                     * @param textureWidth Real texture width
+                     * @param textureHeight Real texture height
+                     * @param srcX X coordinate of the quad
+                     * @param srcY Y coordinate of the quad
+                     * @param srcWidth Width of the quad
+                     * @param srcHeight Height of the quad
+                     * @param scaleX X component of scale
+                     * @param scaleY Y component of scale
+                     * @param rotation Rotation of the quad
+                     * @param flipX Indicates if the quad is horizontally flipped
+                     * @param flipY Indicates if the quad is vertically flipped
+                     * @param scrollFactorX By which factor is the quad affected by the camera horizontal scroll
+                     * @param scrollFactorY By which factor is the quad effected by the camera vertical scroll
+                     * @param displayOriginX Horizontal origin in pixels
+                     * @param displayOriginY Vertical origin in pixels
+                     * @param frameX X coordinate of the texture frame
+                     * @param frameY Y coordinate of the texture frame
+                     * @param frameWidth Width of the texture frame
+                     * @param frameHeight Height of the texture frame
+                     * @param tintTL Tint for top left
+                     * @param tintTR Tint for top right
+                     * @param tintBL Tint for bottom left
+                     * @param tintBR Tint for bottom right
+                     * @param uOffset Horizontal offset on texture coordinate
+                     * @param vOffset Vertical offset on texture coordinate
+                     * @param camera Current used camera
+                     * @param parentTransformMatrix Parent container
+                     */
+                    batchTexture(gameObject: Phaser.GameObjects.GameObject, texture: WebGLTexture, textureWidth: integer, textureHeight: integer, srcX: number, srcY: number, srcWidth: number, srcHeight: number, scaleX: number, scaleY: number, rotation: number, flipX: boolean, flipY: boolean, scrollFactorX: number, scrollFactorY: number, displayOriginX: number, displayOriginY: number, frameX: number, frameY: number, frameWidth: number, frameHeight: number, tintTL: integer, tintTR: integer, tintBL: integer, tintBR: integer, uOffset: number, vOffset: number, camera: Phaser.Cameras.Scene2D.Camera, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): void;
+
+                    /**
+                     * Immediately draws a texture with no batching.
+                     * @param texture [description]
+                     * @param srcX [description]
+                     * @param srcY [description]
+                     * @param tint [description]
+                     * @param alpha [description]
+                     * @param frameX [description]
+                     * @param frameY [description]
+                     * @param frameWidth [description]
+                     * @param frameHeight [description]
+                     * @param transformMatrix [description]
+                     * @param parentTransformMatrix [description]
+                     */
+                    drawTexture(texture: WebGLTexture, srcX: number, srcY: number, tint: number, alpha: number, frameX: number, frameY: number, frameWidth: number, frameHeight: number, transformMatrix: Phaser.GameObjects.Components.TransformMatrix, parentTransformMatrix: Phaser.GameObjects.Components.TransformMatrix): Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+
+                    /**
+                     * [description]
+                     * @param graphics [description]
+                     * @param camera [description]
+                     */
+                    batchGraphics(graphics: Phaser.GameObjects.Graphics, camera: Phaser.Cameras.Scene2D.Camera): void;
+
+                }
 
             }
 
             namespace Utils {
                 /**
-                 * [description]
-                 * @param r [description]
+                 * Packs four floats on a range from 0.0 to 1.0 into a single Uint32
+                 * @param r Red component in a range from 0.0 to 1.0
                  * @param g [description]
                  * @param b [description]
-                 * @param a [description]
+                 * @param a Alpha component in a range from 0.0 to 1.0
                  */
                 function getTintFromFloats(r: number, g: number, b: number, a: number): number;
 
                 /**
-                 * [description]
-                 * @param rgb [description]
-                 * @param a [description]
+                 * Packs a Uint24, representing RGB components, with a Float32, representing
+                 * the alpha component, with a range between 0.0 and 1.0 and return a Uint32
+                 * @param rgb Uint24 representing RGB components
+                 * @param a Float32 representing Alpha component
                  */
                 function getTintAppendFloatAlpha(rgb: number, a: number): number;
 
                 /**
-                 * [description]
-                 * @param rgb [description]
-                 * @param a [description]
+                 * Packs a Uint24, representing RGB components, with a Float32, representing
+                 * the alpha component, with a range between 0.0 and 1.0 and return a 
+                 * swizzled Uint32
+                 * @param rgb Uint24 representing RGB components
+                 * @param a Float32 representing Alpha component
                  */
                 function getTintAppendFloatAlphaAndSwap(rgb: number, a: number): number;
 
                 /**
-                 * [description]
-                 * @param rgb [description]
+                 * Unpacks a Uint24 RGB into an array of floats of ranges of 0.0 and 1.0
+                 * @param rgb RGB packed as a Uint24
                  */
-                function getFloatsFromUintRGB(rgb: number): number;
+                function getFloatsFromUintRGB(rgb: number): any[];
 
                 /**
-                 * [description]
-                 * @param attributes [description]
-                 * @param glContext [description]
+                 * Counts how many attributes of 32 bits a vertex has
+                 * @param attributes Array of attributes
+                 * @param glContext WebGLContext used for check types
                  */
-                function getComponentCount(attributes: number, glContext: WebGLRenderingContext): number;
+                function getComponentCount(attributes: any[], glContext: WebGLRenderingContext): number;
 
             }
 
             /**
-             * [description]
+             * WebGLPipeline is a class that describes the way elements will be rendererd 
+             * in WebGL, specially focused on batching vertices (batching is not provided). 
+             * Pipelines are mostly used for describing 2D rendering passes but it's 
+             * flexible enough to be used for any type of rendering including 3D. 
+             * Internally WebGLPipeline will handle things like compiling shaders,
+             * creating vertex buffers, assigning primitive topology and binding 
+             * vertex attributes.
+             * 
+             * The config properties are:
+             * - game: Current game instance.
+             * - renderer: Current WebGL renderer.
+             * - gl: Current WebGL context.
+             * - topology: This indicates how the primitives are rendered. The default value is GL_TRIANGLES.
+             *              Here is the full list of rendering primitives (https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants).
+             * - vertShader: Source for vertex shader as a string.
+             * - fragShader: Source for fragment shader as a string.
+             * - vertexCapacity: The amount of vertices that shall be allocated
+             * - vertexSize: The size of a single vertex in bytes.
+             * - vertices: An optional buffer of vertices
+             * - attributes: An array describing the vertex attributes
+             *  
+             * The vertex attributes properties are:
+             * - name : String - Name of the attribute in the vertex shader
+             * - size : integer - How many components describe the attribute. For ex: vec3 = size of 3, float = size of 1
+             * - type : GLenum - WebGL type (gl.BYTE, gl.SHORT, gl.UNSIGNED_BYTE, gl.UNSIGNED_SHORT, gl.FLOAT)
+             * - normalized : boolean - Is the attribute normalized
+             * - offset : integer - The offset in bytes to the current attribute in the vertex. Equivalent to offsetof(vertex, attrib) in C
+             * Here you can find more information of how to describe an attribute:
+             * - https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/vertexAttribPointer
              */
             class WebGLPipeline {
                 /**
@@ -38883,7 +43698,7 @@ declare namespace Phaser {
                 constructor(config: object);
 
                 /**
-                 * [description]
+                 * Name of the Pipeline. Used for identifying
                  */
                 name: string;
 
@@ -38898,17 +43713,17 @@ declare namespace Phaser {
                 view: HTMLCanvasElement;
 
                 /**
-                 * [description]
+                 * Used to store the current game resolution
                  */
                 resolution: number;
 
                 /**
-                 * [description]
+                 * Width of the current viewport
                  */
                 width: number;
 
                 /**
-                 * [description]
+                 * Height of the current viewport
                  */
                 height: number;
 
@@ -38918,12 +43733,12 @@ declare namespace Phaser {
                 gl: WebGLRenderingContext;
 
                 /**
-                 * [description]
+                 * How many vertices have been fed to the current pipeline.
                  */
                 vertexCount: number;
 
                 /**
-                 * [description]
+                 * The limit of vertices that the pipeline can hold
                  */
                 vertexCapacity: integer;
 
@@ -38933,37 +43748,38 @@ declare namespace Phaser {
                 renderer: Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Raw byte buffer of vertices.
                  */
                 vertexData: ArrayBuffer;
 
                 /**
-                 * [description]
+                 * The handle to a WebGL vertex buffer object.
                  */
                 vertexBuffer: WebGLBuffer;
 
                 /**
-                 * [description]
+                 * The handle to a WebGL program
                  */
                 program: WebGLProgram;
 
                 /**
-                 * [description]
+                 * Array of objects that describe the vertex attributes
                  */
                 attributes: object;
 
                 /**
-                 * [description]
+                 * The size in bytes of the vertex
                  */
                 vertexSize: integer;
 
                 /**
-                 * [description]
+                 * The primitive topology which the pipeline will use to submit draw calls
                  */
                 topology: integer;
 
                 /**
-                 * [description]
+                 * Uint8 view to the vertex raw buffer. Used for uploading vertex buffer resources
+                 * to the GPU.
                  */
                 bytes: Uint8Array;
 
@@ -38979,22 +43795,22 @@ declare namespace Phaser {
                 flushLocked: boolean;
 
                 /**
-                 * [description]
-                 * @param name [description]
-                 * @param size [description]
-                 * @param type [description]
-                 * @param normalized [description]
-                 * @param offset [description]
+                 * Adds a description of vertex attribute to the pipeline
+                 * @param name Name of the vertex attribute
+                 * @param size Vertex component size
+                 * @param type Type of the attribute
+                 * @param normalized Is the value normalized to a range
+                 * @param offset Byte offset to the beginning of the first element in the vertex
                  */
                 addAttribute(name: string, size: integer, type: integer, normalized: boolean, offset: integer): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Check if the current batch of vertices is full.
                  */
                 shouldFlush(): boolean;
 
                 /**
-                 * [description]
+                 * Resizes the properties used to describe the viewport
                  * @param width [description]
                  * @param height [description]
                  * @param resolution [description]
@@ -39002,7 +43818,7 @@ declare namespace Phaser {
                 resize(width: number, height: number, resolution: number): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Binds the pipeline resources, including programs, vertex buffers and binds attributes
                  */
                 bind(): Phaser.Renderer.WebGL.WebGLPipeline;
 
@@ -39029,7 +43845,8 @@ declare namespace Phaser {
                 onPostRender(): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Uploads the vertex data and emits a draw call
+                 * for the current batch of vertices.
                  */
                 flush(): Phaser.Renderer.WebGL.WebGLPipeline;
 
@@ -39039,14 +43856,14 @@ declare namespace Phaser {
                 destroy(): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  */
                 setFloat1(name: string, x: number): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  * @param y [description]
@@ -39054,7 +43871,7 @@ declare namespace Phaser {
                 setFloat2(name: string, x: number, y: number): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  * @param y [description]
@@ -39063,24 +43880,24 @@ declare namespace Phaser {
                 setFloat3(name: string, x: number, y: number, z: number): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
-                 * @param name [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param z [description]
-                 * @param w [description]
+                 * Set a uniform value of the current pipeline program.
+                 * @param name Name of the uniform
+                 * @param x X component of the uniform
+                 * @param y Y component of the uniform
+                 * @param z Z component of the uniform
+                 * @param w W component of the uniform
                  */
                 setFloat4(name: string, x: number, y: number, z: number, w: number): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  */
                 setInt1(name: string, x: integer): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  * @param y [description]
@@ -39088,7 +43905,7 @@ declare namespace Phaser {
                 setInt2(name: string, x: integer, y: integer): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Set a uniform value of the current pipeline program.
                  * @param name [description]
                  * @param x [description]
                  * @param y [description]
@@ -39097,16 +43914,17 @@ declare namespace Phaser {
                 setInt3(name: string, x: integer, y: integer, z: integer): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
-                 * @param name [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param z [description]
-                 * @param w [description]
+                 * Set a uniform value of the current pipeline program.
+                 * @param name Name of the uniform
+                 * @param x X component of the uniform
+                 * @param y Y component of the uniform
+                 * @param z Z component of the uniform
+                 * @param w W component of the uniform
                  */
                 setInt4(name: string, x: integer, y: integer, z: integer, w: integer): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
+                 * Set a uniform value of the current pipeline program.
                  * [description]
                  * @param name [description]
                  * @param transpose [description]
@@ -39115,6 +43933,8 @@ declare namespace Phaser {
                 setMatrix2(name: string, transpose: boolean, matrix: Float32Array): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
+                 * Set a uniform value of the current pipeline program.
+                 * [description]
                  * [description]
                  * @param name [description]
                  * @param transpose [description]
@@ -39123,17 +43943,23 @@ declare namespace Phaser {
                 setMatrix3(name: string, transpose: boolean, matrix: Float32Array): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
-                 * @param name [description]
-                 * @param transpose [description]
-                 * @param matrix [description]
+                 * Set a uniform value of the current pipeline program.
+                 * @param name Name of the uniform
+                 * @param transpose Should the matrix be transpose
+                 * @param matrix Matrix data
                  */
                 setMatrix4(name: string, transpose: boolean, matrix: Float32Array): Phaser.Renderer.WebGL.WebGLPipeline;
 
             }
 
             /**
-             * [description]
+             * WebGLRenderer is a class that contains the needed functionality to keep the
+             * WebGLRenderingContext state clean. The main idea of the WebGLRenderer is to keep track of
+             * any context change that happens for WebGL rendering inside of Phaser. This means
+             * if raw webgl functions are called outside the WebGLRenderer of the Phaser WebGL
+             * rendering ecosystem they might pollute the current WebGLRenderingContext state producing
+             * unexpected behaviour. It's recommended that WebGL interaction is done through 
+             * WebGLRenderer and/or WebGLPipeline.
              */
             class WebGLRenderer {
                 /**
@@ -39188,7 +44014,7 @@ declare namespace Phaser {
                 blendModes: any[];
 
                 /**
-                 * [description]
+                 * Keeps track of any WebGLTexture created with the current WebGLRenderingContext
                  */
                 nativeTextures: any[];
 
@@ -39198,7 +44024,7 @@ declare namespace Phaser {
                 contextLost: boolean;
 
                 /**
-                 * [description]
+                 * This object will store all pipelines created through addPipeline
                  */
                 pipelines: object;
 
@@ -39208,62 +44034,62 @@ declare namespace Phaser {
                 snapshotState: SnapshotState;
 
                 /**
-                 * [description]
+                 * Cached value for the last texture unit that was used
                  */
                 currentActiveTextureUnit: integer;
 
                 /**
-                 * [description]
+                 * An array of the last texture handles that were bound to the WebGLRenderingContext
                  */
                 currentTextures: any[];
 
                 /**
-                 * [description]
+                 * Current framebuffer in use
                  */
                 currentFramebuffer: WebGLFramebuffer;
 
                 /**
-                 * [description]
+                 * Current WebGLPipeline in use
                  */
                 currentPipeline: Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Current WebGLProgram in use
                  */
                 currentProgram: WebGLProgram;
 
                 /**
-                 * [description]
+                 * Current WebGLBuffer (Vertex buffer) in use
                  */
                 currentVertexBuffer: WebGLBuffer;
 
                 /**
-                 * [description]
+                 * Current WebGLBuffer (Index buffer) in use
                  */
                 currentIndexBuffer: WebGLBuffer;
 
                 /**
-                 * [description]
+                 * Current blend mode in use
                  */
                 currentBlendMode: integer;
 
                 /**
-                 * [description]
+                 * Indicates if the the scissor state is enabled in WebGLRenderingContext
                  */
                 currentScissorEnabled: boolean;
 
                 /**
-                 * [description]
+                 * Stores the current scissor data
                  */
                 currentScissor: Uint32Array;
 
                 /**
-                 * [description]
+                 * Index to the scissor stack top
                  */
                 currentScissorIdx: number;
 
                 /**
-                 * [description]
+                 * Stack of scissor data
                  */
                 scissorStack: Uint32Array;
 
@@ -39273,22 +44099,23 @@ declare namespace Phaser {
                 gl: WebGLRenderingContext;
 
                 /**
-                 * [description]
+                 * Array of strings that indicate which WebGL extensions are supported by the browser
                  */
                 supportedExtensions: object;
 
                 /**
-                 * [description]
+                 * Extensions loaded into the current context
                  */
                 extensions: object;
 
                 /**
-                 * [description]
+                 * Stores the current WebGL component formats for further use
                  */
                 glFormats: any[];
 
                 /**
-                 * [description]
+                 * Creates a new WebGLRenderingContext and initializes all internal
+                 * state.
                  * @param config [description]
                  */
                 init(config: object): Phaser.Renderer.WebGL.WebGLRenderer;
@@ -39315,49 +44142,49 @@ declare namespace Phaser {
                 onContextLost(callback: WebGLContextCallback, target: object): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param extensionName [description]
+                 * Checks if a WebGL extension is supported
+                 * @param extensionName Name of the WebGL extension
                  */
                 hasExtension(extensionName: string): boolean;
 
                 /**
-                 * [description]
+                 * Loads a WebGL extension
                  * @param extensionName [description]
                  */
                 getExtension(extensionName: string): object;
 
                 /**
-                 * [description]
+                 * Flushes the current pipeline if the pipeline is bound
                  */
                 flush(): void;
 
                 /**
-                 * [description]
-                 * @param pipelineName [description]
+                 * Checks if a pipeline is present in the current WebGLRenderer
+                 * @param pipelineName Name of the pipeline
                  */
                 hasPipeline(pipelineName: string): boolean;
 
                 /**
-                 * [description]
+                 * Returns the pipeline by name if the pipeline exists
                  * @param pipelineName [description]
                  */
                 getPipeline(pipelineName: string): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Removes a pipeline by name
                  * @param pipelineName [description]
                  */
                 removePipeline(pipelineName: string): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Adds a pipeline instance into the collection of pipelines
                  * @param pipelineName [description]
-                 * @param pipelineInstance [description]
+                 * @param pipelineInstance Pipeline instance must extend WebGLPipeline
                  */
                 addPipeline(pipelineName: string, pipelineInstance: Phaser.Renderer.WebGL.WebGLPipeline): Phaser.Renderer.WebGL.WebGLPipeline;
 
                 /**
-                 * [description]
+                 * Sets the current scissor state
                  * @param x [description]
                  * @param y [description]
                  * @param w [description]
@@ -39366,7 +44193,7 @@ declare namespace Phaser {
                 setScissor(x: integer, y: integer, w: integer, h: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Pushes a new scissor state. This is used to set nested scissor states.
                  * @param x [description]
                  * @param y [description]
                  * @param w [description]
@@ -39375,12 +44202,12 @@ declare namespace Phaser {
                 pushScissor(x: integer, y: integer, w: integer, h: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Pops the last scissor state and sets it.
                  */
                 popScissor(): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Binds a WebGLPipeline and sets it as the current pipeline to be used.
                  * @param pipelineInstance [description]
                  */
                 setPipeline(pipelineInstance: Phaser.Renderer.WebGL.WebGLPipeline): Phaser.Renderer.WebGL.WebGLPipeline;
@@ -39413,38 +44240,44 @@ declare namespace Phaser {
                 removeBlendMode(index: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param texture [description]
-                 * @param textureUnit [description]
+                 * Binds a texture at a texture unit. If a texture is already 
+                 * bound to that unit it will force a flush on the current pipeline.
+                 * @param texture The WebGL texture that needs to be bound
+                 * @param textureUnit The texture unit to which the texture will be bound
                  */
                 setTexture2D(texture: WebGLTexture, textureUnit: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param framebuffer [description]
+                 * Binds a framebuffer. If there was another framebuffer already bound
+                 * it will force a pipeline flush.
+                 * @param framebuffer The framebuffer that needs to be bound
                  */
                 setFramebuffer(framebuffer: WebGLFramebuffer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param program [description]
+                 * Binds a program. If there was another program already bound
+                 * it will force a pipeline flush
+                 * @param program The program that needs to be bound
                  */
                 setProgram(program: WebGLProgram): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param vertexBuffer [description]
+                 * Bounds a vertex buffer. If there is a vertex buffer already bound
+                 * it'll force a pipeline flush.
+                 * @param vertexBuffer The buffer that needs to be bound
                  */
                 setVertexBuffer(vertexBuffer: WebGLBuffer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param indexBuffer [description]
+                 * Bounds a index buffer. If there is a index buffer already bound
+                 * it'll force a pipeline flush.
+                 * @param indexBuffer The buffer the needs to be bound
                  */
                 setIndexBuffer(indexBuffer: WebGLBuffer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Creates a texture from an image source. If the source is not valid
+                 * it creates an empty texture
                  * @param source [description]
                  * @param width [description]
                  * @param height [description]
@@ -39453,47 +44286,48 @@ declare namespace Phaser {
                 createTextureFromSource(source: object, width: integer, height: integer, scaleMode: integer): WebGLTexture;
 
                 /**
-                 * [description]
-                 * @param mipLevel [description]
-                 * @param minFilter [description]
-                 * @param magFilter [description]
-                 * @param wrapT [description]
-                 * @param wrapS [description]
-                 * @param format [description]
-                 * @param pixels [description]
-                 * @param width [description]
-                 * @param height [description]
-                 * @param pma [description]
+                 * A wrapper for creating a WebGLTexture. If not pixel data is passed
+                 * it will create an empty texture.
+                 * @param mipLevel Mip level of the texture
+                 * @param minFilter Filtering of the texture
+                 * @param magFilter Filtering of the texture
+                 * @param wrapT Wrapping mode of the texture
+                 * @param wrapS Wrapping mode of the texture
+                 * @param format Which format does the texture use
+                 * @param pixels pixel data
+                 * @param width Width of the texture in pixels
+                 * @param height Height of the texture in pixels
+                 * @param pma Does the texture hace premultiplied alpha.
                  */
                 createTexture2D(mipLevel: integer, minFilter: integer, magFilter: integer, wrapT: integer, wrapS: integer, format: integer, pixels: object, width: integer, height: integer, pma: boolean): WebGLTexture;
 
                 /**
-                 * [description]
-                 * @param width [description]
-                 * @param height [description]
-                 * @param renderTexture [description]
-                 * @param addDepthStencilBuffer [description]
+                 * Wrapper for creating WebGLFramebuffer.
+                 * @param width Width in pixels of the framebuffer
+                 * @param height Height in pixels of the framebuffer
+                 * @param renderTexture The color texture to where the color pixels are written
+                 * @param addDepthStencilBuffer Indicates if the current framebuffer support depth and stencil buffers
                  */
-                createFramebuffer(width: integer, height: integer, renderTexture: WebGLFramebuffer, addDepthStencilBuffer: boolean): WebGLFramebuffer;
+                createFramebuffer(width: integer, height: integer, renderTexture: WebGLTexture, addDepthStencilBuffer: boolean): WebGLFramebuffer;
 
                 /**
-                 * [description]
-                 * @param vertexShader [description]
-                 * @param fragmentShader [description]
+                 * Wrapper for creating a WebGLProgram
+                 * @param vertexShader Source to the vertex shader
+                 * @param fragmentShader Source to the fragment shader
                  */
                 createProgram(vertexShader: string, fragmentShader: string): WebGLProgram;
 
                 /**
-                 * [description]
-                 * @param initialDataOrSize [description]
-                 * @param bufferUsage [description]
+                 * Wrapper for creating a vertex buffer.
+                 * @param initialDataOrSize It's either ArrayBuffer or an integer indicating the size of the vbo
+                 * @param bufferUsage How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
                  */
                 createVertexBuffer(initialDataOrSize: ArrayBuffer, bufferUsage: integer): WebGLBuffer;
 
                 /**
-                 * [description]
-                 * @param initialDataOrSize [description]
-                 * @param bufferUsage [description]
+                 * Wrapper for creating a vertex buffer.
+                 * @param initialDataOrSize It's either ArrayBuffer or an integer indicating the size of the vbo
+                 * @param bufferUsage How the buffer is used. gl.DYNAMIC_DRAW, gl.STATIC_DRAW or gl.STREAM_DRAW
                  */
                 createIndexBuffer(initialDataOrSize: ArrayBuffer, bufferUsage: integer): WebGLBuffer;
 
@@ -39504,7 +44338,7 @@ declare namespace Phaser {
                 deleteTexture(texture: WebGLTexture): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Wrapper for deleting a raw WebGLFramebuffer
                  * @param framebuffer [description]
                  */
                 deleteFramebuffer(framebuffer: WebGLFramebuffer): Phaser.Renderer.WebGL.WebGLRenderer;
@@ -39516,25 +44350,27 @@ declare namespace Phaser {
                 deleteProgram(program: WebGLProgram): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Wrapper for deleting a vertex or index buffer
                  * @param vertexBuffer [description]
                  */
                 deleteBuffer(vertexBuffer: WebGLBuffer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
+                 * Handles any clipping needed by the camera and renders the background
+                 * color if a color is visible.
                  * @param camera [description]
                  */
                 preRenderCamera(camera: Phaser.Cameras.Scene2D.Camera): void;
 
                 /**
-                 * [description]
+                 * Renders the foreground camera effects like flash and fading.
+                 * It resets the current scissor state.
                  * @param camera [description]
                  */
                 postRenderCamera(camera: Phaser.Cameras.Scene2D.Camera): void;
 
                 /**
-                 * [description]
+                 * Clears the current vertex buffer and updates pipelines.
                  */
                 preRender(): void;
 
@@ -39564,10 +44400,8 @@ declare namespace Phaser {
                  * [description]
                  * @param srcCanvas [description]
                  * @param dstTexture [description]
-                 * @param shouldReallocate [description]
-                 * @param scaleMode [description]
                  */
-                canvasToTexture(srcCanvas: HTMLCanvasElement, dstTexture: WebGLTexture, shouldReallocate: boolean, scaleMode: integer): WebGLTexture;
+                canvasToTexture(srcCanvas: HTMLCanvasElement, dstTexture?: WebGLTexture): WebGLTexture;
 
                 /**
                  * [description]
@@ -39604,13 +44438,13 @@ declare namespace Phaser {
                 setFloat3(program: WebGLProgram, name: string, x: number, y: number, z: number): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param program [description]
-                 * @param name [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param z [description]
-                 * @param w [description]
+                 * Sets uniform of a WebGLProgram
+                 * @param program Target program
+                 * @param name Name of the uniform
+                 * @param x X component
+                 * @param y Y component
+                 * @param z Z component
+                 * @param w W component
                  */
                 setFloat4(program: WebGLProgram, name: string, x: number, y: number, z: number, w: number): Phaser.Renderer.WebGL.WebGLRenderer;
 
@@ -39642,13 +44476,13 @@ declare namespace Phaser {
                 setInt3(program: WebGLProgram, name: string, x: integer, y: integer, z: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param program [description]
-                 * @param name [description]
-                 * @param x [description]
-                 * @param y [description]
-                 * @param z [description]
-                 * @param w [description]
+                 * Sets uniform of a WebGLProgram
+                 * @param program Target Program
+                 * @param name Name of the uniform
+                 * @param x X component
+                 * @param y Y component
+                 * @param z Z component
+                 * @param w W component
                  */
                 setInt4(program: WebGLProgram, name: string, x: integer, y: integer, z: integer, w: integer): Phaser.Renderer.WebGL.WebGLRenderer;
 
@@ -39671,11 +44505,11 @@ declare namespace Phaser {
                 setMatrix3(program: WebGLProgram, name: string, transpose: boolean, matrix: Float32Array): Phaser.Renderer.WebGL.WebGLRenderer;
 
                 /**
-                 * [description]
-                 * @param program [description]
-                 * @param name [description]
-                 * @param transpose [description]
-                 * @param matrix [description]
+                 * Sets uniform of a WebGLProgram
+                 * @param program Target program
+                 * @param name Name of the uniform
+                 * @param transpose Is the matrix transposed
+                 * @param matrix Matrix data
                  */
                 setMatrix4(program: WebGLProgram, name: string, transpose: boolean, matrix: Float32Array): Phaser.Renderer.WebGL.WebGLRenderer;
 
@@ -39710,8 +44544,58 @@ declare namespace Phaser {
 
     namespace Scenes {
         /**
+         * Scene state.
+         */
+        var PENDING: integer;
+
+        /**
+         * Scene state.
+         */
+        var INIT: integer;
+
+        /**
+         * Scene state.
+         */
+        var START: integer;
+
+        /**
+         * Scene state.
+         */
+        var LOADING: integer;
+
+        /**
+         * Scene state.
+         */
+        var CREATING: integer;
+
+        /**
+         * Scene state.
+         */
+        var RUNNING: integer;
+
+        /**
+         * Scene state.
+         */
+        var PAUSED: integer;
+
+        /**
+         * Scene state.
+         */
+        var SLEEPING: integer;
+
+        /**
+         * Scene state.
+         */
+        var SHUTDOWN: integer;
+
+        /**
+         * Scene state.
+         */
+        var DESTROYED: integer;
+
+        /**
          * Builds an array of which physics plugins should be activated for the given Scene.
-         * @param sys [description]
+         * @param sys The scene system to get the physics systems of.
          */
         function GetPhysicsPlugins(sys: Phaser.Scenes.Systems): any[];
 
@@ -39724,10 +44608,7 @@ declare namespace Phaser {
         /**
          * The Scene Manager.
          * 
-         * 
-         * 
          * The Scene Manager is a Game level system, responsible for creating, processing and updating all of the
-         * 
          * Scenes in a Game instance.
          */
         class SceneManager {
@@ -39756,12 +44637,12 @@ declare namespace Phaser {
             /**
              * Is the Scene Manager actively processing the Scenes list?
              */
-            isProcessing: boolean;
+            readonly isProcessing: boolean;
 
             /**
              * Has the Scene Manager properly started?
              */
-            isBooted: boolean;
+            readonly isBooted: boolean;
 
             /**
              * Process the Scene operations queue.
@@ -39786,7 +44667,7 @@ declare namespace Phaser {
              * @param autoStart If `true` the Scene will be started immediately after being added. Default false.
              * @param data Optional data object. This will be set as Scene.settings.data and passed to `Scene.init`.
              */
-            add(key: string, sceneConfig: Phaser.Scene | SettingsConfig | Function, autoStart?: boolean, data?: object): Phaser.Scene;
+            add(key: string, sceneConfig: Phaser.Scene | Phaser.Scenes.Settings.Config | Function, autoStart?: boolean, data?: object): Phaser.Scene;
 
             /**
              * Removes a Scene from the SceneManager.
@@ -39988,7 +44869,7 @@ declare namespace Phaser {
             /**
              * The settings of the Scene this ScenePlugin belongs to.
              */
-            settings: SettingsObject;
+            settings: Phaser.Scenes.Settings.Object;
 
             /**
              * The key of the Scene this ScenePlugin belongs to.
@@ -40058,7 +44939,7 @@ declare namespace Phaser {
              * @param sceneConfig The config for the Scene.
              * @param autoStart Whether to start the Scene after it's added.
              */
-            add(key: string, sceneConfig: Phaser.Scene | SettingsConfig | Function, autoStart: boolean): Phaser.Scenes.ScenePlugin;
+            add(key: string, sceneConfig: Phaser.Scene | Phaser.Scenes.Settings.Config | Function, autoStart: boolean): Phaser.Scenes.ScenePlugin;
 
             /**
              * Launch the given Scene and run it in parallel with this one.
@@ -40105,15 +44986,17 @@ declare namespace Phaser {
 
             /**
              * Sets the active state of the given Scene.
-             * @param value The Scene to set the active state for.
+             * @param value The active value.
+             * @param key The Scene to set the active state for.
              */
-            setActive(value: boolean): Phaser.Scenes.ScenePlugin;
+            setActive(value: boolean, key?: string): Phaser.Scenes.ScenePlugin;
 
             /**
              * Sets the visible state of the given Scene.
-             * @param value The Scene to set the visible state for.
+             * @param value The visible value.
+             * @param key The Scene to set the visible state for.
              */
-            setVisible(value: boolean): Phaser.Scenes.ScenePlugin;
+            setVisible(value: boolean, key?: string): Phaser.Scenes.ScenePlugin;
 
             /**
              * Checks if the given Scene is sleeping or not?
@@ -40206,6 +45089,12 @@ declare namespace Phaser {
              */
             get(key: string): Phaser.Scene;
 
+            /**
+             * Retrieves the numeric index of a Scene in the Scenes list.
+             * @param key The Scene to get the index of.
+             */
+            getIndex(key?: string | Phaser.Scene): integer;
+
         }
 
         namespace Settings {
@@ -40225,7 +45114,7 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                files?: false | LoaderFileObject[];
+                pack?: false | Phaser.Loader.FileTypes.PackFileConfig;
                 /**
                  * [description]
                  */
@@ -40296,7 +45185,7 @@ declare namespace Phaser {
                 /**
                  * [description]
                  */
-                files: false | LoaderFileObject[];
+                pack: false | Phaser.Loader.FileTypes.PackFileConfig;
                 /**
                  * [description]
                  */
@@ -40323,19 +45212,15 @@ declare namespace Phaser {
              * Takes a Scene configuration object and returns a fully formed Systems object.
              * @param config [description]
              */
-            function create(config: string | Phaser.Scenes.SettingsConfig): Phaser.Scenes.Settings.Object;
+            function create(config: string | Phaser.Scenes.Settings.Config): Phaser.Scenes.Settings.Object;
 
         }
 
         /**
          * The Scene Systems class.
          * 
-         * 
-         * 
          * This class is available from within a Scene under the property `sys`.
-         * 
          * It is responsible for managing all of the plugins a Scene has running, including the display list, and
-         * 
          * handling the update step and renderer. It also contains references to global systems belonging to Game.
          */
         class Systems {
@@ -40344,7 +45229,7 @@ declare namespace Phaser {
              * @param scene The Scene that owns this Systems instance.
              * @param config Scene specific configuration settings.
              */
-            constructor(scene: Phaser.Scene, config: string | SettingsConfig);
+            constructor(scene: Phaser.Scene, config: string | Phaser.Scenes.Settings.Config);
 
             /**
              * [description]
@@ -40359,12 +45244,12 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            config: string | SettingsConfig;
+            config: string | Phaser.Scenes.Settings.Config;
 
             /**
              * [description]
              */
-            settings: SettingsObject;
+            settings: Phaser.Scenes.Settings.Object;
 
             /**
              * A handy reference to the Scene canvas / context.
@@ -40570,50 +45455,6 @@ declare namespace Phaser {
 
         }
 
-        namespace ScenePlugin {
-            type SceneTransitionConfig = {
-                /**
-                 * The Scene key to transition to.
-                 */
-                target: string;
-                /**
-                 * The duration, in ms, for the transition to last.
-                 */
-                duration?: integer;
-                /**
-                 * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
-                 */
-                sleep?: boolean;
-                /**
-                 * Will the Scenes Input system be able to process events while it is transitioning in or out?
-                 */
-                allowInput?: boolean;
-                /**
-                 * More the target Scene to be above this one before the transition starts.
-                 */
-                moveAbove?: boolean;
-                /**
-                 * More the target Scene to be below this one before the transition starts.
-                 */
-                moveBelow?: boolean;
-                /**
-                 * This callback is invoked every frame for the duration of the transition.
-                 */
-                onUpdate?: Function;
-                /**
-                 * The context in which the callback is invoked.
-                 */
-                onUpdateScope?: any;
-                /**
-                 * An object containing any data you wish to be passed to the target Scenes init / create methods.
-                 */
-                data?: any;
-            };
-
-        }
-
-        type SettingsConfig = any;
-
     }
 
     /**
@@ -40624,7 +45465,7 @@ declare namespace Phaser {
          * 
          * @param config Scene specific configuration settings.
          */
-        constructor(config: string | SettingsConfig);
+        constructor(config: string | Phaser.Scenes.Settings.Config);
 
         /**
          * The Scene Systems. You must never overwrite this property, or all hell will break lose.
@@ -40788,46 +45629,46 @@ declare namespace Phaser {
             /**
              * Asset key for the sound.
              */
-            key: string;
+            readonly key: string;
 
             /**
              * Flag indicating if sound is currently playing.
              */
-            isPlaying: boolean;
+            readonly isPlaying: boolean;
 
             /**
              * Flag indicating if sound is currently paused.
              */
-            isPaused: boolean;
+            readonly isPaused: boolean;
 
             /**
              * A property that holds the value of sound's actual playback rate,
              * after its rate and detune values has been combined with global
              * rate and detune values.
              */
-            totalRate: number;
+            readonly totalRate: number;
 
             /**
              * A value representing the duration, in seconds.
              * It could be total sound duration or a marker duration.
              */
-            duration: number;
+            readonly duration: number;
 
             /**
              * The total duration of the sound in seconds.
              */
-            totalDuration: number;
+            readonly totalDuration: number;
 
             /**
              * Object containing markers definitions.
              */
-            markers: {[key: string]:  SoundMarker};
+            readonly markers: {[key: string]:  SoundMarker};
 
             /**
              * Currently playing marker.
              * 'null' if whole sound is playing.
              */
-            currentMarker: SoundMarker;
+            readonly currentMarker: SoundMarker;
 
             /**
              * Adds a marker into the current sound. A marker is represented by name, start time, duration, and optionally config object.
@@ -40903,14 +45744,9 @@ declare namespace Phaser {
 
         /**
          * The sound manager is responsible for playing back audio via Web Audio API or HTML Audio tag as fallback.
-         * 
          * The audio file type and the encoding of those files are extremely important.
          * 
-         * 
-         * 
          * Not all browsers can play all audio formats.
-         * 
-         * 
          * 
          * There is a good guide to what's supported [here](https://developer.mozilla.org/en-US/Apps/Fundamentals/Audio_and_video_delivery/Cross-browser_audio_basics#Audio_Codec_Support).
          */
@@ -40924,7 +45760,12 @@ declare namespace Phaser {
             /**
              * Local reference to game.
              */
-            game: Phaser.Game;
+            readonly game: Phaser.Game;
+
+            /**
+             * Local reference to the JSON Cache, as used by Audio Sprites.
+             */
+            readonly jsonCache: Phaser.Cache.BaseCache;
 
             /**
              * Global mute setting.
@@ -40947,7 +45788,7 @@ declare namespace Phaser {
              * such as a tap, before any sound can be loaded/played on a web page.
              * Set to true if the audio system is currently locked awaiting user interaction.
              */
-            locked: boolean;
+            readonly locked: boolean;
 
             /**
              * Adds a new sound into the sound manager.
@@ -40958,6 +45799,8 @@ declare namespace Phaser {
 
             /**
              * Adds a new audio sprite sound into the sound manager.
+             * Audio Sprites are a combination of audio files and a JSON configuration.
+             * The JSON follows the format of that created by https://github.com/tonistiigi/audiosprite
              * @param key Asset key for the sound.
              * @param config An optional config object containing default sound settings.
              */
@@ -41076,7 +45919,7 @@ declare namespace Phaser {
         /**
          * HTML5 Audio implementation of the sound.
          */
-        class HTML5AudioSound extends BaseSound {
+        class HTML5AudioSound extends Phaser.Sound.BaseSound {
             /**
              * 
              * @param manager Reference to the current sound manager instance.
@@ -41084,6 +45927,30 @@ declare namespace Phaser {
              * @param config An optional config object containing default sound settings. Default {}.
              */
             constructor(manager: Phaser.Sound.HTML5AudioSoundManager, key: string, config?: SoundConfig);
+
+            /**
+             * Play this sound, or a marked section of it.
+             * It always plays the sound from the start. If you want to start playback from a specific time
+             * you can set 'seek' setting of the config object, provided to this call, to that value.
+             * @param markerName If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound. Default ''.
+             * @param config Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+             */
+            play(markerName?: string, config?: SoundConfig): boolean;
+
+            /**
+             * Pauses the sound.
+             */
+            pause(): boolean;
+
+            /**
+             * Resumes the sound.
+             */
+            resume(): boolean;
+
+            /**
+             * Stop playing this sound.
+             */
+            stop(): boolean;
 
             /**
              * Update method called automatically by sound manager on every game step.
@@ -41185,7 +46052,7 @@ declare namespace Phaser {
         /**
          * HTML5AudioSoundManager
          */
-        class HTML5AudioSoundManager extends BaseSoundManager {
+        class HTML5AudioSoundManager extends Phaser.Sound.BaseSoundManager {
             /**
              * 
              * @param game Reference to the current game instance.
@@ -41219,6 +46086,19 @@ declare namespace Phaser {
              * since loop lag varies depending on the browser/platform.
              */
             loopEndOffset: number;
+
+            /**
+             * Adds a new sound into the sound manager.
+             * @param key Asset key for the sound.
+             * @param config An optional config object containing default sound settings.
+             */
+            add(key: string, config?: SoundConfig): Phaser.Sound.HTML5AudioSound;
+
+            /**
+             * Unlocks HTML5 Audio loading and playback on mobile
+             * devices on the initial explicit user interaction.
+             */
+            unlock(): void;
 
             /**
              * Method used internally for pausing sound manager if
@@ -41268,18 +46148,13 @@ declare namespace Phaser {
 
         /**
          * No audio implementation of the sound. It is used if audio has been
-         * 
          * disabled in the game config or the device doesn't support any audio.
          * 
-         * 
-         * 
          * It represents a graceful degradation of sound logic that provides
-         * 
          * minimal functionality and prevents Phaser projects that use audio from
-         * 
          * breaking on devices that don't support any audio playback technologies.
          */
-        class NoAudioSound extends BaseSound {
+        class NoAudioSound extends Phaser.Sound.BaseSound {
             /**
              * 
              * @param manager Reference to the current sound manager instance.
@@ -41292,18 +46167,13 @@ declare namespace Phaser {
 
         /**
          * No audio implementation of the sound manager. It is used if audio has been
-         * 
          * disabled in the game config or the device doesn't support any audio.
          * 
-         * 
-         * 
          * It represents a graceful degradation of sound manager logic that provides
-         * 
          * minimal functionality and prevents Phaser projects that use audio from
-         * 
          * breaking on devices that don't support any audio playback technologies.
          */
-        class NoAudioSoundManager extends BaseSoundManager {
+        class NoAudioSoundManager extends Phaser.Sound.BaseSoundManager {
             /**
              * 
              * @param game Reference to the current game instance.
@@ -41314,6 +46184,8 @@ declare namespace Phaser {
 
         /**
          * Creates a Web Audio, HTML5 Audio or No Audio Sound Manager based on config and device settings.
+         * 
+         * Be aware of https://developers.google.com/web/updates/2017/09/autoplay-policy-changes
          * @param game Reference to the current game instance.
          */
         function SoundManagerCreator(game: Phaser.Game): void;
@@ -41321,7 +46193,7 @@ declare namespace Phaser {
         /**
          * Web Audio API implementation of the sound.
          */
-        class WebAudioSound extends BaseSound {
+        class WebAudioSound extends Phaser.Sound.BaseSound {
             /**
              * 
              * @param manager Reference to the current sound manager instance.
@@ -41329,6 +46201,31 @@ declare namespace Phaser {
              * @param config An optional config object containing default sound settings. Default {}.
              */
             constructor(manager: Phaser.Sound.WebAudioSoundManager, key: string, config?: SoundConfig);
+
+            /**
+             * Play this sound, or a marked section of it.
+             * 
+             * It always plays the sound from the start. If you want to start playback from a specific time
+             * you can set 'seek' setting of the config object, provided to this call, to that value.
+             * @param markerName If you want to play a marker then provide the marker name here, otherwise omit it to play the full sound. Default ''.
+             * @param config Optional sound config object to be applied to this marker or entire sound if no marker name is provided. It gets memorized for future plays of current section of the sound.
+             */
+            play(markerName?: string, config?: SoundConfig): boolean;
+
+            /**
+             * Pauses the sound.
+             */
+            pause(): boolean;
+
+            /**
+             * Resumes the sound.
+             */
+            resume(): boolean;
+
+            /**
+             * Stop playing this sound.
+             */
+            stop(): boolean;
 
             /**
              * Method used internally for applying config values to some of the sound properties.
@@ -41435,12 +46332,26 @@ declare namespace Phaser {
         /**
          * Web Audio API implementation of the sound manager.
          */
-        class WebAudioSoundManager extends BaseSoundManager {
+        class WebAudioSoundManager extends Phaser.Sound.BaseSoundManager {
             /**
              * 
              * @param game Reference to the current game instance.
              */
             constructor(game: Phaser.Game);
+
+            /**
+             * Adds a new sound into the sound manager.
+             * @param key Asset key for the sound.
+             * @param config An optional config object containing default sound settings.
+             */
+            add(key: string, config?: SoundConfig): Phaser.Sound.WebAudioSound;
+
+            /**
+             * Unlocks Web Audio API on the initial input event.
+             * 
+             * Read more about how this issue is handled here in [this article](https://medium.com/@pgoloskokovic/unlocking-web-audio-the-smarter-way-8858218c0e09).
+             */
+            unlock(): void;
 
             /**
              * Method used internally for pausing sound manager if
@@ -41475,14 +46386,6 @@ declare namespace Phaser {
             setVolume(value: number): Phaser.Sound.WebAudioSoundManager;
 
             volume: number;
-
-        }
-
-        namespace BaseSound {
-            /**
-             * Audio sprite sound type.
-             */
-            type AudioSpriteSound = ()=>void;
 
         }
 
@@ -41735,41 +46638,36 @@ declare namespace Phaser {
             /**
              * [description]
              */
-            length: integer;
+            readonly length: integer;
 
             /**
              * [description]
              */
-            first: integer;
+            readonly first: integer;
 
             /**
              * [description]
              */
-            last: integer;
+            readonly last: integer;
 
             /**
              * [description]
              */
-            next: integer;
+            readonly next: integer;
 
             /**
              * [description]
              */
-            previous: integer;
+            readonly previous: integer;
 
         }
 
         /**
          * The keys of a Map can be arbitrary values.
-         * 
          * var map = new Map([
-         * 
          *    [ 1, 'one' ],
-         * 
          *    [ 2, 'two' ],
-         * 
          *    [ 3, 'three' ]
-         * 
          * ]);
          */
         class Map<K, V> {
@@ -41897,14 +46795,13 @@ declare namespace Phaser {
 
         /**
          * RBush is a high-performance JavaScript library for 2D spatial indexing of points and rectangles.
-         * 
          * It's based on an optimized R-tree data structure with bulk insertion support.
          * 
-         * 
-         * 
          * Spatial index is a special data structure for points and rectangles that allows you to perform queries like
-         * 
          * "all items within this bounding box" very efficiently (e.g. hundreds of times faster than looping over all items).
+         * 
+         * This version of RBush uses a fixed min/max accessor structure of `[ '.left', '.top', '.right', '.bottom' ]`.
+         * This is to avoid the eval like function creation that the original library used, which caused CSP policy violations.
          */
         class RTree {
         }
@@ -42013,6 +46910,67 @@ declare namespace Phaser {
     }
 
     namespace Textures {
+        /**
+         * A Canvas Texture is a special kind of Texture that is backed by an HTML Canvas Element as its source.
+         * 
+         * You can use the properties of this texture to draw to the canvas element directly, using all of the standard
+         * canvas operations available in the browser. Any Game Object can be given this texture and will render with it.
+         * 
+         * Note: When running under WebGL the Canvas Texture needs to re-generate its base WebGLTexture and reupload it to
+         * the GPU every time you modify it, otherwise the changes you make to this texture will not be visible. To do this
+         * you should call `CanvasTexture.refresh()` once you are finished with your changes to the canvas. Try and keep
+         * this to a minimum, especially on large canvas sizes, or you may inadvertently thrash the GPU by constantly uploading
+         * texture data to it. This restriction does not apply if using the Canvas Renderer.
+         * 
+         * It starts with only one frame that covers the whole of the canvas. You can add further frames, that specify
+         * sections of the canvas using the `add` method.
+         * 
+         * Should you need to resize the canvas use the `setSize` method so that it accurately updates all of the underlying
+         * texture data as well. Forgetting to do this (i.e. by changing the canvas size directly from your code) could cause
+         * graphical errors.
+         */
+        class CanvasTexture extends Phaser.Textures.Texture {
+            /**
+             * 
+             * @param manager A reference to the Texture Manager this Texture belongs to.
+             * @param key The unique string-based key of this Texture.
+             * @param source The canvas element that is used as the base of this texture.
+             * @param width The width of the canvas.
+             * @param height The height of the canvas.
+             */
+            constructor(manager: Phaser.Textures.TextureManager, key: string, source: HTMLCanvasElement, width: integer, height: integer);
+
+            /**
+             * This should be called manually if you are running under WebGL.
+             * It will refresh the WebGLTexture from the Canvas source. Only call this if you know that the
+             * canvas has changed, as there is a significant GPU texture allocation cost involved in doing so.
+             */
+            refresh(): Phaser.Textures.CanvasTexture;
+
+            /**
+             * Gets the Canvas Element.
+             */
+            getCanvas(): HTMLCanvasElement;
+
+            /**
+             * Gets the 2D Canvas Rendering Context.
+             */
+            getContext(): CanvasRenderingContext2D;
+
+            /**
+             * Clears this Canvas Texture, resetting it back to transparent.
+             */
+            clear(): Phaser.Textures.CanvasTexture;
+
+            /**
+             * Changes the size of this Canvas Texture.
+             * @param width The new width of the Canvas.
+             * @param height The new height of the Canvas. If not given it will use the width as the height.
+             */
+            setSize(width: integer, height?: integer): Phaser.Textures.CanvasTexture;
+
+        }
+
         /**
          * Filter Types.
          */
@@ -42164,6 +47122,18 @@ declare namespace Phaser {
             customData: object;
 
             /**
+             * Sets the width, height, x and y of this Frame.
+             * 
+             * This is called automatically by the constructor
+             * and should rarely be changed on-the-fly.
+             * @param width The width of the frame before being trimmed.
+             * @param height The height of the frame before being trimmed.
+             * @param x The x coordinate of the top-left of this Frame. Default 0.
+             * @param y The y coordinate of the top-left of this Frame. Default 0.
+             */
+            setSize(width: integer, height: integer, x?: integer, y?: integer): Phaser.Textures.Frame;
+
+            /**
              * If the frame was trimmed when added to the Texture Atlas, this records the trim and source data.
              * @param actualWidth The width of the frame before being trimmed.
              * @param actualHeight The height of the frame before being trimmed.
@@ -42198,55 +47168,57 @@ declare namespace Phaser {
              * The width of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
              * before being packed.
              */
-            realWidth: number;
+            readonly realWidth: number;
 
             /**
              * The height of the Frame in its un-trimmed, un-padded state, as prepared in the art package,
              * before being packed.
              */
-            realHeight: number;
+            readonly realHeight: number;
 
             /**
              * The UV data for this Frame.
              */
-            uvs: object;
+            readonly uvs: object;
 
             /**
              * The radius of the Frame (derived from sqrt(w * w + h * h) / 2)
              */
-            radius: number;
+            readonly radius: number;
 
             /**
              * Is the Frame trimmed or not?
              */
-            trimmed: boolean;
+            readonly trimmed: boolean;
 
             /**
              * The Canvas drawImage data object.
              */
-            canvasData: object;
+            readonly canvasData: object;
 
         }
+
+        /**
+         * Linear filter type.
+         */
+        const LINEAR: any;
+
+        /**
+         * Nearest Neighbor filter type.
+         */
+        const NEAREST: any;
 
         namespace Parsers {
         }
 
         /**
-         * A Texture consists of a source, usually an Image from the Cache, or a Canvas, and a collection
-         * 
-         * of Frames. The Frames represent the different areas of the Texture. For example a texture atlas
-         * 
+         * A Texture consists of a source, usually an Image from the Cache, and a collection of Frames.
+         * The Frames represent the different areas of the Texture. For example a texture atlas
          * may have many Frames, one for each element within the atlas. Where-as a single image would have
-         * 
          * just one frame, that encompasses the whole image.
          * 
-         * 
-         * 
          * Textures are managed by the global TextureManager. This is a singleton class that is
-         * 
          * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
-         * 
-         * 
          * 
          * Sprites and other Game Objects get the texture data they need from the TextureManager.
          */
@@ -42255,11 +47227,11 @@ declare namespace Phaser {
              * 
              * @param manager A reference to the Texture Manager this Texture belongs to.
              * @param key The unique string-based key of this Texture.
-             * @param source The source that is used to create the texture. Usually an Image, but can also be a Canvas.
+             * @param source An array of sources that are used to create the texture. Usually Images, but can also be a Canvas.
              * @param width The width of the Texture. This is optional and automatically derived from the source images.
              * @param height The height of the Texture. This is optional and automatically derived from the source images.
              */
-            constructor(manager: Phaser.Textures.TextureManager, key: string, source: Image | HTMLCanvasElement, width?: number, height?: number);
+            constructor(manager: Phaser.Textures.TextureManager, key: string, source: HTMLImageElement[] | HTMLCanvasElement[], width?: number, height?: number);
 
             /**
              * A reference to the Texture Manager this Texture belongs to.
@@ -42366,13 +47338,22 @@ declare namespace Phaser {
             getSourceImage(name?: string | integer): HTMLImageElement | HTMLCanvasElement;
 
             /**
+             * Given a Frame name, return the data source image it uses to render with.
+             * You can use this to get the normal map for an image for example.
+             * 
+             * This will return the actual DOM Image.
+             * @param name The string-based name, or integer based index, of the Frame to get from this Texture.
+             */
+            getDataSourceImage(name?: string | integer): HTMLImageElement | HTMLCanvasElement;
+
+            /**
              * Adds a data source image to this Texture.
              * 
              * An example of a data source image would be a normal map, where all of the Frames for this Texture
              * equally apply to the normal map.
              * @param data The source image.
              */
-            setDataSource(data: Image | HTMLCanvasElement): void;
+            setDataSource(data: HTMLImageElement | HTMLCanvasElement): void;
 
             /**
              * Sets the Filter Mode for this Texture.
@@ -42395,14 +47376,9 @@ declare namespace Phaser {
 
         /**
          * Textures are managed by the global TextureManager. This is a singleton class that is
-         * 
          * responsible for creating and delivering Textures and their corresponding Frames to Game Objects.
          * 
-         * 
-         * 
          * Sprites and other Game Objects get the texture data they need from the TextureManager.
-         * 
-         * 
          * 
          * Access it via `scene.textures`.
          */
@@ -42412,6 +47388,23 @@ declare namespace Phaser {
              * @param game [description]
              */
             constructor(game: Phaser.Game);
+
+            /**
+             * The source Canvas Element.
+             */
+            readonly canvas: HTMLCanvasElement;
+
+            /**
+             * The width of the Canvas.
+             * This property is read-only, if you wish to change use `setSize`.
+             */
+            readonly width: integer;
+
+            /**
+             * The height of the Canvas.
+             * This property is read-only, if you wish to change use `setSize`.
+             */
+            readonly height: integer;
 
             /**
              * [description]
@@ -42437,6 +47430,24 @@ declare namespace Phaser {
              * [description]
              */
             updatePending(): void;
+
+            /**
+             * Checks the given texture key and throws a console.warn if the key is already in use, then returns false.
+             * @param key The texture key to check.
+             */
+            checkKey(key: string): boolean;
+
+            /**
+             * Removes a Texture from the Texture Manager and destroys it. This will immediately
+             * clear all references to it from the Texture Manager, and if it has one, destroy its
+             * WebGLTexture. This will emit a `removetexture` event.
+             * 
+             * Note: If you have any Game Objects still using this texture they will start throwing
+             * errors the next time they try to render. Make sure that removing the texture is the final
+             * step when clearing down to avoid this.
+             * @param key The key of the Texture to remove, or a reference to it.
+             */
+            remove(key: string | Phaser.Textures.Texture): Phaser.Textures.TextureManager;
 
             /**
              * Adds a new Texture to the Texture Manager created from the given Base64 encoded data.
@@ -42468,18 +47479,18 @@ declare namespace Phaser {
              * Canvas elements are automatically pooled and calling this method will
              * extract a free canvas from the CanvasPool, or create one if none are available.
              * @param key The unique string-based key of the Texture.
-             * @param width The width of the Canvas element.
-             * @param height The height of the Canvas element.
+             * @param width The width of the Canvas element. Default 256.
+             * @param height The height of the Canvas element. Default 256.
              */
-            createCanvas(key: string, width: integer, height: integer): Phaser.Textures.Texture;
+            createCanvas(key: string, width?: integer, height?: integer): Phaser.Textures.CanvasTexture;
 
             /**
-             * Creates a new Texture object from an existing Canvas element and adds
+             * Creates a new Canvas Texture object from an existing Canvas element and adds
              * it to this Texture Manager.
              * @param key The unique string-based key of the Texture.
              * @param source The Canvas element to form the base of the new Texture.
              */
-            addCanvas(key: string, source: HTMLCanvasElement): Phaser.Textures.Texture;
+            addCanvas(key: string, source: HTMLCanvasElement): Phaser.Textures.CanvasTexture;
 
             /**
              * Adds a new Texture Atlas to this Texture Manager.
@@ -42487,18 +47498,20 @@ declare namespace Phaser {
              * @param key The unique string-based key of the Texture.
              * @param source The source Image element.
              * @param data The Texture Atlas data.
+             * @param dataSource An optional data Image element.
              */
-            addAtlas(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
+            addAtlas(key: string, source: HTMLImageElement, data: object, dataSource?: HTMLImageElement): Phaser.Textures.Texture;
 
             /**
              * Adds a Texture Atlas to this Texture Manager.
              * The frame data of the atlas must be stored in an Array within the JSON.
              * This is known as a JSON Array in software such as Texture Packer.
              * @param key The unique string-based key of the Texture.
-             * @param source The source Image element.
-             * @param data The Texture Atlas data.
+             * @param source The source Image element/s.
+             * @param data The Texture Atlas data/s.
+             * @param dataSource An optional data Image element.
              */
-            addAtlasJSONArray(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
+            addAtlasJSONArray(key: string, source: HTMLImageElement | HTMLImageElement[], data: object | object[], dataSource?: HTMLImageElement): Phaser.Textures.Texture;
 
             /**
              * Adds a Texture Atlas to this Texture Manager.
@@ -42507,8 +47520,19 @@ declare namespace Phaser {
              * @param key The unique string-based key of the Texture.
              * @param source The source Image element.
              * @param data The Texture Atlas data.
+             * @param dataSource An optional data Image element.
              */
-            addAtlasJSONHash(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
+            addAtlasJSONHash(key: string, source: HTMLImageElement, data: object, dataSource?: HTMLImageElement): Phaser.Textures.Texture;
+
+            /**
+             * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
+             * in the XML format.
+             * @param key The unique string-based key of the Texture.
+             * @param source The source Image element.
+             * @param data The Texture Atlas XML data.
+             * @param dataSource An optional data Image element.
+             */
+            addAtlasXML(key: string, source: HTMLImageElement, data: object, dataSource?: HTMLImageElement): Phaser.Textures.Texture;
 
             /**
              * Adds a Unity Texture Atlas to this Texture Manager.
@@ -42516,8 +47540,9 @@ declare namespace Phaser {
              * @param key The unique string-based key of the Texture.
              * @param source The source Image element.
              * @param data The Texture Atlas data.
+             * @param dataSource An optional data Image element.
              */
-            addUnityAtlas(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
+            addUnityAtlas(key: string, source: HTMLImageElement, data: object, dataSource?: HTMLImageElement): Phaser.Textures.Texture;
 
             /**
              * Adds a Sprite Sheet to this Texture Manager.
@@ -42539,24 +47564,6 @@ declare namespace Phaser {
              * @param config The configuration object for this Sprite Sheet.
              */
             addSpriteSheetFromAtlas(key: string, config: SpriteSheetFromAtlasConfig): Phaser.Textures.Texture;
-
-            /**
-             * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-             * in the Starling XML format.
-             * @param key The unique string-based key of the Texture.
-             * @param source The source Image element.
-             * @param data The Texture Atlas XML data.
-             */
-            addAtlasStarlingXML(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
-
-            /**
-             * Adds a Texture Atlas to this Texture Manager, where the atlas data is given
-             * in the Pyxel JSON format.
-             * @param key The unique string-based key of the Texture.
-             * @param source The source Image element.
-             * @param data The Texture Atlas XML data.
-             */
-            addAtlasPyxel(key: string, source: HTMLImageElement, data: object): Phaser.Textures.Texture;
 
             /**
              * Creates a new Texture using the given source and dimensions.
@@ -42638,10 +47645,7 @@ declare namespace Phaser {
 
         /**
          * A Texture Source is the encapsulation of the actual source data for a Texture.
-         * 
          * This is typically an Image Element, loaded from the file system or network, or a Canvas Element.
-         * 
-         * 
          * 
          * A Texture can contain multiple Texture Sources, which only happens when a multi-atlas is loaded.
          */
@@ -42653,7 +47657,12 @@ declare namespace Phaser {
              * @param width Optional width of the source image. If not given it's derived from the source itself.
              * @param height Optional height of the source image. If not given it's derived from the source itself.
              */
-            constructor(texture: Phaser.Textures.Texture, source: Image | HTMLCanvasElement, width?: integer, height?: integer);
+            constructor(texture: Phaser.Textures.Texture, source: HTMLImageElement | HTMLCanvasElement, width?: integer, height?: integer);
+
+            /**
+             * The Texture this TextureSource belongs to.
+             */
+            renderer: Phaser.Renderer.Canvas.CanvasRenderer | Phaser.Renderer.WebGL.WebGLRenderer;
 
             /**
              * The Texture this TextureSource belongs to.
@@ -42725,7 +47734,13 @@ declare namespace Phaser {
             setFilter(filterMode: Phaser.Textures.FilterMode): void;
 
             /**
-             * Destroys this Texture Source and nulls the source image reference.
+             * If this TextureSource is backed by a Canvas and is running under WebGL,
+             * it updates the WebGLTexture using the canvas data.
+             */
+            update(): void;
+
+            /**
+             * Destroys this Texture Source and nulls the references.
              */
             destroy(): void;
 
@@ -42739,17 +47754,11 @@ declare namespace Phaser {
 
         /**
          * A DynamicTilemapLayer is a game object that renders LayerData from a Tilemap. A
-         * 
          * DynamicTilemapLayer can only render tiles from a single tileset.
          * 
-         * 
-         * 
          * A DynamicTilemapLayer trades some speed for being able to apply powerful effects. Unlike a
-         * 
          * StaticTilemapLayer, you can apply per-tile effects like tint or alpha, and you can change the
-         * 
          * tiles in a DynamicTilemapLayer. Use this over a StaticTilemapLayer when you need those
-         * 
          * features.
          */
         class DynamicTilemapLayer extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ComputedSize, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.ScrollFactor, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible {
@@ -42767,7 +47776,7 @@ declare namespace Phaser {
             /**
              * Used internally by physics system to perform fast type checks.
              */
-            isTilemap: boolean;
+            readonly isTilemap: boolean;
 
             /**
              * The Tilemap that this layer is a part of.
@@ -43590,7 +48599,7 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
 
             /**
              * The horizontal origin of this Game Object.
@@ -43869,12 +48878,30 @@ declare namespace Phaser {
         }
 
         namespace Formats {
+            /**
+             * CSV Map Type
+             */
+            var CSV: number;
+
+            /**
+             * Tiled JSON Map Type
+             */
+            var TILED_JSON: number;
+
+            /**
+             * 2D Array Map Type
+             */
+            var ARRAY_2D: number;
+
+            /**
+             * Weltmeister (Impact.js) Map Type
+             */
+            var WELTMEISTER: number;
+
         }
 
         /**
          * An Image Collection is a special Tile Set containing multiple images, with no slicing into each image.
-         * 
-         * 
          * 
          * Image Collections are normally created automatically when Tiled data is loaded.
          */
@@ -43905,24 +48932,24 @@ declare namespace Phaser {
             /**
              * The width of the widest image (in pixels).
              */
-            imageWidth: integer;
+            readonly imageWidth: integer;
 
             /**
              * The height of the tallest image (in pixels).
              */
-            imageHeight: integer;
+            readonly imageHeight: integer;
 
             /**
              * The margin around the images in the collection (in pixels).
              * Use `setSpacing` to change.
              */
-            imageMarge: integer;
+            readonly imageMarge: integer;
 
             /**
              * The spacing between each image in the collection (in pixels).
              * Use `setSpacing` to change.
              */
-            imageSpacing: integer;
+            readonly imageSpacing: integer;
 
             /**
              * Image Collection-specific properties that are typically defined in the Tiled editor.
@@ -43932,12 +48959,12 @@ declare namespace Phaser {
             /**
              * The cached images that are a part of this collection.
              */
-            images: any[];
+            readonly images: any[];
 
             /**
              * The total number of images in the image collection.
              */
-            total: integer;
+            readonly total: integer;
 
             /**
              * Returns true if and only if this image collection contains the given image index.
@@ -43956,9 +48983,7 @@ declare namespace Phaser {
 
         /**
          * A class for representing data about about a layer in a map. Maps are parsed from CSV, Tiled,
-         * 
          * etc. into this format. Tilemap, StaticTilemapLayer and DynamicTilemapLayer have a reference
-         * 
          * to this data and use it to look up and perform operations on tiles.
          */
         class LayerData {
@@ -44072,9 +49097,7 @@ declare namespace Phaser {
 
         /**
          * A class for representing data about a map. Maps are parsed from CSV, Tiled, etc. into this
-         * 
          * format. A Tilemap object get a copy of this data and then unpacks the needed properties into
-         * 
          * itself.
          */
         class MapData {
@@ -44178,15 +49201,10 @@ declare namespace Phaser {
 
         /**
          * A class for representing a Tiled object layer in a map. This mirrors the structure of a Tiled
-         * 
          * object layer, except:
-         * 
          *  - "x" & "y" properties are ignored since these cannot be changed in Tiled.
-         * 
          *  - "offsetx" & "offsety" are applied to the individual object coordinates directly, so they
-         * 
          *    are ignored as well.
-         * 
          *  - "draworder" is ignored.
          */
         class ObjectLayer {
@@ -44421,15 +49439,10 @@ declare namespace Phaser {
 
         /**
          * A StaticTilemapLayer is a game object that renders LayerData from a Tilemap. A
-         * 
          * StaticTilemapLayer can only render tiles from a single tileset.
          * 
-         * 
-         * 
          * A StaticTilemapLayer is optimized for speed over flexibility. You cannot apply per-tile
-         * 
          * effects like tint or alpha. You cannot change the tiles in a StaticTilemapLayer. Use this
-         * 
          * over a DynamicTilemapLayer when you don't need either of those features.
          */
         class StaticTilemapLayer extends Phaser.GameObjects.GameObject implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.BlendMode, Phaser.GameObjects.Components.ComputedSize, Phaser.GameObjects.Components.Depth, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.GetBounds, Phaser.GameObjects.Components.Origin, Phaser.GameObjects.Components.Pipeline, Phaser.GameObjects.Components.ScaleMode, Phaser.GameObjects.Components.Transform, Phaser.GameObjects.Components.Visible, Phaser.GameObjects.Components.ScrollFactor {
@@ -44447,7 +49460,7 @@ declare namespace Phaser {
             /**
              * Used internally by physics system to perform fast type checks.
              */
-            isTilemap: boolean;
+            readonly isTilemap: boolean;
 
             /**
              * The Tilemap that this layer is a part of.
@@ -45109,7 +50122,7 @@ declare namespace Phaser {
              * The values are stored and returned in a Rectangle, or Rectangle-like, object.
              * @param output An object to store the values in. If not provided a new Rectangle will be created.
              */
-            getBounds<O extends Phaser.Math.Vector2>(output?: O): O;
+            getBounds<O extends Phaser.Geom.Rectangle>(output?: O): O;
 
             /**
              * The horizontal origin of this Game Object.
@@ -45389,9 +50402,7 @@ declare namespace Phaser {
 
         /**
          * A Tile is a representation of a single tile within the Tilemap. This is a lightweight data
-         * 
          * representation, so its position information is stored without factoring in scroll, layer
-         * 
          * scale or layer position.
          */
         class Tile implements Phaser.GameObjects.Components.Alpha, Phaser.GameObjects.Components.Flip, Phaser.GameObjects.Components.Visible {
@@ -45689,36 +50700,36 @@ declare namespace Phaser {
             /**
              * True if this tile can collide on any of its faces or has a collision callback set.
              */
-            canCollide: boolean;
+            readonly canCollide: boolean;
 
             /**
              * True if this tile can collide on any of its faces.
              */
-            collides: boolean;
+            readonly collides: boolean;
 
             /**
              * True if this tile has any interesting faces.
              */
-            hasInterestingFace: boolean;
+            readonly hasInterestingFace: boolean;
 
             /**
              * The tileset that contains this Tile. This will only return null if accessed from a LayerData
              * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
              */
-            tileset: Phaser.Tilemaps.Tileset;
+            readonly tileset: Phaser.Tilemaps.Tileset;
 
             /**
              * The tilemap layer that contains this Tile. This will only return null if accessed from a
              * LayerData instance before the tile is placed within a StaticTilemapLayer or
              * DynamicTilemapLayer.
              */
-            tilemapLayer: Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
+            readonly tilemapLayer: Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
             /**
              * The tilemap that contains this Tile. This will only return null if accessed from a LayerData
              * instance before the tile is placed within a StaticTilemapLayer or DynamicTilemapLayer.
              */
-            tilemap: Phaser.Tilemaps.Tilemap;
+            readonly tilemap: Phaser.Tilemaps.Tilemap;
 
             /**
              * Clears all alpha values associated with this Game Object.
@@ -45837,33 +50848,19 @@ declare namespace Phaser {
 
         /**
          * A Tilemap is a container for Tilemap data. This isn't a display object, rather, it holds data
-         * 
          * about the map and allows you to add tilesets and tilemap layers to it. A map can have one or
-         * 
          * more tilemap layers (StaticTilemapLayer or DynamicTilemapLayer), which are the display
-         * 
          * objects that actually render tiles.
          * 
-         * 
-         * 
          * The Tilemap data be parsed from a Tiled JSON file, a CSV file or a 2D array. Tiled is a free
-         * 
          * software package specifically for creating tile maps, and is available from:
-         * 
          * http://www.mapeditor.org
          * 
-         * 
-         * 
          * A Tilemap has handy methods for getting & manipulating the tiles within a layer. You can only
-         * 
          * use the methods that change tiles (e.g. removeTileAt) on a DynamicTilemapLayer.
          * 
-         * 
-         * 
          * Note that all Tilemaps use a base tile size to calculate dimensions from, but that a
-         * 
          * StaticTilemapLayer or DynamicTilemapLayer may have its own unique tile size that overrides
-         * 
          * it.
          */
         class Tilemap {
@@ -46824,7 +51821,6 @@ declare namespace Phaser {
 
         /**
          * A Tileset is a combination of an image containing the tiles and a container for data about
-         * 
          * each tile.
          */
         class Tileset {
@@ -46856,22 +51852,22 @@ declare namespace Phaser {
             /**
              * The width of each tile (in pixels). Use setTileSize to change.
              */
-            tileWidth: integer;
+            readonly tileWidth: integer;
 
             /**
              * The height of each tile (in pixels). Use setTileSize to change.
              */
-            tileHeight: integer;
+            readonly tileHeight: integer;
 
             /**
              * The margin around the tiles in the sheet (in pixels). Use `setSpacing` to change.
              */
-            tileMargin: integer;
+            readonly tileMargin: integer;
 
             /**
              * The spacing between each the tile in the sheet (in pixels). Use `setSpacing` to change.
              */
-            tileSpacing: integer;
+            readonly tileSpacing: integer;
 
             /**
              * Tileset-specific properties per tile that are typically defined in the Tiled editor in the
@@ -46888,28 +51884,28 @@ declare namespace Phaser {
             /**
              * The cached image that contains the individual tiles. Use setImage to set.
              */
-            image: Phaser.Textures.Texture;
+            readonly image: Phaser.Textures.Texture;
 
             /**
              * The number of tile rows in the the tileset.
              */
-            rows: integer;
+            readonly rows: integer;
 
             /**
              * The number of tile columns in the tileset.
              */
-            columns: integer;
+            readonly columns: integer;
 
             /**
              * The total number of tiles in the tileset.
              */
-            total: integer;
+            readonly total: integer;
 
             /**
              * The look-up table to specific tile image texture coordinates (UV in pixels). Each element
              * contains the coordinates for a tile in an object of the form {x, y}.
              */
-            texCoordinates: object[];
+            readonly texCoordinates: object[];
 
             /**
              * Get a tiles properties that are stored in the Tileset. Returns null if tile index is not
@@ -46972,29 +51968,6 @@ declare namespace Phaser {
              * @param imageHeight The (expected) height of the image to slice.
              */
             updateTileData(imageWidth: integer, imageHeight: integer): Phaser.Tilemaps.Tileset;
-
-        }
-
-        class Formats {
-            /**
-             * CSV Map Type
-             */
-            static CSV: number;
-
-            /**
-             * Tiled JSON Map Type
-             */
-            static TILED_JSON: number;
-
-            /**
-             * 2D Array Map Type
-             */
-            static ARRAY_2D: number;
-
-            /**
-             * Weltmeister (Impact.js) Map Type
-             */
-            static WELTMEISTER: number;
 
         }
 
@@ -47090,12 +52063,12 @@ declare namespace Phaser {
             /**
              * The delay in ms at which this TimerEvent fires.
              */
-            delay: number;
+            readonly delay: number;
 
             /**
              * The total number of times this TimerEvent will repeat before finishing.
              */
-            repeat: number;
+            readonly repeat: number;
 
             /**
              * If repeating this contains the current repeat count.
@@ -47105,7 +52078,7 @@ declare namespace Phaser {
             /**
              * True if this TimerEvent loops, otherwise false.
              */
-            loop: boolean;
+            readonly loop: boolean;
 
             /**
              * The callback that will be called when the TimerEvent occurs.
@@ -47504,6 +52477,91 @@ declare namespace Phaser {
             destroy(): void;
 
         }
+
+        /**
+         * TweenData state.
+         */
+        var CREATED: integer;
+
+        /**
+         * TweenData state.
+         */
+        var INIT: integer;
+
+        /**
+         * TweenData state.
+         */
+        var DELAY: integer;
+
+        /**
+         * TweenData state.
+         */
+        var OFFSET_DELAY: integer;
+
+        /**
+         * TweenData state.
+         */
+        var PENDING_RENDER: integer;
+
+        /**
+         * TweenData state.
+         */
+        var PLAYING_FORWARD: integer;
+
+        /**
+         * TweenData state.
+         */
+        var PLAYING_BACKWARD: integer;
+
+        /**
+         * TweenData state.
+         */
+        var HOLD_DELAY: integer;
+
+        /**
+         * TweenData state.
+         */
+        var REPEAT_DELAY: integer;
+
+        /**
+         * TweenData state.
+         */
+        var COMPLETE: integer;
+
+        /**
+         * Tween state.
+         */
+        var PENDING_ADD: integer;
+
+        /**
+         * Tween state.
+         */
+        var PAUSED: integer;
+
+        /**
+         * Tween state.
+         */
+        var LOOP_DELAY: integer;
+
+        /**
+         * Tween state.
+         */
+        var ACTIVE: integer;
+
+        /**
+         * Tween state.
+         */
+        var COMPLETE_DELAY: integer;
+
+        /**
+         * Tween state.
+         */
+        var PENDING_REMOVE: integer;
+
+        /**
+         * Tween state.
+         */
+        var REMOVED: integer;
 
         type TweenConfigDefaults = {
             /**
@@ -48660,316 +53718,6 @@ declare namespace Phaser {
 
     }
 
-    class Loader {
-        /**
-         * The Loader is idle.
-         */
-        static LOADER_IDLE: integer;
-
-        /**
-         * The Loader is actively loading.
-         */
-        static LOADER_LOADING: integer;
-
-        /**
-         * The Loader is processing files is has loaded.
-         */
-        static LOADER_PROCESSING: integer;
-
-        /**
-         * The Loader has completed loading and processing.
-         */
-        static LOADER_COMPLETE: integer;
-
-        /**
-         * The Loader is shutting down.
-         */
-        static LOADER_SHUTDOWN: integer;
-
-        /**
-         * The Loader has been destroyed.
-         */
-        static LOADER_DESTROYED: integer;
-
-        /**
-         * File is in the load queue but not yet started
-         */
-        static FILE_PENDING: integer;
-
-        /**
-         * File has been started to load by the loader (onLoad called)
-         */
-        static FILE_LOADING: integer;
-
-        /**
-         * File has loaded successfully, awaiting processing
-         */
-        static FILE_LOADED: integer;
-
-        /**
-         * File failed to load
-         */
-        static FILE_FAILED: integer;
-
-        /**
-         * File is being processed (onProcess callback)
-         */
-        static FILE_PROCESSING: integer;
-
-        /**
-         * File is waiting for its linkfile to load.
-         */
-        static FILE_WAITING_LINKFILE: integer;
-
-        /**
-         * The File has errored somehow during processing.
-         */
-        static FILE_ERRORED: integer;
-
-        /**
-         * File has finished processing.
-         */
-        static FILE_COMPLETE: integer;
-
-        /**
-         * File has been destroyed
-         */
-        static FILE_DESTROYED: integer;
-
-        /**
-         * File was populated from local data and doesn't need an HTTP request
-         */
-        static FILE_POPULATED: integer;
-
-        /**
-         * A special Texture Atlas const.
-         */
-        static TEXTURE_ATLAS_JSON_ARRAY: integer;
-
-        /**
-         * A special Texture Atlas const.
-         */
-        static TEXTURE_ATLAS_JSON_HASH: integer;
-
-    }
-
-    class Math {
-        /**
-         * The value of PI * 2.
-         */
-        static PI2: number;
-
-        /**
-         * The value of PI * 0.5.
-         */
-        static TAU: number;
-
-        /**
-         * An epsilon value (1.0e-6)
-         */
-        static EPSILON: number;
-
-        /**
-         * For converting degrees to radians (PI / 180)
-         */
-        static DEG_TO_RAD: number;
-
-        /**
-         * For converting radians to degrees (180 / PI)
-         */
-        static RAD_TO_DEG: number;
-
-        /**
-         * An instance of the Random Number Generator.
-         */
-        static RND: Phaser.Math.RandomDataGenerator;
-
-    }
-
-    class Plugins {
-        /**
-         * These are the Global Managers that are created by the Phaser.Game instance.
-         * They are referenced from Scene.Systems so that plugins can use them.
-         */
-        static Global: any[];
-
-        /**
-         * These are the core plugins that are installed into every Scene.Systems instance, no matter what.
-         * They are optionally exposed in the Scene as well (see the InjectionMap for details)
-         * 
-         * They are created in the order in which they appear in this array and EventEmitter is always first.
-         */
-        static CoreScene: any[];
-
-        /**
-         * These plugins are created in Scene.Systems in addition to the CoreScenePlugins.
-         * 
-         * You can elect not to have these plugins by either creating a DefaultPlugins object as part
-         * of the Game Config, by creating a Plugins object as part of a Scene Config, or by modifying this array
-         * and building your own bundle.
-         * 
-         * They are optionally exposed in the Scene as well (see the InjectionMap for details)
-         * 
-         * They are always created in the order in which they appear in the array.
-         */
-        static DefaultScene: any[];
-
-    }
-
-    class Scenes {
-        /**
-         * Scene state.
-         */
-        static PENDING: integer;
-
-        /**
-         * Scene state.
-         */
-        static INIT: integer;
-
-        /**
-         * Scene state.
-         */
-        static START: integer;
-
-        /**
-         * Scene state.
-         */
-        static LOADING: integer;
-
-        /**
-         * Scene state.
-         */
-        static CREATING: integer;
-
-        /**
-         * Scene state.
-         */
-        static RUNNING: integer;
-
-        /**
-         * Scene state.
-         */
-        static PAUSED: integer;
-
-        /**
-         * Scene state.
-         */
-        static SLEEPING: integer;
-
-        /**
-         * Scene state.
-         */
-        static SHUTDOWN: integer;
-
-        /**
-         * Scene state.
-         */
-        static DESTROYED: integer;
-
-    }
-
-    class Textures {
-        /**
-         * Linear filter type.
-         */
-        static readonly LINEAR: any;
-
-        /**
-         * Nearest Neighbor filter type.
-         */
-        static readonly NEAREST: any;
-
-    }
-
-    class Tweens {
-        /**
-         * TweenData state.
-         */
-        static CREATED: integer;
-
-        /**
-         * TweenData state.
-         */
-        static INIT: integer;
-
-        /**
-         * TweenData state.
-         */
-        static DELAY: integer;
-
-        /**
-         * TweenData state.
-         */
-        static OFFSET_DELAY: integer;
-
-        /**
-         * TweenData state.
-         */
-        static PENDING_RENDER: integer;
-
-        /**
-         * TweenData state.
-         */
-        static PLAYING_FORWARD: integer;
-
-        /**
-         * TweenData state.
-         */
-        static PLAYING_BACKWARD: integer;
-
-        /**
-         * TweenData state.
-         */
-        static HOLD_DELAY: integer;
-
-        /**
-         * TweenData state.
-         */
-        static REPEAT_DELAY: integer;
-
-        /**
-         * TweenData state.
-         */
-        static COMPLETE: integer;
-
-        /**
-         * Tween state.
-         */
-        static PENDING_ADD: integer;
-
-        /**
-         * Tween state.
-         */
-        static PAUSED: integer;
-
-        /**
-         * Tween state.
-         */
-        static LOOP_DELAY: integer;
-
-        /**
-         * Tween state.
-         */
-        static ACTIVE: integer;
-
-        /**
-         * Tween state.
-         */
-        static COMPLETE_DELAY: integer;
-
-        /**
-         * Tween state.
-         */
-        static PENDING_REMOVE: integer;
-
-        /**
-         * Tween state.
-         */
-        static REMOVED: integer;
-
-    }
-
 }
 
 declare type ArcadeBodyBounds = {
@@ -49016,7 +53764,7 @@ declare type ArcadeBodyCollision = {
 
 declare type ArcadePhysicsCallback = (object1: Phaser.GameObjects.GameObject, object2: Phaser.GameObjects.GameObject)=>void;
 
-declare type PhysicsGroupConfig = {
+declare type PhysicsGroupConfig = GroupConfig & {
     /**
      * [description]
      */
@@ -49392,9 +54140,7 @@ declare type CollideCallback = (body: Phaser.Physics.Impact.Body, other: Phaser.
 declare namespace MatterJS {
     /**
      * The `Matter.Body` module contains methods for creating and manipulating body models.
-     * 
      * A `Matter.Body` is a rigid body that can be simulated by a `Matter.Engine`.
-     * 
      * Factories for commonly used body configurations (such as rectangles, circles and other polygons) can be found in the module `Matter.Bodies`.
      */
     class Body {
@@ -49402,11 +54148,8 @@ declare namespace MatterJS {
 
     /**
      * The `Matter.Composite` module contains methods for creating and manipulating composite bodies.
-     * 
      * A composite body is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`, therefore composites form a tree structure.
-     * 
      * It is important to use the functions in this module to modify composites, rather than directly modifying their properties.
-     * 
      * Note that the `Matter.World` object is also a type of `Matter.Composite` and as such all composite methods here can also operate on a `Matter.World`.
      */
     class Composite {
@@ -49414,23 +54157,17 @@ declare namespace MatterJS {
 
     /**
      * The `Matter.World` module contains methods for creating and manipulating the world composite.
-     * 
      * A `Matter.World` is a `Matter.Composite` body, which is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite`.
-     * 
      * A `Matter.World` has a few additional properties including `gravity` and `bounds`.
-     * 
      * It is important to use the functions in the `Matter.Composite` module to modify the world composite, rather than directly modifying its properties.
-     * 
      * There are also a few methods here that alias those in `Matter.Composite` for easier readability.
      */
-    class World extends Composite {
+    class World extends MatterJS.Composite {
     }
 
     /**
      * The `Matter.Constraint` module contains methods for creating and manipulating constraints.
-     * 
      * Constraints are used for specifying that a fixed distance must be maintained between two bodies (or a body and a fixed world-space position).
-     * 
      * The stiffness of constraints can be modified to create springs or elastic.
      */
     class Constraint {
@@ -49438,7 +54175,6 @@ declare namespace MatterJS {
 
     /**
      * The `Matter.Engine` module contains methods for creating and manipulating engines.
-     * 
      * An engine is a controller that manages updating the simulation of the world.
      */
     class Engine {
@@ -49475,6 +54211,113 @@ declare type RendererConfig = {
 
 declare type SnapshotCallback = (snapshot: HTMLImageElement)=>void;
 
+/**
+ * Implements a model view projection matrices.
+ * Pipelines can implement this for doing 2D and 3D rendering.
+ */
+declare interface ModelViewProjection {
+    /**
+     * Dirty flag for checking if model matrix needs to be updated on GPU.
+     */
+    modelMatrixDirty: any;
+    /**
+     * Dirty flag for checking if view matrix needs to be updated on GPU.
+     */
+    viewMatrixDirty: any;
+    /**
+     * Dirty flag for checking if projection matrix needs to be updated on GPU.
+     */
+    projectionMatrixDirty: any;
+    /**
+     * Model matrix
+     */
+    modelMatrix: any;
+    /**
+     * View matrix
+     */
+    viewMatrix: any;
+    /**
+     * Projection matrix
+     */
+    projectionMatrix: any;
+    /**
+     * Initializes MVP matrices with an identity matrix
+     */
+    mvpInit(): void;
+    /**
+     * If dirty flags are set then the matrices are uploaded to the GPU.
+     */
+    mvpUpdate(): void;
+    /**
+     * Loads an identity matrix to the model matrix
+     */
+    modelIdentity(): void;
+    /**
+     * Scale model matrix
+     */
+    modelScale(): void;
+    /**
+     * Translate model matrix
+     */
+    modelTranslate(): void;
+    /**
+     * Rotates the model matrix in the X axis.
+     */
+    modelRotateX(): void;
+    /**
+     * Rotates the model matrix in the Y axis.
+     */
+    modelRotateY(): void;
+    /**
+     * Rotates the model matrix in the Z axis.
+     */
+    modelRotateZ(): void;
+    /**
+     * Loads identity matrix into the view matrix
+     */
+    viewIdentity(): void;
+    /**
+     * Scales view matrix
+     */
+    viewScale(): void;
+    /**
+     * Translates view matrix
+     */
+    viewTranslate(): void;
+    /**
+     * Rotates view matrix in the X axis.
+     */
+    viewRotateX(): void;
+    /**
+     * Rotates view matrix in the Y axis.
+     */
+    viewRotateY(): void;
+    /**
+     * Rotates view matrix in the Z axis.
+     */
+    viewRotateZ(): void;
+    /**
+     * Loads a 2D view matrix (3x2 matrix) into a 4x4 view matrix
+     */
+    viewLoad2D(): void;
+    /**
+     * Copies a 4x4 matrix into the view matrix
+     */
+    viewLoad(): void;
+    /**
+     * Loads identity matrix into the projection matrix.
+     */
+    projIdentity(): void;
+    /**
+     * Sets up an orthographics projection matrix
+     */
+    projOrtho(): void;
+    /**
+     * Sets up a perspective projection matrix
+     */
+    projPersp(): void;
+}
+
 declare type WebGLContextCallback = (renderer: Phaser.Renderer.WebGL.WebGLRenderer)=>void;
 
 declare type SnapshotState = {
@@ -49492,7 +54335,57 @@ declare type SnapshotState = {
     encoder: number;
 };
 
+declare namespace Phaser.Scenes.ScenePlugin {
+    type SceneTransitionConfig = {
+        /**
+         * The Scene key to transition to.
+         */
+        target: string;
+        /**
+         * The duration, in ms, for the transition to last.
+         */
+        duration?: integer;
+        /**
+         * Will the Scene responsible for the transition be sent to sleep on completion (`true`), or stopped? (`false`)
+         */
+        sleep?: boolean;
+        /**
+         * Will the Scenes Input system be able to process events while it is transitioning in or out?
+         */
+        allowInput?: boolean;
+        /**
+         * More the target Scene to be above this one before the transition starts.
+         */
+        moveAbove?: boolean;
+        /**
+         * More the target Scene to be below this one before the transition starts.
+         */
+        moveBelow?: boolean;
+        /**
+         * This callback is invoked every frame for the duration of the transition.
+         */
+        onUpdate?: Function;
+        /**
+         * The context in which the callback is invoked.
+         */
+        onUpdateScope?: any;
+        /**
+         * An object containing any data you wish to be passed to the target Scenes init / create methods.
+         */
+        data?: any;
+    };
+
+}
+
 declare type EachActiveSoundCallback = (manager: Phaser.Sound.BaseSoundManager, sound: Phaser.Sound.BaseSound, index: number, sounds: Phaser.Sound.BaseSound[])=>void;
+
+declare namespace Phaser.Sound.BaseSound {
+    /**
+     * Audio sprite sound type.
+     */
+    type AudioSpriteSound = ()=>void;
+
+}
 
 /**
  * Config object containing various sound settings.
@@ -49718,8 +54611,6 @@ declare type TimerEventConfig = {
     paused?: boolean;
 };
 
-declare function hasGetStart(): void;
-
 declare type TweenDataGenConfig = {
     /**
      * [description]
@@ -49743,139 +54634,21 @@ declare type TweenDataGenConfig = {
     repeatDelay: Function;
 };
 
-declare class Phaser {
+/**
+ * Class
+ */
+declare class Class {
     /**
-     * Phaser Release Version
+     * 
+     * @param definition a dictionary of functions for the class
      */
-    static VERSION: string;
-
-    /**
-     * AUTO Detect Renderer.
-     */
-    static AUTO: integer;
-
-    /**
-     * Canvas Renderer.
-     */
-    static CANVAS: integer;
-
-    /**
-     * WebGL Renderer.
-     */
-    static WEBGL: integer;
-
-    /**
-     * Headless Renderer.
-     */
-    static HEADLESS: integer;
-
-    /**
-     * In Phaser the value -1 means 'forever' in lots of cases, this const allows you to use it instead
-     * to help you remember what the value is doing in your code.
-     */
-    static FOREVER: integer;
-
-    /**
-     * Direction constant.
-     */
-    static NONE: integer;
-
-    /**
-     * Direction constant.
-     */
-    static UP: integer;
-
-    /**
-     * Direction constant.
-     */
-    static DOWN: integer;
-
-    /**
-     * Direction constant.
-     */
-    static LEFT: integer;
-
-    /**
-     * Direction constant.
-     */
-    static RIGHT: integer;
-
-}
-
-declare class ParseRetroFont {
-    /**
-     * Text Set 1 =  !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~
-     */
-    static readonly TEXT_SET1: string;
-
-    /**
-     * Text Set 2 =  !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ
-     */
-    static readonly TEXT_SET2: string;
-
-    /**
-     * Text Set 3 = ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
-     */
-    static readonly TEXT_SET3: string;
-
-    /**
-     * Text Set 4 = ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789
-     */
-    static readonly TEXT_SET4: string;
-
-    /**
-     * Text Set 5 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,/() '!?-*:0123456789
-     */
-    static readonly TEXT_SET5: string;
-
-    /**
-     * Text Set 6 = ABCDEFGHIJKLMNOPQRSTUVWXYZ!?:;0123456789"(),-.'
-     */
-    static readonly TEXT_SET6: string;
-
-    /**
-     * Text Set 7 = AGMSY+:4BHNTZ!;5CIOU.?06DJPV,(17EKQW")28FLRX-'39
-     */
-    static readonly TEXT_SET7: string;
-
-    /**
-     * Text Set 8 = 0123456789 .ABCDEFGHIJKLMNOPQRSTUVWXYZ
-     */
-    static readonly TEXT_SET8: string;
-
-    /**
-     * Text Set 9 = ABCDEFGHIJKLMNOPQRSTUVWXYZ()-0123456789.:,'"?!
-     */
-    static readonly TEXT_SET9: string;
-
-    /**
-     * Text Set 10 = ABCDEFGHIJKLMNOPQRSTUVWXYZ
-     */
-    static readonly TEXT_SET10: string;
-
-    /**
-     * Text Set 11 = ABCDEFGHIJKLMNOPQRSTUVWXYZ.,"-+!?()':;0123456789
-     */
-    static readonly TEXT_SET11: string;
+    constructor(definition: Object);
 
 }
 
 declare type integer = number;
 
-declare type int = number;
-
-declare type DOMHighResTimeStamp = number;
-
-declare type Image = HTMLImageElement;
-
-declare type Point = any;
-
-declare type SettingsObject = any;
-
-declare type SettingsConfig = any;
-
 declare module 'phaser' {
     export = Phaser;
 
 }
-
