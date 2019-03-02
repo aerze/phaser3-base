@@ -3,6 +3,34 @@ const path = require('path')
 const express = require('express')
 const socketio = require('socket.io')
 
+const Users = {
+  async findOrCreate (name) {
+    return {
+      name
+    }
+  }
+}
+const Rooms = {
+  async findOrCreate (code) {
+    return {
+      code,
+      players: [],
+
+      async addPlayer (user) {
+        this.players = this.players || []
+        this.players.push(user)
+      },
+
+      toJson () {
+        return {
+          code: this.code,
+          players: this.players
+        }
+      }
+    }
+  }
+}
+
 const { SOCKET_EVENTS, STATUS } = require('../common/constants')
 
 const app = express()
@@ -23,12 +51,30 @@ io.on('connection', socket => {
     io.emit(SOCKET_EVENTS.MESSAGE, payload)
   })
 
-  socket.on(SOCKET_EVENTS.CONNECT_TO_ROOM, payload => {
-    const { name, room } = payload
+  socket.on(SOCKET_EVENTS.CONNECT_TO_ROOM, async state => {
+    const { name, code } = state.user
 
-    const result = { status: 404 }
+    try {
+      const room = await Rooms.findOrCreate(code)
+      const user = await Users.findOrCreate(name)
 
-    socket.emit(SOCKET_EVENTS.CONNECT_TO_ROOM, result)
+      await room.addPlayer(user)
+
+      const result = {
+        status: STATUS.SUCCESS,
+        room,
+        user
+      }
+
+      socket.join(code)
+
+      return socket.emit(SOCKET_EVENTS.CONNECT_TO_ROOM, result)
+    } catch (error) {
+      return socket.emit(SOCKET_EVENTS.CONNECT_TO_ROOM, {
+        status: STATUS.FAILED,
+        error
+      })
+    }
   })
 
   socket.on('disconnect', () => {

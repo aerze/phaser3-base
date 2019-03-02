@@ -1,13 +1,13 @@
 import Phaser from 'phaser'
 import BootScene from './scenes/Boot'
-// import TitleScene from './scenes/Title'
+import TitleScene from './scenes/Title'
 // import MainScene from './scenes/Main'
 import Socket from './lib/socket'
 
 const menu = document.getElementById('menu')
 const form = document.getElementById('form')
 const name = document.getElementById('name')
-const room = document.getElementById('room')
+const code = document.getElementById('code')
 const send = document.getElementById('send')
 
 const socket = Socket.getInstance()
@@ -24,7 +24,7 @@ form.addEventListener('submit', event => {
   }
 
   const nameValue = name.value
-  const roomValue = room.value
+  const codeValue = code.value
 
   menu.remove()
 
@@ -40,11 +40,11 @@ form.addEventListener('submit', event => {
       autoRound: true,
       autoCenter: Phaser.Scale.CENTER_BOTH
     },
-    scene: [BootScene],
+    scene: [BootScene, TitleScene],
     // scene: [BootScene, TitleScene, MainScene]
     callbacks: {
       preBoot: game => {
-        game.registry.set({ user: { name: nameValue, room: roomValue } })
+        game.registry.set({ user: { name: nameValue, code: codeValue } })
       }
     }
   })
