@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        --dark-brown: #37392e;
+
+        --light-blue: #7bdff2;
+        --blue: #19647e;
+
+        --light-green: #b2f7ef;
+        --super-light-green: #eff7f6;
+        --white: #fcfcfd;
+
+        --light-pink: #f7d6e0;
+        --pink: #f2b5d4;
+
+        --gradient: linear-gradient(
+          var(--light-blue),
+          var(--light-green),
+          var(--white),
+          var(--light-pink),
+          var(--pink)
+        );
+      }
+
+      html,
+      body,
+      #canvas {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        background-color: var(--white);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      canvas {
+        display: block;
+        touch-action: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        image-rendering: pixelated;
+        cursor: inherit;
+      }
+
+      #menu {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        width: 200px;
+        height: 200px;
+
+        margin-top: 4rem;
+        border-width: 3px;
+        border-style: solid;
+        border-image: linear-gradient(
+            to bottom right,
+            var(--light-blue) 15%,
+            var(--light-green),
+            var(--light-pink) 85%,
+            var(--pink)
+          )
+          1 100%;
+        border-image-slice: 1;
+      }
+
+      #menu h1 {
+        margin: 0.6rem 0;
+      }
+
+      #form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #form label,
+      #form input {
+        margin-bottom: 0.4rem;
+      }
+
+      #form input {
+        padding: 0.2rem;
+        border-radius: 5px;
+        border: 1px solid var(--blue);
+        -webkit-appearance: none;
+      }
+
+      #send {
+        padding: 0.6rem;
+        border: 2px solid var(--white);
+        border-radius: 5px;
+        background-color: var(--blue);
+        color: var(--white);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu">
+      <h1>Play</h1>
+      <form id="form">
+        <label> Name </label>
+        <input id="name" value="abby" />
+
+        <label> Room </label>
+        <input id="room" value="test" />
+        <button id="send">Connect</button>
+      </form>
+
+      <div id="output"></div>
+    </div>
+    <!-- <script src="/socket.io/socket.io.js" charset="utf-8"></script> -->
+  </body>
+</html>
